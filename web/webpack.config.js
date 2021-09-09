@@ -3,21 +3,25 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const rootDir = path.join(__dirname, "..");
-const webpackEnv = process.env.NODE_ENV || "production";
+const webpackEnv = process.env.NODE_ENV || "development";
+const isProdEnv = webpackEnv === "production";
+const isDevEnv = webpackEnv === "development";
 const TerserPlugin = require("terser-webpack-plugin");
 var Visualizer = require("webpack-visualizer-plugin2");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
+const CopyPlugin = require("copy-webpack-plugin");
 module.exports = {
   entry: [
-    "webpack/hot/dev-server.js",
-    "webpack-dev-server/client/index.js?hot=true&live-reload=true",
+    isDevEnv && "webpack/hot/dev-server.js",
+    isDevEnv && "webpack-dev-server/client/index.js?hot=true&live-reload=true",
     path.join(rootDir, "./index.web.ts"),
-  ],
+  ].filter(Boolean),
   mode: webpackEnv,
   optimization: {
-    usedExports: true,
-    minimize: true,
+    usedExports: isProdEnv,
+    minimize: isProdEnv,
+    sideEffects: isProdEnv,
     minimizer: [
       new TerserPlugin({
         parallel: 4,
@@ -54,24 +58,49 @@ module.exports = {
   devtool: "source-map",
   target: "web",
   devServer: {
+    // http2: true,
+    // static: false,
+    // contentBase: path.resolve("dist"),
+    // publicPath: "/dist/",
+    // inline: true,
     historyApiFallback: true,
-    static: "./dist",
+    // proxy: {
+    //   "/static": {
+    //     target: "http://localhost:3333",
+    //     pathRewrite: { "^/static": "/app/static" },
+    //   },
+    // },
+    static: __dirname + "/../dist/",
     hot: true,
-    compress: true,
+    compress: false,
     port: 3000,
   },
   module: {
     rules: [
-      {
-        test: /\.tsx?$/,
+      // {
+      //   test: /\.(js|jsx)$/,
+      //   exclude: /node_modules/,
+      //   use: {
+      //     loader: "babel-loader",
+      //     // "side-effects": false,
+      //     options: {
+      //       presets: ["module:metro-react-native-babel-preset"],
+      //       plugins: ["react-native-web"],
+      //     },
+      //   },
+      // },
+      isProdEnv && {
+        test: /\.(tsx?|jsx?)$/,
         loader: "babel-loader",
         exclude: /node_modules/,
         options: {
+          babelrc: false,
+          configFile: false,
           presets: ["module:metro-react-native-babel-preset"],
           plugins: ["react-native-web"],
         },
       },
-      {
+      isDevEnv && {
         test: /\.tsx?$/,
         loader: "ts-loader",
       },
@@ -85,7 +114,7 @@ module.exports = {
           },
         },
       },
-    ],
+    ].filter(Boolean),
   },
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -95,14 +124,19 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: true,
       template: path.join(__dirname, "./index.html"),
     }),
-    new CompressionPlugin(),
+    isProdEnv && new CompressionPlugin(),
 
     // new Visualizer({
     //   filename: path.join("..", "stats", "statistics.html"),
     // }),
-    // new BundleAnalyzerPlugin(),
+    isProdEnv && new BundleAnalyzerPlugin(),
+    isProdEnv &&
+      new CopyPlugin({
+        patterns: [{ from: "./main.css", to: "../dist/main.css" }],
+      }),
     new webpack.HotModuleReplacementPlugin(),
-  ],
+  ].filter(Boolean),
 };

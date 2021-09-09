@@ -1,0 +1,6 @@
+html,
+body {
+  overflow: hidden;
+  overflow-y: scroll;
+  background-color: bisque;
+}

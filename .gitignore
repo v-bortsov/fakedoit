@@ -29,6 +29,7 @@ build/
 local.properties
 *.iml
 .history
+dist
 # node.js
 #
 node_modules/

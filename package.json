@@ -2,15 +2,15 @@
   "name": "fakedoit",
   "version": "0.0.1",
   "private": true,
-  "sideEffects": true,
+  "sideEffects": false,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build-react": "cross-env NODE_ENV=production && cd web && webpack",
-    "web": "cross-env NODE_ENV=development && cd web && webpack serve --open"
+    "build-react": "cd web && cross-env NODE_ENV=production webpack --env production",
+    "web": "cd web && cross-env NODE_ENV=development webpack serve --open"
   },
   "dependencies": {
     "react": "17.0.2",
@@ -30,6 +30,7 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-react-native-web": "^0.17.1",
     "compression-webpack-plugin": "^8.0.1",
+    "copy-webpack-plugin": "^9.0.1",
     "cross-env": "^7.0.3",
     "eslint": "^7.14.0",
     "html-webpack-plugin": "^5.3.2",

@@ -1,13 +1,18 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Animated,
   Dimensions,
   Text,
   TouchableWithoutFeedback,
   View,
-} from "react-native";
+} from 'react-native';
+// import TouchableWithoutFeedback from "react-native-web/dist/exports/TouchableWithoutFeedback";
+// import View from "react-native-web/dist/exports/View";
+// import Text from "react-native-web/dist/exports/Text";
+// import Dimensions from "react-native-web/dist/exports/Dimensions";
+// import Animated from "react-native-web/dist/exports/Animated";
 import { hot } from "react-hot-loader/root";
-const { height } = Dimensions.get("window");
+const { height } = Dimensions.get('window');
 
 const AnimatedView = Animated.createAnimatedComponent(View);
 
@@ -37,12 +42,12 @@ const App: React.FC<any> = (props: any) => {
           style={{
             height,
             flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
+            justifyContent: 'center',
+            alignItems: 'center',
             opacity: opacity,
           }}
         >
-          <Text>Hello, as World!!</Text>
+          <Text>Hello, ttt World!!</Text>
         </AnimatedView>
       </TouchableWithoutFeedback>
     </View>
