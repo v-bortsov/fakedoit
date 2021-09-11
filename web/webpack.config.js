@@ -11,6 +11,7 @@ var Visualizer = require("webpack-visualizer-plugin2");
 const BundleAnalyzerPlugin =
   require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 const CopyPlugin = require("copy-webpack-plugin");
+const ESLintPlugin = require('eslint-webpack-plugin');
 module.exports = {
   entry: [
     isDevEnv && "webpack/hot/dev-server.js",
@@ -103,6 +104,10 @@ module.exports = {
       isDevEnv && {
         test: /\.tsx?$/,
         loader: "ts-loader",
+        options: {
+          silent: false,
+          transpileOnly: true,
+        },
       },
       {
         test: /\.(gif|jpe?g|png|svg)$/,
@@ -123,6 +128,7 @@ module.exports = {
     },
   },
   plugins: [
+    new ESLintPlugin({ extensions: ["ts"] }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, "./index.html"),
