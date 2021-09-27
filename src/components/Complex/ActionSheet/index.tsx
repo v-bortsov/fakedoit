@@ -1,48 +1,32 @@
 import React, { Component, createRef } from 'react';
 import {
-  Animated,
-  Dimensions,
-  EmitterSubscription,
-  FlatList,
-  Keyboard,
-  KeyboardEvent,
-  LayoutChangeEvent,
-  Modal,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-  View,
+  Animated, Dimensions, FlatList,
+  Keyboard, KeyboardEvent, LayoutChangeEvent, Modal, NativeScrollEvent,
+  NativeSyntheticEvent, Platform, SafeAreaView, StatusBar, TouchableOpacity, UIManager, View
 } from 'react-native';
-import { styles } from './styles';
+import { styles } from './style';
 import type { ActionSheetProps } from './types';
 import {
-  getDeviceHeight,
-  getElevation,
-  SUPPORTED_ORIENTATIONS,
-  waitAsync,
+  getDeviceHeight, getElevation, SUPPORTED_ORIENTATIONS, waitAsync
 } from './utils';
 
 let safeAreaInnerHeight = 0;
 const dummyData = ['dummy'];
-let safeAreaPaddingTop =
-  Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
+let safeAreaPaddingTop = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
 let calculatedDeviceHeight = Dimensions.get('window').height;
 
 type State = {
-  modalVisible: boolean;
-  scrollable: boolean;
-  layoutHasCalled: boolean;
-  keyboard: boolean;
-  deviceHeight: number;
-  deviceWidth: number;
-  portrait: boolean;
-  safeAreaInnerHeight: number;
-  paddingTop: number;
-  keyboardPadding: number;
-};
+  modalVisible: boolean
+  scrollable: boolean
+  layoutHasCalled: boolean
+  keyboard: boolean
+  deviceHeight: number
+  deviceWidth: number
+  portrait: boolean
+  safeAreaInnerHeight: number
+  paddingTop: number
+  keyboardPadding: number
+}
 
 const defaultProps = {
   animated: true,
@@ -61,43 +45,38 @@ const defaultProps = {
   closable: true,
   bottomOffset: 0,
   closeOnTouchBackdrop: true,
-  drawUnderStatusBar: false,
+  drawUnderStatusBar: true,
   statusBarTranslucent: true,
   gestureEnabled: false,
-  keyboardDismissMode: 'none',
-};
+  keyboardDismissMode:'none'
+}
 
 type Props = Partial<typeof defaultProps> & ActionSheetProps;
 
 export default class ActionSheet extends Component<Props, State, any> {
-  static defaultProps = defaultProps;
 
+  static defaultProps = defaultProps;
   actionSheetHeight = 0;
   prevScroll = 0;
   timeout: any = null;
   offsetY = 0;
-  currentOffsetFromBottom = 0;
+  currentOffsetFromBottom = 0
   scrollAnimationEndValue = 0;
-
   hasBounced = false;
   layoutHasCalled = false;
   isClosing = false;
   isRecoiling = false;
   isReachedTop = false;
   deviceLayoutCalled = false;
-
-  scrollViewRef: React.RefObject<any>;
-  safeAreaViewRef: React.RefObject<any>;
-
-  transformValue: Animated.Value;
-  opacityValue: Animated.Value;
-  borderRadius: Animated.Value;
-  underlayTranslateY: Animated.Value;
-  underlayScale: Animated.Value;
-  indicatorTranslateY: Animated.Value;
+  scrollViewRef: React.RefObject<any>
+  safeAreaViewRef: React.RefObject<any>
+  transformValue: Animated.Value
+  opacityValue: Animated.Value
+  borderRadius: Animated.Value
+  underlayTranslateY: Animated.Value
+  underlayScale: Animated.Value
+  indicatorTranslateY: Animated.Value
   initialScrolling = false;
-  keyboardShowSubscription: EmitterSubscription | null = null;
-  KeyboardHideSubscription: EmitterSubscription | null = null;
 
   constructor(props: ActionSheetProps) {
     super(props);
@@ -106,14 +85,12 @@ export default class ActionSheet extends Component<Props, State, any> {
       scrollable: false,
       layoutHasCalled: false,
       keyboard: false,
-      deviceHeight:
-        calculatedDeviceHeight ||
-        getDeviceHeight(this.props.statusBarTranslucent),
+      deviceHeight: calculatedDeviceHeight || getDeviceHeight(this.props.statusBarTranslucent),
       deviceWidth: Dimensions.get('window').width,
       portrait: true,
       safeAreaInnerHeight,
       paddingTop: safeAreaPaddingTop,
-      keyboardPadding: 0,
+      keyboardPadding: 0
     };
 
     this.actionSheetHeight = 0;
@@ -129,7 +106,7 @@ export default class ActionSheet extends Component<Props, State, any> {
     this.transformValue = new Animated.Value(0);
     this.opacityValue = new Animated.Value(0);
     this.borderRadius = new Animated.Value(10);
-    this.currentOffsetFromBottom = this.props.initialOffsetFromBottom ?? 1;
+    this.currentOffsetFromBottom = this.props.initialOffsetFromBottom;
     this.underlayTranslateY = new Animated.Value(100);
     this.underlayScale = new Animated.Value(1);
     this.indicatorTranslateY = new Animated.Value(-this.state.paddingTop | 0);
@@ -155,10 +132,12 @@ export default class ActionSheet extends Component<Props, State, any> {
   show = () => {
     this.setModalVisible(true);
   };
+
   // Close the ActionSheet
   hide = () => {
     this.setModalVisible(false);
   };
+
   /**
    * Open/Close the ActionSheet
    */
@@ -178,11 +157,13 @@ export default class ActionSheet extends Component<Props, State, any> {
         scrollable: this.props.gestureEnabled || false,
       });
     } else {
+
       this._hideModal();
     }
   };
 
   _hideAnimation() {
+
     let {
       animated,
       closeAnimationDuration,
@@ -197,32 +178,32 @@ export default class ActionSheet extends Component<Props, State, any> {
         {
           toValue: closable ? 0 : 1,
           duration: animated ? closeAnimationDuration : 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }
       ), Animated.timing(
         this.transformValue,
         {
           toValue: closable ? this.actionSheetHeight * 2 : 0,
           duration: animated ? closeAnimationDuration : 1,
-          useNativeDriver: false,
+          useNativeDriver: true,
         }
       ),
     ])
       .start();
 
-    waitAsync((closeAnimationDuration ?? 300) / 1.5)
+    waitAsync(closeAnimationDuration / 1.5)
       .then(() => {
         if (!closable) {
-          if (bottomOffset && bottomOffset > 0) {
+          if (bottomOffset > 0) {
             this.snapToOffset(bottomOffset);
           } else {
             this._scrollTo(
-              this.actionSheetHeight * (initialOffsetFromBottom ?? 1) +
-              this.state.deviceHeight * 0.1 +
-              (extraScroll ?? 0),
+              this.actionSheetHeight * initialOffsetFromBottom +
+            this.state.deviceHeight * 0.1 +
+            extraScroll,
               true
             );
-            this.currentOffsetFromBottom = initialOffsetFromBottom ?? 1;
+            this.currentOffsetFromBottom = initialOffsetFromBottom;
           }
 
           this.isClosing = false;
@@ -231,7 +212,7 @@ export default class ActionSheet extends Component<Props, State, any> {
             0,
             false
           );
-          this.currentOffsetFromBottom = initialOffsetFromBottom ?? 1;
+          this.currentOffsetFromBottom = initialOffsetFromBottom;
           this.setState(
             {
               modalVisible: !closable,
@@ -251,9 +232,7 @@ export default class ActionSheet extends Component<Props, State, any> {
   }
 
   _hideModal = () => {
-    if (this.isClosing) {
-      return;
-    }
+    if (this.isClosing) return;
     this.isClosing = true;
     this._hideAnimation();
   };
@@ -265,7 +244,7 @@ export default class ActionSheet extends Component<Props, State, any> {
       return;
     }
     this.safeAreaViewRef.current?.measure((
-      _x: number, _y: number, _width: number, height: number
+      x, y, width, height
     ) => {
       safeAreaPaddingTop = height === 0 ? 20 : height;
       resolve(safeAreaPaddingTop);
@@ -273,12 +252,8 @@ export default class ActionSheet extends Component<Props, State, any> {
   });
 
   _showModal = async (event: LayoutChangeEvent) => {
-    let { gestureEnabled, delayActionSheetDraw, delayActionSheetDrawTime } =
-      this.props;
-
-    if (!event?.nativeEvent) {
-      return;
-    }
+    let { gestureEnabled, delayActionSheetDraw, delayActionSheetDrawTime } = this.props;
+    if (!event?.nativeEvent) return;
     let height = event.nativeEvent.layout.height;
     if (this.layoutHasCalled) {
       this.actionSheetHeight = height;
@@ -291,10 +266,10 @@ export default class ActionSheet extends Component<Props, State, any> {
       let scrollOffset = this.getInitialScrollPosition();
       this.isRecoiling = false;
       if (Platform.OS === 'ios') {
-        await waitAsync(delayActionSheetDrawTime ?? 0);
+        await waitAsync(delayActionSheetDrawTime);
       } else {
         if (delayActionSheetDraw) {
-          await waitAsync(delayActionSheetDrawTime ?? 0);
+          await waitAsync(delayActionSheetDrawTime);
         }
       }
       this._scrollTo(
@@ -304,10 +279,10 @@ export default class ActionSheet extends Component<Props, State, any> {
 
       this.prevScroll = scrollOffset;
       if (Platform.OS === 'ios') {
-        await waitAsync(delayActionSheetDrawTime ?? 0 / 2);
+        await waitAsync(delayActionSheetDrawTime / 2);
       } else {
         if (delayActionSheetDraw) {
-          await waitAsync((delayActionSheetDrawTime ?? 0) / 2);
+          await waitAsync(delayActionSheetDrawTime / 2);
         }
       }
       this._openAnimation(scrollOffset);
@@ -332,14 +307,14 @@ export default class ActionSheet extends Component<Props, State, any> {
             toValue: 0,
             bounciness: bounceOnOpen ? bounciness : 1,
             speed: openAnimationSpeed,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }
         ), Animated.timing(
           this.opacityValue,
           {
             toValue: 1,
             duration: 150,
-            useNativeDriver: false,
+            useNativeDriver: true,
           }
         ),
       ])
@@ -349,7 +324,7 @@ export default class ActionSheet extends Component<Props, State, any> {
     }
   };
 
-  _onScrollBegin = async (_event: NativeSyntheticEvent<NativeScrollEvent>) => {};
+  _onScrollBegin = async (event: NativeSyntheticEvent<NativeScrollEvent>) => { };
   _onScrollBeginDrag = async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     let verticalOffset = event.nativeEvent.contentOffset.y;
     this.prevScroll = verticalOffset;
@@ -368,26 +343,20 @@ export default class ActionSheet extends Component<Props, State, any> {
     let { springOffset, extraScroll } = this.props;
     let verticalOffset = event.nativeEvent.contentOffset.y;
     let correction = this.state.deviceHeight * 0.15;
-    if (this.isRecoiling) {
-      return;
-    }
+    if (this.isRecoiling) return;
 
     if (this.prevScroll < verticalOffset || this.initialScrolling) {
-      if (
-        verticalOffset - this.prevScroll > (springOffset ?? 100) * 0.75 ||
-        this.initialScrolling
-      ) {
+      if (verticalOffset - this.prevScroll > springOffset * 0.75 || this.initialScrolling) {
         this.isRecoiling = true;
         this._applyHeightLimiter();
         this.currentOffsetFromBottom =
-          this.currentOffsetFromBottom <
-          (this.props.initialOffsetFromBottom ?? 1)
-            ? this.props.initialOffsetFromBottom ?? 1
+          this.currentOffsetFromBottom < this.props.initialOffsetFromBottom
+            ? this.props.initialOffsetFromBottom
             : 1;
         let scrollOffset =
           this.actionSheetHeight * this.currentOffsetFromBottom +
           correction +
-          (extraScroll ?? 100);
+          extraScroll;
 
         if (this.initialScrolling) {
           this.initialScrolling = false;
@@ -402,7 +371,7 @@ export default class ActionSheet extends Component<Props, State, any> {
         this._returnToPrevScrollPosition(this.actionSheetHeight);
       }
     } else {
-      if (this.prevScroll - verticalOffset > (springOffset ?? 100)) {
+      if (this.prevScroll - verticalOffset > springOffset) {
         this._hideModal();
       } else {
         if (this.isRecoiling) {
@@ -422,9 +391,7 @@ export default class ActionSheet extends Component<Props, State, any> {
       let distanceFromTop =
         this.actionSheetHeight + correction - scrollPosition;
       if (distanceFromTop < this.state.paddingTop) {
-        if (!this.props.drawUnderStatusBar) {
-          return;
-        }
+        if (!this.props.drawUnderStatusBar) return;
         this.indicatorTranslateY.setValue(0);
       } else {
         this.indicatorTranslateY.setValue(-this.state.paddingTop);
@@ -437,7 +404,7 @@ export default class ActionSheet extends Component<Props, State, any> {
     let scrollOffset =
       height * this.currentOffsetFromBottom +
       correction +
-      (this.props.extraScroll ?? 0);
+      this.props.extraScroll;
 
     this.updateActionSheetPosition(scrollOffset);
     this._scrollTo(scrollOffset);
@@ -510,9 +477,7 @@ export default class ActionSheet extends Component<Props, State, any> {
 
     if (this.actionSheetHeight >= this.state.deviceHeight - 1) {
       if (distanceFromTop < this.state.paddingTop) {
-        if (!this.props.drawUnderStatusBar) {
-          return;
-        }
+        if (!this.props.drawUnderStatusBar) return;
 
         this.indicatorTranslateY.setValue(-this.state.paddingTop + (this.state.paddingTop - distanceFromTop));
       } else {
@@ -522,9 +487,7 @@ export default class ActionSheet extends Component<Props, State, any> {
   };
 
   _onRequestClose = () => {
-    if (this.props.closeOnPressBack) {
-      this._hideModal();
-    }
+    if (this.props.closeOnPressBack) this._hideModal();
   };
 
   _onTouchBackdrop = () => {
@@ -534,12 +497,12 @@ export default class ActionSheet extends Component<Props, State, any> {
   };
 
   componentDidMount() {
-    this.keyboardShowSubscription = Keyboard.addListener(
+    Keyboard.addListener(
       Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
       this._onKeyboardShow
     );
 
-    this.KeyboardHideSubscription = Keyboard.addListener(
+    Keyboard.addListener(
       Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
       this._onKeyboardHide
     );
@@ -547,10 +510,10 @@ export default class ActionSheet extends Component<Props, State, any> {
 
   _onKeyboardShow = (event: KeyboardEvent) => {
     this.isRecoiling = true;
-    let correction = Platform.OS === 'android' ? 20 : 5;
+    let correction = Platform.OS === 'android' ? 20 : 5
     this.setState({
       keyboard: true,
-      keyboardPadding: event.endCoordinates.height + correction,
+      keyboardPadding: event.endCoordinates.height + correction
     });
     waitAsync(300)
       .then(() => {
@@ -561,25 +524,25 @@ export default class ActionSheet extends Component<Props, State, any> {
   _onKeyboardHide = () => {
     this.setState({
       keyboard: false,
-      keyboardPadding: 0,
+      keyboardPadding: 0
     });
     this.opacityValue.setValue(1);
   };
+
   /**
    * Attach this to any child ScrollView Component's onScrollEndDrag,
    * onMomentumScrollEnd,onScrollAnimationEnd callbacks to handle the ActionSheet
    * closing and bouncing back properly.
    */
+
   handleChildScrollEnd = async () => {
-    if (this.offsetY > this.prevScroll) {
-      return;
-    }
-    if (this.prevScroll - (this.props.springOffset ?? 100) > this.offsetY) {
+    if (this.offsetY > this.prevScroll) return;
+    if (this.prevScroll - this.props.springOffset > this.offsetY) {
       let scrollOffset = this.getInitialScrollPosition();
       if (this.offsetY > scrollOffset - 100) {
         this.isRecoiling = true;
         this._scrollTo(scrollOffset);
-        this.currentOffsetFromBottom = this.props.initialOffsetFromBottom ?? 1;
+        this.currentOffsetFromBottom = this.props.initialOffsetFromBottom;
         this.prevScroll = scrollOffset;
         setTimeout(
           () => {
@@ -606,23 +569,20 @@ export default class ActionSheet extends Component<Props, State, any> {
   };
 
   componentWillUnmount() {
-    this.keyboardShowSubscription?.remove();
-    this.KeyboardHideSubscription?.remove();
+    const removeListener = Keyboard.remove ? Keyboard.remove : Keyboard.removeListener;
 
-    if (Keyboard.removeListener) {
-      Keyboard.removeListener(
-        Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
-        this._onKeyboardShow
-      );
+    removeListener(
+      Platform.OS === 'android' ? 'keyboardDidShow' : 'keyboardWillShow',
+      this._onKeyboardShow
+    );
 
-      Keyboard.removeListener(
-        Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
-        this._onKeyboardHide
-      );
-    }
+    removeListener(
+      Platform.OS === 'android' ? 'keyboardDidHide' : 'keyboardWillHide',
+      this._onKeyboardHide
+    );
   }
 
-  _onDeviceLayout = async (_event: LayoutChangeEvent) => {
+  _onDeviceLayout = async (_event) => {
     let event = { ..._event };
 
     if (this.timeout) {
@@ -636,13 +596,10 @@ export default class ActionSheet extends Component<Props, State, any> {
         Platform.OS === 'ios' ? await this.measure() : StatusBar.currentHeight;
 
         if (!this.props.drawUnderStatusBar) {
-          if (Platform.OS === 'android' && !this.props.statusBarTranslucent) {
+          if (Platform.OS === 'android' && !this.props.statusBarTranslucent)
             return;
-          }
-          safeMarginFromTop = measuredPadding ?? 0;
-          if (measuredPadding) {
-            this.indicatorTranslateY.setValue(-measuredPadding);
-          }
+          safeMarginFromTop = measuredPadding;
+          this.indicatorTranslateY.setValue(-measuredPadding);
         } else {
           this.updateActionSheetPosition(this.offsetY);
         }
@@ -652,16 +609,15 @@ export default class ActionSheet extends Component<Props, State, any> {
           height?.toFixed(0) === calculatedDeviceHeight?.toFixed(0) &&
         width?.toFixed(0) === this.state.deviceWidth?.toFixed(0) &&
         this.deviceLayoutCalled
-        ) {
+        )
           return;
-        }
         this.deviceLayoutCalled = true;
         calculatedDeviceHeight = height;
         this.setState({
           deviceHeight: height,
           deviceWidth: width,
           portrait: height > width,
-          paddingTop: measuredPadding ?? 0,
+          paddingTop: measuredPadding,
         });
       },
       1
@@ -672,20 +628,20 @@ export default class ActionSheet extends Component<Props, State, any> {
     this._applyHeightLimiter();
     let correction = this.state.deviceHeight * 0.15;
     let scrollPosition = this.props.gestureEnabled
-      ? this.actionSheetHeight * (this.props.initialOffsetFromBottom ?? 1) +
-        correction +
-        (this.props.extraScroll ?? 0)
-      : this.actionSheetHeight + correction + (this.props.extraScroll ?? 0);
-    this.currentOffsetFromBottom = this.props.initialOffsetFromBottom ?? 0;
+      ? this.actionSheetHeight * this.props.initialOffsetFromBottom +
+      correction +
+      this.props.extraScroll
+      : this.actionSheetHeight + correction + this.props.extraScroll;
+    this.currentOffsetFromBottom = this.props.initialOffsetFromBottom;
     this.updateActionSheetPosition(scrollPosition);
 
     return scrollPosition;
   }
 
-  _keyExtractor = (item: string) => item;
+  _keyExtractor = (item) => item;
 
   render() {
-    let { scrollable, modalVisible } = this.state;
+    let { scrollable, modalVisible, keyboard } = this.state;
     let {
       testID,
       onOpen,
@@ -700,7 +656,7 @@ export default class ActionSheet extends Component<Props, State, any> {
       headerAlwaysVisible,
       keyboardShouldPersistTaps,
       statusBarTranslucent,
-      keyboardDismissMode,
+      keyboardDismissMode
     } = this.props;
 
     return (
@@ -708,7 +664,6 @@ export default class ActionSheet extends Component<Props, State, any> {
         <Modal
           visible={modalVisible}
           animationType="none"
-          // @ts-ignore
           testID={testID}
           supportedOrientations={SUPPORTED_ORIENTATIONS}
           onShow={onOpen}
@@ -720,7 +675,7 @@ export default class ActionSheet extends Component<Props, State, any> {
             pointerEvents="none"
             style={{
               position: 'absolute',
-              width: 0,
+              width: 0
             }}
             ref={this.safeAreaViewRef}
           >
@@ -736,7 +691,6 @@ export default class ActionSheet extends Component<Props, State, any> {
             ]}
           >
             {this.props.ExtraOverlayComponent}
-
             <FlatList
               bounces={false}
               keyboardShouldPersistTaps={keyboardShouldPersistTaps}
@@ -807,7 +761,7 @@ export default class ActionSheet extends Component<Props, State, any> {
                       styles.container, {
                         borderRadius: 10,
                       }, containerStyle, {
-                        ...getElevation(elevation ?? 5),
+                        ...getElevation(elevation),
                         zIndex: 11,
                         opacity: this.opacityValue,
                         transform: [
@@ -816,7 +770,7 @@ export default class ActionSheet extends Component<Props, State, any> {
                           },
                         ],
                         maxHeight: this.state.deviceHeight,
-                        paddingBottom: this.state.keyboardPadding,
+                        paddingBottom: this.state.keyboardPadding
                       },
                     ]}
                   >
@@ -836,22 +790,19 @@ export default class ActionSheet extends Component<Props, State, any> {
                           CustomHeaderComponent
                         ) : (
                           <Animated.View
-                            style={[styles.indicator, { backgroundColor: indicatorColor },]}
+                            style={[styles.indicator, { backgroundColor: indicatorColor }]}
                           />
                         )
                       ) : null}
-
                       {children}
                     </Animated.View>
-
                     <View
                       style={{
                         height: 200,
-                        backgroundColor:
-                          containerStyle?.backgroundColor || '#ffffff',
+                        backgroundColor: containerStyle?.backgroundColor || '#ffffff',
                         position: 'absolute',
                         bottom: -195,
-                        width: containerStyle?.width || '100%',
+                        width: containerStyle?.width || '100%'
                       }}
                     />
                   </Animated.View>

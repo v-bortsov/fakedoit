@@ -4,32 +4,38 @@ import { Text, View } from '../Themed';
 interface Collapse {
   idx: number;
   duration: number;
-  header: JSX.Element;
+  Header: JSX.Element;
   children: JSX.Element;
   icon?: JSX.Element;
   borderStyle?: any;
   backgroundColor?: any;
   buttonProps?: any;
   Button?: any;
+  style?: any;
 }
 export const collapseView = (
   duration: number,
   animationHeight: any,
-  toValue: number
+  toValue: number   
 ) => {
-  Animated.timing(animationHeight, {
-    duration,
-    easing: Easing.back(1),
-    toValue,
-    useNativeDriver: false,
-  }).start();
+  Animated.timing(
+    animationHeight,
+    {
+      duration,
+      easing: Easing.back(1),
+      toValue,
+      useNativeDriver: false,
+    }
+  )
+    .start();
 };
 const Collapse = ({
   idx,
   duration,
-  header,
+  Header,
   children,
   icon,
+  style,
   borderStyle,
   backgroundColor,
   Button,
@@ -38,18 +44,16 @@ const Collapse = ({
   const [open, setOpen] = useState(false);
   const animationHeight = useRef(new Animated.Value(0)).current;
   useEffect(
-    () => collapseView(duration, animationHeight, !open ? 0 : 1),
+    () => collapseView(
+      duration,
+      animationHeight,
+      !open ? 0 : 1
+    ),
     [open]
   );
   return (
-    <View key={idx} style={borderStyle}>
-      <Pressable
-        key={`press_${idx}`}
-        onPress={Button ? undefined : () => setOpen(!open)}
-        style={[styles.summary, { backgroundColor }]}
-      >
-        {header(animationHeight)}
-      </Pressable>
+    <View key={idx}>
+      <Header animation={animationHeight} setOpen={setOpen} open={open} />
       <Animated.View
         key={`desc_${idx}`}
         style={{
@@ -59,7 +63,6 @@ const Collapse = ({
             extrapolate: 'clamp',
           }),
           overflow: 'hidden',
-          backgroundColor: '#0891b2',
         }}
       >
         {children}

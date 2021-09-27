@@ -12,6 +12,7 @@ const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require("eslint-webpack-plugin");
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 module.exports = {
   entry: [
     isDevEnv && 'webpack/hot/dev-server.js',
@@ -102,11 +103,21 @@ module.exports = {
         },
       },
       isDevEnv && {
-        test: /\.tsx?$/,
+        test: /\.(t|j)sx?$/,
         loader: 'ts-loader',
         options: {
-          silent: false,
+          // silent: false,
           transpileOnly: true,
+          // declaration: true,
+          configFile: __dirname + '/../tsconfig.json',
+          errorFormatter: function customErrorFormatter(error, colors) {
+            const messageColor =
+              error.severity === "warning" ? colors.bold.yellow : colors.bold.red;
+            return (
+              "Does not compute.... " +
+              messageColor(Object.keys(error).map(key => `${key}: ${error[key]}`))
+            );
+          }
         },
       },
       {
@@ -128,8 +139,14 @@ module.exports = {
       'react-native-svg$': 'react-native-web-svg',
     },
   },
+  stats: {
+    errorDetails: true
+  },
   plugins: [
-    new ESLintPlugin({ extensions: ['ts'] }),
+    // new ForkTsCheckerWebpackPlugin({
+    //   configFile: __dirname + '/../tsconfig.json'
+    // }),
+    new ESLintPlugin({ extensions: ['ts', 'tsx'] }),
     new HtmlWebpackPlugin({
       inject: true,
       template: path.join(__dirname, './index.html'),
@@ -142,7 +159,7 @@ module.exports = {
     isProdEnv && new BundleAnalyzerPlugin(),
     isProdEnv &&
       new CopyPlugin({
-        patterns: [{ from: './main.css', to: '../dist/main.css' }],
+        patterns: [{ from: './mains.css', to: '../dist/mains.css' }],
       }),
     new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),
