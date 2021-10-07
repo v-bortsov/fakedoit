@@ -2,7 +2,10 @@ const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
-const rootDir = path.join(__dirname, '..');
+const rootDir = path.join(
+  __dirname,
+  '..'
+);
 const webpackEnv = process.env.NODE_ENV || 'development';
 const isProdEnv = webpackEnv === 'production';
 const isDevEnv = webpackEnv === 'development';
@@ -11,13 +14,14 @@ var Visualizer = require('webpack-visualizer-plugin2');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const CopyPlugin = require('copy-webpack-plugin');
-const ESLintPlugin = require("eslint-webpack-plugin");
+const ESLintPlugin = require('eslint-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 module.exports = {
   entry: [
-    isDevEnv && 'webpack/hot/dev-server.js',
-    isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=true',
-    path.join(rootDir, './index.web.ts'),
+    isDevEnv && 'webpack/hot/dev-server.js', isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=true', path.join(
+      rootDir,
+      './packages/client/index.web.ts'
+    ),
   ].filter(Boolean),
   mode: webpackEnv,
   optimization: {
@@ -28,18 +32,23 @@ module.exports = {
       new TerserPlugin({
         parallel: 4,
         // Can be async
-        minify: (input, sourceMap, minimizerOptions, extractsComments) => {
+        minify: (
+          input, sourceMap, minimizerOptions, extractsComments
+        ) => {
           // The `minimizerOptions` option contains option from the `terserOptions` option
           // You can use `minimizerOptions.myCustomOption`
           const extractedComments = [];
           // Custom logic for extract comments
           const { map, code } = require('uglify-js') // Or require('./path/to/uglify-module')
-            .minify(input, {
-              mangle: {
-                toplevel: true,
-              },
-              nameCache: {},
-            });
+            .minify(
+              input,
+              {
+                mangle: {
+                  toplevel: true,
+                },
+                nameCache: {},
+              }
+            );
           return { map, code, extractedComments };
         },
         terserOptions: {
@@ -54,7 +63,10 @@ module.exports = {
   },
   output: {
     filename: 'app-[chunkhash].bundle.js',
-    path: path.resolve(rootDir, 'dist'),
+    path: path.resolve(
+      rootDir,
+      'dist'
+    ),
     clean: true,
   },
   devtool: 'source-map',
@@ -101,8 +113,7 @@ module.exports = {
           presets: ['module:metro-react-native-babel-preset'],
           plugins: ['react-native-web'],
         },
-      },
-      isDevEnv && {
+      }, isDevEnv && {
         test: /\.(t|j)sx?$/,
         loader: 'ts-loader',
         options: {
@@ -110,17 +121,19 @@ module.exports = {
           transpileOnly: true,
           // declaration: true,
           configFile: __dirname + '/../tsconfig.json',
-          errorFormatter: function customErrorFormatter(error, colors) {
+          errorFormatter: function customErrorFormatter(
+            error, colors
+          ) {
             const messageColor =
-              error.severity === "warning" ? colors.bold.yellow : colors.bold.red;
+              error.severity === 'warning' ? colors.bold.yellow : colors.bold.red;
             return (
-              "Does not compute.... " +
-              messageColor(Object.keys(error).map(key => `${key}: ${error[key]}`))
+              'Does not compute.... ' +
+              messageColor(Object.keys(error)
+                .map(key => `${key}: ${error[key]}`))
             );
           }
         },
-      },
-      {
+      }, {
         test: /\.(gif|jpe?g|png|svg)$/,
         use: {
           loader: 'url-loader',
@@ -146,21 +159,20 @@ module.exports = {
     // new ForkTsCheckerWebpackPlugin({
     //   configFile: __dirname + '/../tsconfig.json'
     // }),
-    new ESLintPlugin({ extensions: ['ts', 'tsx'] }),
-    new HtmlWebpackPlugin({
+    new ESLintPlugin({ extensions: ['ts', 'tsx'] }), new HtmlWebpackPlugin({
       inject: true,
-      template: path.join(__dirname, './index.html'),
-    }),
-    isProdEnv && new CompressionPlugin(),
+      template: path.join(
+        __dirname,
+        './index.html'
+      ),
+    }), isProdEnv && new CompressionPlugin(),
 
     // new Visualizer({
     //   filename: path.join("..", "stats", "statistics.html"),
     // }),
-    isProdEnv && new BundleAnalyzerPlugin(),
-    isProdEnv &&
+    isProdEnv && new BundleAnalyzerPlugin(), isProdEnv &&
       new CopyPlugin({
         patterns: [{ from: './mains.css', to: '../dist/mains.css' }],
-      }),
-    new webpack.HotModuleReplacementPlugin(),
+      }), new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),
 };

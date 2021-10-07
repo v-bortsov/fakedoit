@@ -1,0 +1,11 @@
+{
+	"exclude": ["node_modules"],
+	"files": ["./typings.d.ts"],
+	"compilerOptions": {
+		"target": "es6",
+    "module": "commonjs",
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+	}
+}
