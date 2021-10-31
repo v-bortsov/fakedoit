@@ -1,21 +1,21 @@
 import {
-  always, assoc, assocPath, clone, concat, cond, converge, evolve, ifElse, isEmpty, map, not, pair, path, pathEq, pipe, prepend, prop, propEq,
+  always, assoc, assocPath, clone, concat, cond, converge, evolve, ifElse, isEmpty, map, not, of, pair, path, pathEq, pipe, prepend, prop, propEq,
   tap,
   __
 } from 'ramda';
-import { selectByType } from './form';
-import { findAndMerge } from './popular';
+import { getFieldsByType } from '../business/form';
+import { findAndMerge } from '../utils/popular';
 
 const actionOnDictionaryField = clone;
 
 const updateFields = (func: any) => converge(
-  assocPath([0, 'fields']),
+  assocPath([0, 'columns']),
   [func, clone]
 );
 
 const actionOnOtherFields = updateFields(converge(
   findAndMerge,
-  [path<any>([0, 'fields']), prop<any>(1), always('name')]
+  [path<any>([0, 'columns']), prop<any>(1), always('name')]
 ));
 const actionOnTypeField = updateFields(converge(
   map,
@@ -40,11 +40,10 @@ const actionOnTypeField = updateFields(converge(
       ]
     ), pipe(
       path<any>([1, 'value']),
-      selectByType
+      getFieldsByType
     )
   ]
 ));
-
 
 export const reducerFields = 
   cond([
@@ -67,7 +66,7 @@ export const reducerFields =
         [
           pipe(
             path([1, 'payload', 'path']),
-            concat([0, 'fields']),
+            concat([0, 'columns']),
           ), path([1, 'payload', 'value']), clone
         ]
       )
@@ -80,7 +79,7 @@ export const reducerFields =
     // ],
     [
       pipe(
-        prop(1),
+        prop<any>(1),
         isEmpty,
         not
       ), actionOnOtherFields
@@ -105,10 +104,16 @@ export const evolveInitialState = pipe(
       [
         pipe(
           path([1,'type']),
+          of,
           prepend(0)
-        ), path([1, 'payload', 'value']), prop(0)
+        ),
+        path([1, 'value']), clone
       ]
     )
   ),
+  tap(x => console.log(
+    'evolveStte',
+    x
+  )),
   prop<any>(0)
 )

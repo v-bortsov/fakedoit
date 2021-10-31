@@ -1,4 +1,3 @@
-
 import React from 'react'
 import { StyleSheet, Pressable, TouchableOpacity } from 'react-native'
 import { View, Text } from '../Themed'

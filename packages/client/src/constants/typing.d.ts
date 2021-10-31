@@ -1,41 +1,82 @@
-import { ColumnType, OptionNumber, OptionDate } from '../../react-app-env'
-import {COLUMN_ADD, COLUMN_DEL, COLUMN_UPD, ACTION_SHEET_ADD, ACTION_SHEET_DEL, START_GEN, FIELD_CHANGE_VALUE} from './Actions'
+import { ColumnTypeBase, ColumnTypeNumber, ColumnTypeDate, GeneratorState, Field } from '../../react-app-env'
 
-// type COLUMN_ADD = 'COLUMN_ADD'
-type ComponentActionSheet = 'ActionSheet'
-type ComponentMenu = 'Menu'
 
-type ScreenHome = 'ScreenHome'
-type ScreenError = 'ScreenError'
-
-/** Start TypeList */
-type CustomType = ColumnType<null>
-type NumberType = ColumnType<OptionNumber>
-type DateType = ColumnType<OptionDate>
-/** End TypeList */
-
+export enum ColumnType {
+   CUSTOM = 'CUSTOM',
+   DATE = 'DATE',
+   NUMBER = 'NUMBER',
+   DICTIONARY = 'DICTIONARY',
+}
 /** Start AllList */
 
-type ColumnList = CustomType | NumberType | DateType
+type ColumnList = ColumnTypeBase | ColumnTypeNumber | ColumnTypeDate
 
 type ScreensList = ScreenHome | ScreenError
-
-type ActionsList = typeof COLUMN_ADD | typeof COLUMN_DEL
-
-
+export interface Collapse {
+   head: [Field<ComponentSelectBase>, Field<ComponentInputNumberBase>, Field<ComponentInputNumberBase>]
+   body: any[]
+}
+export enum Props {
+   NAME = 'name',
+   LABEL = 'label',
+   TYPE = 'type',
+   LIMIT = 'limit',
+   VALUE = 'value'
+}
+export enum Components {
+   Switch = 'Switch',
+   ActionSheet = 'ActionSheet',
+   Menu = 'Menu',
+   Input = 'Input',
+   TextArea = 'TextArea',
+   Select = 'Select',
+   InputNumber = 'InputNumber',
+   DatePicker = 'DatePicker',
+   Weekdays = 'Weekdays',
+   ButtonGroup = 'ButtonGroup',
+}
 /** End AllList */
-
-type Value = number
-
-interface Action<Name, Value> {
-   type: Name
-   payload: Payload<Value>
+interface ComponentBase {
+   name: Components
+}
+interface ComponentInputBase extends ComponentBase {
+   value: string | null | number[]
+   defaultValue: string | null | number[];
+   rules: string[][];
+   edit: boolean
+   // onChange: Dispatch<typeof COLUMN_UPD_LABEL | typeof COLUMN_UPD_NAME, string>
+   // onEdit: Dispatch<typeof COLUMN_UPD_LABEL_EDIT | typeof COLUMN_UPD_NAME_EDIT, boolean>
+}
+interface ComponentInputNumberBase extends ComponentBase {
+   name: Components.InputNumber
+   range: number[]
+}
+interface ComponentWeekdaysBase extends ComponentBase {
+   name: Components.Weekdays
+   range: number[]
+}
+export enum NumberType {
+   'ceil',
+   'float'
+}
+interface ComponentButtonGroupBase extends ComponentBase {
+   name: Components.ButtonGroup
+   options: string[]
+}
+interface ComponentSelectBase extends ComponentBase {
+   name: Components.Select
+   options: string[]
 }
 
-type Payload<Value> = {
-   value: Value
-   path: (string|number)[]
+interface ComponentTextAreaBase extends ComponentInputBase {
+   name: Components.TextArea
+   rows: number
 }
-
-/** Start Function */
-type Dispatch = (params: Action<ActionsList, Value>) => void
+interface ComponentSwitchBase extends ComponentInputBase {
+   name: Components.Switch
+}
+interface ComponentDatePickerBase extends ComponentInputBase {
+   name: Components.DatePicker
+}
+type ScreenHome = 'ScreenHome'
+type ScreenError = 'ScreenError'

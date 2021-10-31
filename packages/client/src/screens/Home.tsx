@@ -1,85 +1,24 @@
-import React, { useReducer } from 'react';
 import {
-  always,
-  assoc,
-  clone,
-  cond,
-  converge,
-  curry,
-  indexBy,
-  keys,
-  objOf,
-  path,
-  pathEq,
-  pick,
-  pipe,
-  prop,
-  T,
-  values,
-  __,
+  curry, pipe
 } from 'ramda';
+import React from 'react';
 import {
-  ScrollView,
-  View,
-  TouchableOpacity,
-  Animated,
-  StyleSheet,
-  Text,
-  FlatList,
-  Pressable,
+  Animated, Pressable, ScrollView, StyleSheet,
+  Text, TouchableOpacity, View
 } from 'react-native';
+import Fields from '../business/field';
 import Collapse from '../components/Effects/Collapse';
-import SvgOption from '../components/icons/SvgOption';
-import SvgPlus from '../components/icons/SvgPlus';
-import { initialState } from '../context';
-import Slider from '../components/Primitives/Slider';
-// import Fields from '../components/Complex/AddColumn';
-import { Field } from '../../react-app-env';
-import { TextInputHover } from '../components/Primitives/TextInput';
-import { staggerButtons } from '../constants/Fields';
 import SvgArrowDown from '../components/icons/SvgArrowDown';
 import SvgKey from '../components/icons/SvgKey';
+import SvgOption from '../components/icons/SvgOption';
+import SvgPlus from '../components/icons/SvgPlus';
+import Slider from '../components/Primitives/Slider';
+import { TextInputHover } from '../components/Primitives/TextInput';
+import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue } from '../constants/Actions';
 import { theme } from '../constants/Colors';
-import { evolveInitialState, reducerFields } from '../utils';
-import { Fields } from '../components/Complex';
+import { MenuActionAddColumn } from '../constants/Fields';
 
-const getIconByType = (item: Field) => pipe(
-  indexBy<any, any>(prop('type')),
-  prop(path(
-    ['type', 'value'],
-    item
-  ))
-)(staggerButtons);
-
-const pickFieldsByType = pipe(
-  converge(
-    pick,
-    [
-      cond([
-        [
-          pathEq(
-            ['type', 'value'],
-            'custom'
-          ), always(['collect'])
-        ], [
-          pathEq(
-            ['type', 'value'],
-            'dates'
-          ), always(['days', 'startDay', 'limit']),
-        ], [
-          pathEq(
-            ['type', 'value'],
-            'integer'
-          ), always(['from-to', 'length'])
-        ], [T, keys],
-      ]), clone,
-    ]
-  ),
-  values,
-  objOf('fields')
-);
-
-const HeaderBody = curry(({ circle, label, name, dispatch, idx }: any) => ({ animation, open, setOpen }: any) => (
+const HeaderBody = curry(({ items: [type, name, label], dispatch, idx }: any) => ({ animation, open, setOpen }: any) => (
   <Pressable
     onPress={()=>setOpen(!open)}
     style={[
@@ -90,23 +29,20 @@ const HeaderBody = curry(({ circle, label, name, dispatch, idx }: any) => ({ ani
       }, styles.accordionItem
     ]}>
     <View style={styles.leftSummary}>
-      <Text>{circle.icon}</Text>
+      <Text>{type.name}</Text>
     </View>
     <View style={styles.titleSummary}>
-      <TextInputHover
-        text={name}
-        height={30}
-        fontSize={24}
-        width={30}
-        onChange={(value: React.FormEvent<HTMLInputElement>) => dispatch({ type: 'fields', payload: { name: 'updateFields', path: [idx, 'name', 'value'], value: value.currentTarget.value }})}
-      />
-      <TextInputHover
-        text={label}
-        fontSize={18}
-        height={20}
-        width={20}
-        onChange={(value: React.FormEvent<HTMLInputElement>) => dispatch({ type: 'fields', payload: { name: 'updateFields', path: [idx, 'label', 'value'], value: value.currentTarget.value }})}
-      />
+      {[['name', name.label, name.component.edit, 30, 24, 30], ['label', label.label, label.component.edit, 18, 20, 20]].map(([prop, text, toggle, height, fontSize, width])=>
+        <TextInputHover
+          text={text}
+          height={height}
+          fontSize={fontSize}
+          edit={toggle}
+          width={width}
+          setToggle={()=>updColumnEdit({dispatch, key: 'columns', idx, prop, value: toggle })}
+          onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, key: 'columns', idx, prop, value: value.currentTarget.value})}
+        />
+      )}
     </View>
     <View style={styles.keyIconSummary}>
       <SvgKey />
@@ -123,9 +59,9 @@ const HeaderBody = curry(({ circle, label, name, dispatch, idx }: any) => ({ ani
               inputRange: [0, 1],
               outputRange: ['0deg', '180deg'],
               extrapolate: 'clamp',
-            }),
-          },
-        ],
+            })
+          }
+        ]
       }}
     >
       <SvgArrowDown/>
@@ -133,7 +69,7 @@ const HeaderBody = curry(({ circle, label, name, dispatch, idx }: any) => ({ ani
   </Pressable>
 ));
 
-const HeaderFooter = curry(({ actionSheetRef, idx }: any) => ({ animation, open, setOpen }: any) => (
+const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animation, open, setOpen }: any) => (
   <View
     style={{
       backgroundColor: '#ffa500',
@@ -143,7 +79,7 @@ const HeaderFooter = curry(({ actionSheetRef, idx }: any) => ({ animation, open,
     }}
   >
     <TouchableOpacity
-      onPress={() => actionSheetRef.current?.show()}
+      onPress={pipe(() => actionSheetRef.current?.show(), ()=> startGen({dispatch}))}
       style={[
         styles.FABButton, {
           backgroundColor: '#ffa500',
@@ -155,7 +91,10 @@ const HeaderFooter = curry(({ actionSheetRef, idx }: any) => ({ animation, open,
       <Text style={{ fontSize: 36 }}>GO!</Text>
     </TouchableOpacity>
     <TouchableOpacity
-      onPress={() => actionSheetRef.current?.show()}
+      onPress={pipe(
+        () => actionSheetRef.current?.show(),
+        ()=> addMenuToActionSheet({dispatch})
+      )}
       style={[styles.FABButton, { backgroundColor: '#ffa500' }]}
     >
       <SvgPlus />
@@ -185,73 +124,33 @@ const HeaderFooter = curry(({ actionSheetRef, idx }: any) => ({ animation, open,
 ));
 
 
-export default ({ actionSheetRef }: any) => {
-  const [state, dispatch]  = converge(
-    curry(useReducer),
-    [
-      always(evolveInitialState), clone, always(assoc(
-        'fields',
-        __,
-        {}
-      ))
-    ]
-  )(initialState.columns)
-  // const state = initialState;
-  // const dispatch = () => ({})
-  return (
+export default ({ actionSheetRef, dispatch, state }: any) => (
     <>
       <ScrollView>
-        {state.fields.map((
+        {state.columns.map((
           item: any, idx: number
-        )=>(<Collapse
-          key={idx}
-          idx={idx}
-          duration={200}
-          Header={HeaderBody({
-            ...{
-              key: `header_${idx}`,
-              idx,
-              dispatch,
-              circle: getIconByType(item),
-              label: path(
-                ['label', 'value'],
-                item
-              ),
-              name: path(
-                ['name', 'value'],
-                item
-              ),
-            },
-          })}
-        >
-          <Fields key={idx} {...{ state: pickFieldsByType(item), dispatch, idx }} />
-        </Collapse>))
-        }
-        {/* <FlatList
-          keyExtractor={(item) => item}
-          data={state.fields}
-          extraData={state.fields}
-          renderItem={({ item, index: idx }) => (
-          )}
-        /> */}
+        )=>(
+          <Collapse
+            key={idx}
+            idx={idx}
+            duration={200}
+            Header={HeaderBody({ key: `header_${idx}`, idx, dispatch, items: item.head })}
+          >
+            <Fields key={idx} {...{ fields: item.body, dispatch, idx }} />
+          </Collapse>
+        ))}
       </ScrollView>
       <Collapse
-        style={{
-          flex: 1,
-          justifyContent: 'space-between',
-          flexDirection: 'row',
-          height: 50,
-          alignItems: 'flex-end',
-        }}
+        style={styles.collapseFooter}
         idx={12341}
         duration={200}
-        Header={HeaderFooter({ actionSheetRef })}
+        Header={HeaderFooter({ actionSheetRef, dispatch })}
       >
         <Slider />
       </Collapse>
     </>
   )
-}
+
 const childMargin = {
   marginTop: 0,
   marginRight: 0,
@@ -260,6 +159,13 @@ const childMargin = {
 };
 
 const styles = StyleSheet.create({
+  collapseFooter: {
+    flex: 1,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    height: 50,
+    alignItems: 'flex-end',
+  },
   btnTitle: {
     color: 'white',
     fontWeight: 'bold',

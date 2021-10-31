@@ -1,3 +1,6 @@
+import { areas } from "./Fields";
+import { ColumnType } from './typing';
+
 export const exampleFields = [
   {
     type: {
@@ -5,37 +8,18 @@ export const exampleFields = [
       label: 'Type',
       rules: [['isEmpty', 'field is empty']],
       component: 'Select',
-      options: [
-        {
-          label: 'Custom',
-          value: 'custom',
-        },
-        {
-          label: 'Integer',
-          value: 'integer',
-        },
-        {
-          label: 'Dates',
-          value: 'dates',
-        },
-        {
-          label: 'Dictionary',
-          value: 'dictionary',
-        },
-      ],
+      options: areas,
       defaultValue: null,
-      value: 'custom',
+      value: ColumnType.CUSTOM,
     },
     name: {
       name: 'name',
       label: 'Name',
-      rules: [
-        ['isEmpty', 'field is empty'],
-        ['uniqNameByColumns', 'The name is not unique in the current scope'],
-      ],
+      rules: [['isEmpty', 'field is empty'], ['uniqNameByColumns', 'The name is not unique in the current scope'],],
       component: 'Input',
       defaultValue: 'asdfasf',
       value: 'city',
+      edit: false
     },
     label: {
       name: 'label',
@@ -44,6 +28,7 @@ export const exampleFields = [
       component: 'Input',
       defaultValue: null,
       value: 'city',
+      edit: false
     },
     collect: {
       name: 'collect',

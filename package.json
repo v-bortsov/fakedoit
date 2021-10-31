@@ -13,6 +13,8 @@
   },
   "scripts": {
     "start": "lerna run start --parallel --stream --scope fakedoit --scope pm2graphql",
+    "web:start": "lerna run start --parallel --stream --scope fakedoit --scope fakedoit",
+    "sonar": "node ./packages/client/sonar-project.js",
     "test": "lerna run test --stream"
   },
   "dependencies": {

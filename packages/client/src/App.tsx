@@ -1,74 +1,131 @@
-import React, {useRef, useState} from 'react';
-import {hot} from 'react-hot-loader/root';
-import {Dimensions, Text, SafeAreaView, ScrollView,  StyleSheet,  TextInput, TouchableOpacity, View} from 'react-native';
+import { assoc, assocPath, clone, converge, ifElse, pair, path, pathEq, pipe, prop, tap } from 'ramda';
+import React, { useRef } from 'react';
+import { hot } from 'react-hot-loader/root';
+import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { GeneratorState } from '../react-app-env';
+import { makeInstance } from './business';
 import ActionSheet from './components/actionsheet/ActionSheet';
+import { Dispatch } from './constants/Actions';
+import { ConfigContext, configInitialState } from './context';
 import Home from './screens/Home';
+import { loggerAfter, loggerBefore, useReducerWithMiddleware } from './store/store';
+import { evolveInitialState, getReactComponentFromCollect } from './utils';
 const { height } = Dimensions.get('window');
 const colors = ['#4a4e4d', '#0e9aa7', '#3da4ab', '#f6cd61', '#fe8a71'];
 
 // const AnimatedView = Animated.createAnimatedComponent(View);
-
+export const reduceConfig = pipe(
+  pair,
+  ifElse(
+    pathEq(
+      [1, 'type'],
+      'actionSheet'
+    ),
+    converge(
+      assocPath([0, 'actionSheet']),
+      [path([1, 'value']), clone]
+    ),
+    clone
+  ),
+  tap(x => console.log(
+    'configState',
+    x
+  )),
+  prop<any>(0)
+)
 const App: React.FC<any> = (props: any) => {
   const actionSheetRef = useRef(null);
+
+  // const [state, dispatch] = converge(
+  //   curry(useReducer),
+  //   [always(evolveInitialState), clone, always(clone)]
+  // )(configInitialState)
+  // @ts-ignore
+  const [state, dispatch]: [GeneratorState, Dispatch] = useReducerWithMiddleware(evolveInitialState, configInitialState, loggerBefore, loggerAfter)
+
+
+  console.log(state)
   return (
     <SafeAreaView style={styles.safeareview}>
-      <Home actionSheetRef={actionSheetRef} />
-      <ActionSheet
-        initialOffsetFromBottom={1}
-        ref={actionSheetRef}
-        statusBarTranslucent
-        bounceOnOpen={true}
-        drawUnderStatusBar={true}
-        bounciness={4}
-        gestureEnabled={true}
-        defaultOverlayOpacity={0.3}
-      >
-        <View
-          style={{paddingHorizontal: 12}}
+      <ConfigContext.Provider value={{state, dispatch}}>
+        <Home actionSheetRef={actionSheetRef} dispatch={dispatch} state={state} />
+        <ActionSheet
+          initialOffsetFromBottom={1}
+          ref={actionSheetRef}
+          statusBarTranslucent
+          bounceOnOpen={true}
+          drawUnderStatusBar={true}
+          bounciness={4}
+          gestureEnabled={true}
+          defaultOverlayOpacity={0.3}
         >
-          <View style={styles.container}>
-            {colors.map((color) => (
-              <TouchableOpacity
-                onPress={() => {
-                  actionSheetRef.current?.hide();
-                }}
-                key={color}
-                style={[styles.circle, {backgroundColor: color}]}
-              />
-            ))}
-          </View>
-          <ScrollView
-            nestedScrollEnabled
-            onMomentumScrollEnd={() => {
-              actionSheetRef.current?.handleChildScrollEnd();
-            }}
-            style={styles.scrollview}
+          <View
+            style={{paddingHorizontal: 12}}
           >
-            <TextInput
-              style={styles.input}
-              multiline={true}
-              placeholder="Write your text here"
-            />
-            <View>
-              {items.map((item) => (
+            <ConfigContext.Consumer>
+              {({state, dispatch}: any) => pipe(
+                converge(
+                  makeInstance,
+                  [
+                    getReactComponentFromCollect, pipe(
+                      prop('data'),
+                      assoc(
+                        'state',
+                        state
+                      ),
+                      assoc(
+                        'dispatch',
+                        dispatch
+                      )
+                    )
+                  ]
+                )
+              )(state.actionSheet)}
+              {/* <View style={styles.container}>
+              {colors.map((color) => (
                 <TouchableOpacity
-                  key={item}
                   onPress={() => {
                     actionSheetRef.current?.hide();
                   }}
-                  style={styles.listItem}
-                >
-                  <View
-                    style={[styles.placeholder, {width: item,},]}
-                  />
-                  <View style={styles.btnLeft} />
-                </TouchableOpacity>
+                  key={color}
+                  style={[styles.circle, {backgroundColor: color}]}
+                />
               ))}
             </View>
-            <View style={styles.footer} />
-          </ScrollView>
-        </View>
-      </ActionSheet>
+            <ScrollView
+              nestedScrollEnabled
+              onMomentumScrollEnd={() => {
+                actionSheetRef.current?.handleChildScrollEnd();
+              }}
+              style={styles.scrollview}
+            >
+              <TextInput
+                style={styles.input}
+                multiline={true}
+                placeholder="Write your text here"
+              />
+              <View>
+                {items.map((item) => (
+                  <TouchableOpacity
+                    key={item}
+                    onPress={() => {
+                      actionSheetRef.current?.hide();
+                    }}
+                    style={styles.listItem}
+                  >
+                    <View
+                      style={[styles.placeholder, {width: item,},]}
+                    />
+                    <View style={styles.btnLeft} />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <View style={styles.footer} />
+            </ScrollView> */}
+            </ConfigContext.Consumer>
+          </View>
+        </ActionSheet>
+      </ConfigContext.Provider>
     </SafeAreaView>
   );
 };

@@ -1,16 +1,16 @@
 import { theme } from '../../constants/Colors';
 import { omit, pipe, tap, pick } from 'ramda';
 import React, { useState } from 'react';
-import { TextInput, StyleSheet, Platform, Text, View, Pressable } from 'react-native';
+import { TextInput, StyleSheet, Platform, Text, View, Pressable, StyleProp, TextInputComponent, TextInputProps } from 'react-native';
 import Hoverable from './Hoverable';
 import SvgEdit from '../icons/SvgEdit';
 
-export const TextInputHover = ({ text, onChange, height, width, fontSize }: any) => {
-  const [toggle, setToggle] = useState(false);
-  return (
+export const TextInputHover = ({ text, onChange, setToggle, edit, height, width, fontSize }: any) => 
+  // const [toggle, setToggle] = useState(false);
+  (
     <View>
       {' '}
-      {toggle ? (
+      {edit ? (
         <Input
           style={{
             padding: 5,
@@ -48,8 +48,7 @@ export const TextInputHover = ({ text, onChange, height, width, fontSize }: any)
               //   size={fontSize}
               //   name={"file-edit"}
               // />
-
-                <Pressable onPress={() => setToggle(!toggle)}>
+                <Pressable onPress={() => setToggle(!edit)}>
                   <SvgEdit height={height} width={width}  />
                 </Pressable>
               )}
@@ -58,10 +57,16 @@ export const TextInputHover = ({ text, onChange, height, width, fontSize }: any)
         </Hoverable>
       )}
     </View>
-  );
-};
+  )
+;
+interface IInput {
+  style: any
+  onChangeText: ()=>void
+  placeholder: string
+  value: string
+}
 
-export const Input = (props: any) => (
+export const Input = (props: TextInputProps) => (
   <View
     style={[
       styles.containerInput, omit(

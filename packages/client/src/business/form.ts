@@ -48,9 +48,16 @@ import {
   currencies,
   getCitiesByCountry,
   languages
-} from './network';
-// import { changeColumnByName } from "../features/generator/generatorSlice";
-export const selectByType = cond<string, any[]>([[equals('custom'), always(customFields)], [equals('integer'), always(integerFields)], [equals('dates'), always(dateFields)], [equals('dictionary'), always(dictionaryFields)], [T, always([])],]);
+} from '../services/network';
+import { ColumnType } from '../constants/typing';
+
+export const getFieldsByType = cond<ColumnType, any>([
+  [equals<ColumnType>(ColumnType.CUSTOM), always(customFields)],
+  [equals<ColumnType>(ColumnType.NUMBER), always(integerFields)],
+  [equals<ColumnType>(ColumnType.DATE), always(dateFields)],
+  [equals<ColumnType>(ColumnType.DICTIONARY), always(dictionaryFields)],
+  [T, always([])]
+]);
 
 export const timestampToMoment = when(
   has('startDay'),
@@ -68,7 +75,7 @@ export const onFinish = curry((
   when(
     pathEq(
       ['type', 'value'],
-      'custom'
+      ColumnType.CUSTOM
     ),
     over(
       lensPath(['collect', 'value']),
@@ -127,15 +134,12 @@ const loadDictionaryData = curry((
           always<any>(currencies),
           call
         )
-      ],
-      ,
-      [
+      ], [
         equals('cities'), pipe(
           always({ countryId: 176, limit: 10 }),
           getCitiesByCountry
         ),
-        ,
-      ],
+      ]
     ]),
     andThen(converge(
       ext,
@@ -173,9 +177,7 @@ export const extractValueOfComponent = curry((
       always(event),
       loadDictionaryData(dispatch)
     ),
-  ],
-  ,
-  [
+  ], [
     propEq(
       'component',
       'DatePicker'
@@ -184,23 +186,20 @@ export const extractValueOfComponent = curry((
       //   e,
       //   'DD.MM.YYYY'
       // )
-    ),
-    ,
+    )
   ], [
     pipe(
       prop('component'),
       includes(
         __,
-        ['Input', 'InputNumber', 'Select', 'TextArea', 'WeekDays', 'Multislider',]
+        ['Input', 'InputNumber', 'Select', 'TextArea', 'WeekDays', 'Multislider']
       )
-    ), compose(always(event)),
-    ,
+    ), compose(always(event))
   ],
-  ,
 ])(props));
 // (component: any)=> React.createElement(component)
 export const getReactComponentFromCollect = pipe<Field, any, JSX.Element>(
-  prop('component'),
+  path(['component', 'name']),
   prop(
     __,
     components
@@ -208,8 +207,8 @@ export const getReactComponentFromCollect = pipe<Field, any, JSX.Element>(
 );
 export const addValueAndOnChange: any = (
   dispatch: AppDispatch, idx: number
-) => chain(
-  assoc('onChange'),
+) => chain<any,any>(
+  assoc<any>('onChange'),
   curry((
     props: Field, e: any
   ) => pipe(
@@ -234,5 +233,5 @@ export const addValueAndOnChange: any = (
     ),
     // changeColumnByName,
     dispatch
-  )(props))
+  )(props.component))
 );

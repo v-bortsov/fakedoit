@@ -1,4 +1,4 @@
- 
+
 export function downloadObjectAsJson(
   exportObj: any[], exportName: string
 ): void {
