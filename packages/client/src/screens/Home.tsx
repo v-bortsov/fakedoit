@@ -1,24 +1,29 @@
+import { ColumnTypeBase, GeneratorState } from 'packages/client/react-app-env';
 import {
-  curry, pipe
+  curry, pipe, tap
 } from 'ramda';
-import React from 'react';
+import React, { MutableRefObject } from 'react';
 import {
-  Animated, Pressable, ScrollView, StyleSheet,
+  Animated, Button, Pressable, ScrollView, StyleSheet,
   Text, TouchableOpacity, View
 } from 'react-native';
 import Fields from '../business/field';
 import Collapse from '../components/Effects/Collapse';
+import Manual, {ExampleManual} from '../components/forms/Manual';
 import SvgArrowDown from '../components/icons/SvgArrowDown';
 import SvgKey from '../components/icons/SvgKey';
 import SvgOption from '../components/icons/SvgOption';
 import SvgPlus from '../components/icons/SvgPlus';
 import Slider from '../components/Primitives/Slider';
-import { TextInputHover } from '../components/Primitives/TextInput';
-import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue } from '../constants/Actions';
+import { Input, TextInputHover } from '../components/Primitives/TextInput';
+import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue, Dispatch } from '../constants/Actions';
 import { theme } from '../constants/Colors';
-import { MenuActionAddColumn } from '../constants/Fields';
-
-const HeaderBody = curry(({ items: [type, name, label], dispatch, idx }: any) => ({ animation, open, setOpen }: any) => (
+import { headType } from '../constants/Fields';
+const HeaderBody = curry(({ items: [
+  type,
+  name,
+  label
+], dispatch, idx }: any) => ({ animation, open, setOpen }: any) => (
   <Pressable
     onPress={()=>setOpen(!open)}
     style={[
@@ -32,17 +37,25 @@ const HeaderBody = curry(({ items: [type, name, label], dispatch, idx }: any) =>
       <Text>{type.name}</Text>
     </View>
     <View style={styles.titleSummary}>
-      {[['name', name.label, name.component.edit, 30, 24, 30], ['label', label.label, label.component.edit, 18, 20, 20]].map(([prop, text, toggle, height, fontSize, width])=>
-        <TextInputHover
-          text={text}
-          height={height}
-          fontSize={fontSize}
-          edit={toggle}
-          width={width}
-          setToggle={()=>updColumnEdit({dispatch, key: 'columns', idx, prop, value: toggle })}
-          onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, key: 'columns', idx, prop, value: value.currentTarget.value})}
-        />
-      )}
+      {[['name', name.label, name.component.edit, 30, 24, 30], ['label', label.label, label.component.edit, 18, 20, 20]].map((
+        [
+          prop,
+          text,
+          toggle,
+          height,
+          fontSize,
+          width
+        ], key
+      )=> <TextInputHover
+        key={key}
+        text={text}
+        height={height}
+        fontSize={fontSize}
+        edit={toggle}
+        width={width}
+        setToggle={()=>updColumnEdit({dispatch, key: 'columns', idx, prop, value: toggle })}
+        onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, key: 'columns', idx, prop, value: value.currentTarget.value})}
+      />)}
     </View>
     <View style={styles.keyIconSummary}>
       <SvgKey />
@@ -79,7 +92,10 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
     }}
   >
     <TouchableOpacity
-      onPress={pipe(() => actionSheetRef.current?.show(), ()=> startGen({dispatch}))}
+      onPress={pipe(
+        () => actionSheetRef.current?.show(),
+        ()=> startGen({dispatch})
+      )}
       style={[
         styles.FABButton, {
           backgroundColor: '#ffa500',
@@ -123,33 +139,38 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
   </View>
 ));
 
+export interface IHomePropsScreen {
+  actionSheetRef: MutableRefObject<null>
+  dispatch: Dispatch
+  state: GeneratorState
+}
 
-export default ({ actionSheetRef, dispatch, state }: any) => (
-    <>
-      <ScrollView>
-        {state.columns.map((
-          item: any, idx: number
-        )=>(
-          <Collapse
-            key={idx}
-            idx={idx}
-            duration={200}
-            Header={HeaderBody({ key: `header_${idx}`, idx, dispatch, items: item.head })}
-          >
-            <Fields key={idx} {...{ fields: item.body, dispatch, idx }} />
-          </Collapse>
-        ))}
-      </ScrollView>
-      <Collapse
-        style={styles.collapseFooter}
-        idx={12341}
-        duration={200}
-        Header={HeaderFooter({ actionSheetRef, dispatch })}
-      >
-        <Slider />
-      </Collapse>
-    </>
-  )
+export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
+  <>
+    <ScrollView>
+      {state.columns.map((
+        item: ColumnTypeBase, idx: number
+      )=>(
+        <Collapse
+          key={idx}
+          idx={idx}
+          duration={200}
+          Header={HeaderBody({ key: `header_${idx}`, idx, dispatch, items: item.head })}
+        >
+          <ExampleManual/>
+        </Collapse>
+      ))}
+    </ScrollView>
+    <Collapse
+      style={styles.collapseFooter}
+      idx={12341}
+      duration={200}
+      Header={HeaderFooter({ actionSheetRef, dispatch })}
+    >
+      <Slider />
+    </Collapse>
+  </>
+)
 
 const childMargin = {
   marginTop: 0,

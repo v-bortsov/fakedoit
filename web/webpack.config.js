@@ -21,7 +21,7 @@ module.exports = {
     isDevEnv && 'webpack/hot/dev-server.js', isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=true', path.join(
       rootDir,
       './packages/client/index.web.ts'
-    ),
+    )
   ].filter(Boolean),
   mode: webpackEnv,
   optimization: {
@@ -120,7 +120,7 @@ module.exports = {
           // silent: false,
           transpileOnly: true,
           // declaration: true,
-          configFile: __dirname + '/../tsconfig.json',
+          configFile: __dirname + '/../packages/client/tsconfig.json',
           errorFormatter: function customErrorFormatter(
             error, colors
           ) {

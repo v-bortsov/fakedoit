@@ -1,6 +1,6 @@
 
 {
-  "files": ["./packages/client/react-app-env.d.ts", "./packages/server/typing.d.ts"],
+  // "files": ["./packages/client/react-app-env.d.ts", "./packages/server/typing.d.ts"],
   "compilerOptions": {
     /* Basic Options */
     "target": "esnext" /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */,
@@ -60,7 +60,20 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    
+    "baseUrl": ".",
+    // "paths": {
+    //   "@monorepo/*": [
+    //     "packages/*/src/App.tsx"
+    //   ]
+    // }
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  // "references": [
+  //   {
+  //     "path": "packages/client"
+  //   },
+  //   {
+  //     "path": "packages/server"
+  //   }
+  // ],
 }

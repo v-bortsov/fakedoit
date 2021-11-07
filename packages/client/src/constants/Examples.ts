@@ -1,4 +1,4 @@
-import { areas } from "./Fields";
+import { areas } from './Fields';
 import { ColumnType } from './typing';
 
 export const exampleFields = [

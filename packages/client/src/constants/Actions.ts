@@ -113,7 +113,8 @@ export const updFieldValueByColumn = curry(({dispatch, path, value}: DispathPara
 export const addColumn = curry(({dispatch, type}): DispathParams => dispatch({
   type: Actions.ADD_COLUMN,
   payload: {
-    type
+    type, 
+    path: ['columns']
   }
 }))
 export const startGen = ({dispatch}): DispathParams => dispatch({

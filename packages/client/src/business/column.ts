@@ -1,23 +1,24 @@
-import { map, when, complement, propEq, converge, mergeRight, clone, pipe, prop, objOf, cond, ifElse, anyPass, pathEq, mergeWith, pluck, append, __, chain, curry, assocPath, indexBy, over, lensPath, path, hasPath, always, assoc, Placeholder, mapObjIndexed, flip, concat, both } from "ramda"
-import {  Props, Collapse, ColumnType } from "../constants/typing"
-import { random, getFieldsByType, uuidv4 } from "../utils"
+import { map, when, complement, propEq, converge, mergeRight, clone, pipe, prop, objOf, cond, ifElse, anyPass, pathEq, mergeWith, pluck, append, __, chain, curry, assocPath, indexBy, over, lensPath, path, hasPath, always, assoc, Placeholder, mapObjIndexed, flip, concat, both } from 'ramda'
+import {  Props, Collapse, ColumnType } from '../constants/typing'
+import { random, getFieldsByType, uuidv4 } from '../utils'
 
-export const assocPathConverge = (target: string[], source: string[]): any=>
-  converge(
-    assocPath(target),
-    [
-      path(source),
-      clone
-    ]
-  )
+export const assocPathConverge = (
+  target: string[], source: string[]
+): any=> converge(
+  assocPath(target),
+  [path(source), clone]
+)
 
- const addValueAndGroupBy = pipe(
+const addValueAndGroupBy = pipe(
   map(when(
     complement(propEq(
       'name',
       'startDay'
     )),
-    assocPathConverge(['component','value'], ['component','defaultValue'])
+    assocPathConverge(
+      ['component','value'],
+      ['component','defaultValue']
+    )
   )),
   indexBy(prop(Props.NAME))
 )
@@ -40,37 +41,34 @@ const pathLabel: ['head', Props, Props] = ['head', Props.LABEL, Props.VALUE]
 const pathType: ['head', Props, Props] = ['head', Props.TYPE, Props.VALUE]
 const pathLimit: ['body', Props, Props] = ['body', Props.LIMIT, Props.VALUE]
 
-const transformPropValue: transformPropValue = pipe(
-  ifElse(
-    anyPass([
-      pathEq(
-        pathType,
-        ColumnType.CUSTOM
-      ), pathEq(
-        pathType,
-        ColumnType.DICTIONARY
-      )
-    ]),
-    clone,
-    converge(
-      mergeWith(mergeRight),
-      [
-        clone, pipe(
-          pluck('value'),
-          bindTypeToHandler,
-          map(objOf('value'))
-        )
-      ]
+const transformPropValue: transformPropValue = pipe(ifElse(
+  anyPass([
+    pathEq(
+      pathType,
+      ColumnType.CUSTOM
+    ), pathEq(
+      pathType,
+      ColumnType.DICTIONARY
     )
+  ]),
+  clone,
+  converge(
+    mergeWith(mergeRight),
+    [
+      clone, pipe(
+        pluck('value'),
+        bindTypeToHandler,
+        map(objOf('value'))
+      )
+    ]
   )
-)
+))
 
 const getColumnStructure: getColumnStructure = pipe(
   converge(
     assocPath(pathType),
     [
-      clone,
-      pipe(
+      clone, pipe(
         getFieldsByType,
         mapObjIndexed(addValueAndGroupBy),
       )
@@ -81,7 +79,10 @@ const getColumnStructure: getColumnStructure = pipe(
     lensPath(pathName),
     uuidv4
   ),
-  assocPathConverge(pathLabel, pathName),
+  assocPathConverge(
+    pathLabel,
+    pathName
+  ),
   when(
     hasPath(pathLimit),
     over(
@@ -91,15 +92,9 @@ const getColumnStructure: getColumnStructure = pipe(
   ),
   when(
     both(
-      hasPath([
-        'body',
-        'startDay',
-      ]),
-      pathEq([
-          'body',
-          'startDay',
-          'value',
-        ],
+      hasPath(['body', 'startDay',]),
+      pathEq(
+        ['body', 'startDay', 'value',],
         undefined
       )
     ),
@@ -114,10 +109,8 @@ type AddColumn = (pointers: [ColumnType, Collapse[]]) => Collapse[]
 type getColumnStructure = (x: ColumnType) => Collapse
 type transformPropValue = (x: Collapse) => Collapse
 
-export const addColumn: AddColumn = (
-  [type, columns]
-) => pipe<ColumnType, Collapse, Collapse, Collapse[]>(
-    getColumnStructure,
-    transformPropValue,
-    (column: Collapse) => [...columns, column]
-  )(type)
+export const addColumn: AddColumn = ([type, columns]) => pipe<ColumnType, Collapse, Collapse, Collapse[]>(
+  getColumnStructure,
+  transformPropValue,
+  (column: Collapse) => [...columns, column]
+)(type)

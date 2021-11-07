@@ -1,5 +1,4 @@
-import { ColumnTypeBase, ColumnTypeNumber, ColumnTypeDate, GeneratorState, Field } from '../../react-app-env'
-
+import { ColumnTypeBase, ColumnTypeNumber, ColumnTypeDate, Field } from '../../react-app-env'
 
 export enum ColumnType {
    CUSTOM = 'CUSTOM',
@@ -12,9 +11,14 @@ export enum ColumnType {
 type ColumnList = ColumnTypeBase | ColumnTypeNumber | ColumnTypeDate
 
 type ScreensList = ScreenHome | ScreenError
+
 export interface Collapse {
    head: [Field<ComponentSelectBase>, Field<ComponentInputNumberBase>, Field<ComponentInputNumberBase>]
-   body: any[]
+}
+export interface ManualCollapseForm extends Collapse{
+   body: {
+      collect: Field<ComponentTextAreaBase>
+   }
 }
 export enum Props {
    NAME = 'name',
@@ -28,12 +32,15 @@ export enum Components {
    ActionSheet = 'ActionSheet',
    Menu = 'Menu',
    Input = 'Input',
+   InputWithButton = 'InputWithButton',
    TextArea = 'TextArea',
    Select = 'Select',
    InputNumber = 'InputNumber',
    DatePicker = 'DatePicker',
    Weekdays = 'Weekdays',
    ButtonGroup = 'ButtonGroup',
+   /** FormComponent */
+   // Manual = 'Manual'
 }
 /** End AllList */
 interface ComponentBase {

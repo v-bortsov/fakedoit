@@ -1,29 +1,36 @@
 import { theme } from '../../constants/Colors';
 import { omit, pipe, tap, pick } from 'ramda';
-import React, { useState } from 'react';
-import { TextInput, StyleSheet, Platform, Text, View, Pressable, StyleProp, TextInputComponent, TextInputProps } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { TextInput, StyleSheet, Platform, Text, View, Pressable, StyleProp, TextInputComponent, TextInputProps, Button } from 'react-native';
 import Hoverable from './Hoverable';
 import SvgEdit from '../icons/SvgEdit';
 
-export const TextInputHover = ({ text, onChange, setToggle, edit, height, width, fontSize }: any) => 
+
+export interface TextInputHoverFuncProps {
+  onChange: (value: React.FormEvent<HTMLInputElement>)=>void
+  setToggle: ()=>void
+}
+
+export interface TextInputHoverProps extends TextInputHoverFuncProps {
+  text: string
+  edit: boolean
+  height: number
+  width: number
+  fontSize: number
+}
+export const TextInputHover: React.FC<TextInputHoverProps> = ({ text, onChange, setToggle, edit, height, width, fontSize }) => 
   // const [toggle, setToggle] = useState(false);
   (
     <View>
       {' '}
       {edit ? (
         <Input
-          style={{
-            padding: 5,
-            borderRadius: 10,
-            borderColor: theme.colors.dart,
-            backgroundColor: '#fff',
-            minWidth: 200,
-          }}
+          style={styles.inputHover}
           onKeyPress={(e: any) => e.nativeEvent.key === 'Enter' ? setToggle(false) : null}
           value={text}
           onChange={onChange}
           autoFocus
-          InputRightElement={
+          rightElement={
             <SvgEdit />
           }
         />
@@ -58,15 +65,24 @@ export const TextInputHover = ({ text, onChange, setToggle, edit, height, width,
       )}
     </View>
   )
-;
-interface IInput {
+
+export interface InputFuncProps {
+  onChangeText?: ()=>void
+  onEndEditing?: ()=>void
+}
+export interface InputProps extends InputFuncProps {
   style: any
-  onChangeText: ()=>void
-  placeholder: string
-  value: string
+  placeholder?: string
+  value?: string
+  ref?: any
+  rightElement?: JSX.Element
 }
 
-export const Input = (props: TextInputProps) => (
+type RemoveKindField<Type> = {
+  [Property in keyof Type]:  Extract<InputProps, Function>
+};
+
+export const Input = (props: InputProps) => (
   <View
     style={[
       styles.containerInput, omit(
@@ -82,14 +98,41 @@ export const Input = (props: TextInputProps) => (
           props.style
         )
       ]}
-      {...omit(
-        ['InputRightElement', 'style'],
-        props
-      )}
+      {...props.ref 
+        ? {ref: props.ref}
+        : omit(
+            ['InputRightElement', 'style', 'ref'],
+            props
+          )
+      }
     />
-    {props.InputRightElement}
+    {props.rightElement && props.rightElement}
   </View>
 );
+export interface InputWithButtonFuncProps extends InputProps {
+  onPress: ()=>void
+}
+export interface InputWithButtonProps extends InputWithButtonFuncProps {
+  title: string
+  icon?: string
+  color?: string
+}
+// useRef
+// useState
+export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWithButtonProps)=> (
+  <Input 
+    {...omit(
+      ['title', 'onPress', 'color'],
+      props
+    )}
+    rightElement={
+      <Button
+        {...pick(['title', 'onPress', 'color']), props}
+        accessibilityLabel="Learn more about this purple button"
+      />
+    }
+  />
+)
 
 const styles = StyleSheet.create({
   containerInput: {
@@ -105,6 +148,14 @@ const styles = StyleSheet.create({
         outlineWidth: 0,
       },
     }),
+    padding: 0
+  },
+  inputHover: {
+    padding: 5,
+    borderRadius: 10,
+    borderColor: theme.colors.dart,
+    backgroundColor: '#fff',
+    minWidth: 200,
   },
   editField: {
     flex: 1,

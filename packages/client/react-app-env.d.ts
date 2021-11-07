@@ -1,6 +1,5 @@
 // import { ColumnType } from './src/constants/typing';
 /// <reference types="react-scripts" />
-type AppDispatch = ThunkDispatch<RootState, any, AnyAction>;
 
 type TypeLimiting = null | number | ColumnType.name;
 
@@ -15,6 +14,7 @@ export declare type Tuple<T, N extends number> = N extends N
 type _TupleOf<T, N extends number, R extends unknown[]> = R['length'] extends N
   ? R
   : _TupleOf<T, N, [T, ...R]>;
+
 export enum Format {
   json = 'json',
   csv = 'csv',
@@ -24,7 +24,7 @@ export const type = <const>['json', 'csv'];
 export declare interface GeneratorState {
   theme: 'dark' | 'light';
   lang: string;
-  columns: ColumnTypeBase[];
+  columns: Collapse[];
   rows: any[];
   limiting: TypeLimiting;
   loading: boolean | undefined;
@@ -109,7 +109,7 @@ type FormField = {
   fields: Field[];
 };
 
-declare module 'ramda'{
+declare module 'ramda' {
   
 /**
  * Creates a new function that runs each of the functions supplied as parameters in turn,
@@ -156,5 +156,4 @@ declare module 'ramda'{
   export function pipe<V0, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(fn0: (x0: V0) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5, fn5: (x: T5) => T6, fn6: (x: T6) => T7, fn7: (x: T7) => T8, fn8: (x: T8) => T9, fn9: (x: T9) => T10): (x0: V0) => T10;
   export function pipe<V0, V1, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(fn0: (x0: V0, x1: V1) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5, fn5: (x: T5) => T6, fn6: (x: T6) => T7, fn7: (x: T7) => T8, fn8: (x: T8) => T9, fn9: (x: T9) => T10): (x0: V0, x1: V1) => T10;
   export function pipe<V0, V1, V2, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>(fn0: (x0: V0, x1: V1, x2: V2) => T1, fn1: (x: T1) => T2, fn2: (x: T2) => T3, fn3: (x: T3) => T4, fn4: (x: T4) => T5, fn5: (x: T5) => T6, fn6: (x: T6) => T7, fn7: (x: T7) => T8, fn8: (x: T8) => T9, fn9: (x: T9) => T10): (x0: V0, x1: V1, x2: V2) => T10;
-
 }

@@ -5,7 +5,7 @@ import {
   getCitiesByCountry,
 } from '../services/network';
 import { Actions } from './Actions';
-import { ColumnType } from './typing';
+import { ColumnType } from './typing.d';
 
 export const MenuActionAddColumn = [
   { icon: 'playlist-plus', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.CUSTOM }}, backgroundColor: '#b72424' },
@@ -27,6 +27,11 @@ export const areas = [{ label: 'Custom', value: ColumnType.CUSTOM }, { label: 'I
 export const dictionaries = [{ label: 'Cities', value: 'cities' }, { label: 'Countries', value: 'countries' }, { label: 'Languages', value: 'languages' }, { label: 'Currencies', value: 'currencies' },];
 // const { TextArea } = Input
 export const baseColumn = ['name', 'label', 'type', 'collect'];
+export enum headType {
+  TYPE = 0,
+  NAME = 1,
+  LABEL = 2
+}
 export const unionFields = {
   head: [
     {
@@ -58,18 +63,18 @@ export const unionFields = {
       }
     }
   ],
-  body: [
-    {
+  body: {
+    collect: {
       name: 'collect',
       label: 'Collect',
       component: {
         rules: [],
-        name: 'TextArea',
+        name: 'Manual',
         defaultValue: [],
         rows: 4,
       }
     }
-  ]
+  }
 }
 
 export const customFields = unionFields;
