@@ -1,5 +1,5 @@
-import React from "react"
-import { View } from "react-native"
+import React from 'react'
+import { View } from 'react-native'
 
 interface IDateForm {
   addItem: React.FC<any>
@@ -8,12 +8,12 @@ interface IDateForm {
 }
 function DateForm({addItem, output, editableItem}: IDateForm){
   return <View>
-          <View>
-            {addItem}
-          </View>
-          <View>
-            {output}
-          </View>
-        </View>
+    <View>
+      {addItem}
+    </View>
+    <View>
+      {output}
+    </View>
+  </View>
 }
 export default DateForm
