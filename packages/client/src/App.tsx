@@ -2,28 +2,45 @@ import { assoc, assocPath, clone, converge, ifElse, pair, path, pathEq, pipe, pr
 import React, { useRef } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
-import { GeneratorState } from '../react-app-env';
 import { makeInstance } from './business';
 import ActionSheet from './components/actionsheet/ActionSheet';
-import { Dispatch } from './constants/Actions';
 import { ConfigContext, configInitialState } from './context';
 import Home from './screens/Home';
+import { home } from './store';
 import { loggerAfter, loggerBefore, useReducerWithMiddleware } from './store/store';
 import { evolveInitialState, getReactComponentFromCollect } from './utils';
 const { height } = Dimensions.get('window');
-const colors = ['#4a4e4d', '#0e9aa7', '#3da4ab', '#f6cd61', '#fe8a71'];
+const colors = [
+  '#4a4e4d',
+  '#0e9aa7',
+  '#3da4ab',
+  '#f6cd61',
+  '#fe8a71'
+];
 
 // const AnimatedView = Animated.createAnimatedComponent(View);
 export const reduceConfig = pipe(
   pair,
   ifElse(
     pathEq(
-      [1, 'type'],
+      [
+        1,
+        'type'
+      ],
       'actionSheet'
     ),
     converge(
-      assocPath([0, 'actionSheet']),
-      [path([1, 'value']), clone]
+      assocPath([
+        0,
+        'actionSheet'
+      ]),
+      [
+        path([
+          1,
+          'value'
+        ]),
+        clone
+      ]
     ),
     clone
   ),
@@ -41,8 +58,12 @@ const App: React.FC<any> = (props: any) => {
   //   [always(evolveInitialState), clone, always(clone)]
   // )(configInitialState)
   // @ts-ignore
-  const [state, dispatch]: [GeneratorState, Dispatch] = useReducerWithMiddleware(evolveInitialState, configInitialState, loggerBefore, loggerAfter)
-
+  const [state, dispatch]: [GeneratorState, Dispatch] = useReducerWithMiddleware(
+    home,
+    configInitialState,
+    [loggerBefore],
+    [loggerAfter]
+  )
 
   console.log(state)
   return (
@@ -63,24 +84,23 @@ const App: React.FC<any> = (props: any) => {
             style={{paddingHorizontal: 12}}
           >
             <ConfigContext.Consumer>
-              {({state, dispatch}: any) => pipe(
-                converge(
-                  makeInstance,
-                  [
-                    getReactComponentFromCollect, pipe(
-                      prop('data'),
-                      assoc(
-                        'state',
-                        state
-                      ),
-                      assoc(
-                        'dispatch',
-                        dispatch
-                      )
+              {({state, dispatch}: any) => pipe(converge(
+                makeInstance,
+                [
+                  getReactComponentFromCollect,
+                  pipe(
+                    prop('data'),
+                    assoc(
+                      'state',
+                      state
+                    ),
+                    assoc(
+                      'dispatch',
+                      dispatch
                     )
-                  ]
-                )
-              )(state.actionSheet)}
+                  )
+                ]
+              ))(state.actionSheet)}
               {/* <View style={styles.container}>
               {colors.map((color) => (
                 <TouchableOpacity
@@ -131,7 +151,36 @@ const App: React.FC<any> = (props: any) => {
 };
 
 export default hot(App);
-const items = [100, 60, 150, 200, 170, 80, 41, 101, 61, 151, 202, 172, 82, 43, 103, 64, 155, 205, 176, 86, 46, 106, 66, 152, 203, 173, 81, 42,];
+const items = [
+  100,
+  60,
+  150,
+  200,
+  170,
+  80,
+  41,
+  101,
+  61,
+  151,
+  202,
+  172,
+  82,
+  43,
+  103,
+  64,
+  155,
+  205,
+  176,
+  86,
+  46,
+  106,
+  66,
+  152,
+  203,
+  173,
+  81,
+  42,
+];
 
 const styles = StyleSheet.create({
   footer: {

@@ -1,8 +1,9 @@
 import { always, append, assoc, chain, clone, converge, curry, filter, flatten, is, length, map, mergeRight, objOf, of, omit, path, pick, pipe, pluck, prop, propEq, reject, slice, splitAt, transpose, values, when, zipObj, __, xprod, adjust, findIndex, tap, cond, find, hasPath, identity, pathEq, product, T } from 'ramda';
+import { ObjectLiteral } from 'src/types/react-app-env';
+
 // import { multipledParts } from 'ramda-combo';
 // import {Maybe} from 'ramda-fantasy'
-import { ColumnTypeBase, Field, ObjectLiteral, Option, OptionDate, OptionNumber, TypeLimiting } from '../../react-app-env';
-
+/* eslint array-element-newline: ["error", "never"] */
 const RF = require('ramda-fantasy'),
   Maybe = RF.Maybe,
   Just    = Maybe.Just,
@@ -12,7 +13,7 @@ const RF = require('ramda-fantasy'),
 // lenFunc("asdfasf")
 //   .map(<any>flatten)
 export const sliceAndTranspose = curry((
-  columns: ColumnTypeBase<OptionNumber | OptionDate | Option>[], multipled: any[], equalsName: any
+  columns: CollapseForm<FormTypes>[][], multipled: any[], equalsName: any
 ) => pipe(
   filter<any, any>(equalsName),
   path([0, 'collect']),
@@ -30,7 +31,7 @@ export const sliceAndTranspose = curry((
   ),
   transpose
 )(columns))
-export const multipleCount = pipe<any,any,any,any>(
+export const multipleCount = pipe<any,any,any,any,any>(
   filter(hasPath(['collect', 'value', 'length'])),
   map(path(['collect', 'value', 'length'])),
   values,
@@ -40,9 +41,9 @@ export const calcCount = (
   columns: any, limiting: (null | string | number)
 )=>cond([
   [is(Number), identity], [
-    is(String), pipe(
+    is(String), pipe<any,any,any,any,any>(
       pathEq(['name', 'value']),
-      find(
+      find<any>(
         __,
         columns
       ),

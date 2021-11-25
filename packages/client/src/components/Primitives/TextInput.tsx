@@ -1,14 +1,14 @@
+import { omit, pick } from 'ramda';
+import React from 'react';
+import { Button, Platform, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { theme } from '../../constants/Colors';
-import { omit, pipe, tap, pick } from 'ramda';
-import React, { useRef, useState } from 'react';
-import { TextInput, StyleSheet, Platform, Text, View, Pressable, StyleProp, TextInputComponent, TextInputProps, Button } from 'react-native';
-import Hoverable from './Hoverable';
 import SvgEdit from '../icons/SvgEdit';
+import Hoverable from './Hoverable';
 
 
 export interface TextInputHoverFuncProps {
   onChange: (value: React.FormEvent<HTMLInputElement>)=>void
-  setToggle: ()=>void
+  setToggle: (value: boolean)=>void
 }
 
 export interface TextInputHoverProps extends TextInputHoverFuncProps {
@@ -17,8 +17,10 @@ export interface TextInputHoverProps extends TextInputHoverFuncProps {
   height: number
   width: number
   fontSize: number
+  isStaticIcon: boolean
 }
-export const TextInputHover: React.FC<TextInputHoverProps> = ({ text, onChange, setToggle, edit, height, width, fontSize }) => 
+
+export const TextInputHover: React.FC<TextInputHoverProps> = ({ text, onChange, setToggle, edit, height, width, fontSize, isStaticIcon }) => 
   // const [toggle, setToggle] = useState(false);
   (
     <View>
@@ -39,17 +41,23 @@ export const TextInputHover: React.FC<TextInputHoverProps> = ({ text, onChange, 
           {(isHovered: boolean) => (
             <View
               style={[
-                styles.editField, isHovered && {
+                styles.editField,
+                isHovered && {
                   borderRadius: 10,
                   borderColor: theme.colors.dart,
                   backgroundColor: 'grey',
                 },
               ]}
             >
-              <Text numberOfLines={1} style={[styles.topField, {fontSize}]}>
+              <Text
+                numberOfLines={1}
+                style={[
+                  styles.topField,
+                  {fontSize}
+                ]}>
                 {text}
               </Text>
-              {isHovered && (
+              {isHovered && !isStaticIcon && (
               // <MaterialCommunityIcons
               //   onPress={() => setToggle(!toggle)}
               //   size={fontSize}
@@ -67,9 +75,12 @@ export const TextInputHover: React.FC<TextInputHoverProps> = ({ text, onChange, 
   )
 
 export interface InputFuncProps {
-  onChangeText?: ()=>void
-  onEndEditing?: ()=>void
+  onChangeText?: (value: string)=>void
+  onChange?: (value: string)=>void
+  onEndEditing?:  (value: React.FormEvent<HTMLInputElement>)=>void
+  onKeyPress?: (value: React.FormEvent<HTMLInputElement>)=>void|null
 }
+
 export interface InputProps extends InputFuncProps {
   style: any
   placeholder?: string
@@ -78,32 +89,45 @@ export interface InputProps extends InputFuncProps {
   rightElement?: JSX.Element
 }
 
-type RemoveKindField<Type> = {
-  [Property in keyof Type]:  Extract<InputProps, Function>
-};
-
 export const Input = (props: InputProps) => (
   <View
     style={[
-      styles.containerInput, omit(
-        ['fontSize', 'padding'],
+      styles.containerInput,
+      omit(
+        [
+          'fontSize',
+          'padding'
+        ],
         props.style
       )
     ]}
   >
+    {/* {console.log(props.style) } */}
     <TextInput
       style={[
-        styles.input, pick(
-          ['fontSize', 'padding'],
-          props.style
-        )
+        styles.input,
+        props.style
+        // pick(
+        //   [
+        //     'fontSize',
+        //     'padding'
+        //   ],
+        //   props.style
+        // )
       ]}
-      {...props.ref 
-        ? {ref: props.ref}
-        : omit(
-            ['InputRightElement', 'style', 'ref'],
-            props
-          )
+      ref={props.passRef && props.passRef}
+      {
+        // ...props.ref 
+        // ? {ref: props.ref}
+        // : 
+        ...omit(
+          [
+            'InputRightElement',
+            'style',
+            'passRef'
+          ],
+          props
+        )
       }
     />
     {props.rightElement && props.rightElement}
@@ -122,12 +146,20 @@ export interface InputWithButtonProps extends InputWithButtonFuncProps {
 export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWithButtonProps)=> (
   <Input 
     {...omit(
-      ['title', 'onPress', 'color'],
+      [
+        'title',
+        'onPress',
+        'color'
+      ],
       props
     )}
     rightElement={
       <Button
-        {...pick(['title', 'onPress', 'color']), props}
+        {...pick([
+          'title',
+          'onPress',
+          'color'
+        ]), props}
         accessibilityLabel="Learn more about this purple button"
       />
     }
@@ -138,17 +170,18 @@ const styles = StyleSheet.create({
   containerInput: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
   },
   input: {
     ...Platform.select({
       web: {
+        backgroundColor: '#fff',
         outlineStyle: 'none',
         outlineWidth: 0,
       },
     }),
-    padding: 0
+    padding: 0,
   },
   inputHover: {
     padding: 5,

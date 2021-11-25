@@ -1,11 +1,11 @@
 import { lensProp, not, over, pipe, __ } from 'ramda';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { AppDispatch, Day, WeekDay } from '../../../react-app-env';
 import { findAndMerge } from '../../utils/popular';
 import { theme } from '../../constants/Colors'
+
 export const setDay = (
-  day: Day, days: Day[], setDays: AppDispatch
+  day: Day, days: Day[], setDays: any
 ): any => pipe(
   over<any,any>(
     lensProp('active'),
@@ -29,8 +29,9 @@ const Circle = (props: any) => {
     alignItems:'center',
     width: size,
     height: size,
-    margin: 1,
+    margin: 1
   };
+
   return <View style={style}>{props.children}</View>;
 };
 export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (

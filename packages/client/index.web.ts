@@ -1,11 +1,17 @@
 import { AppRegistry } from 'react-native';
-import { name as appName } from './app.json';
+import appName from './app.json';
 import App from './src/App';
 
-AppRegistry.registerComponent(appName, () => App);
+AppRegistry.registerComponent(
+  appName.name,
+  () => App
+);
 
-AppRegistry.runApplication(appName, {
-  initialProps: {},
-  rootTag: document.getElementById('app-root'),
-  mode: "Concurrent",
-});
+AppRegistry.runApplication(
+  appName.name,
+  {
+    initialProps: {},
+    rootTag: document.getElementById('app-root'),
+    mode: 'Concurrent',
+  }
+);

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, StyleSheet } from 'react-native';
+import { Animated, Easing, Pressable, ScrollView, StyleSheet } from 'react-native';
 import { Text, View } from '../Themed';
 interface Collapse {
   idx: number;
@@ -58,14 +58,20 @@ const Collapse = ({
         key={`desc_${idx}`}
         style={{
           maxHeight: animationHeight.interpolate({
-            inputRange: [0, 1],
-            outputRange: [0, 300],
+            inputRange: [
+              0,
+              1
+            ],
+            outputRange: [
+              0,
+              300
+            ],
             extrapolate: 'clamp',
           }),
           overflow: 'hidden',
         }}
       >
-        {children}
+        <ScrollView>{children}</ScrollView>
       </Animated.View>
     </View>
   );

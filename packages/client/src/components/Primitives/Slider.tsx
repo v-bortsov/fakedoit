@@ -12,7 +12,10 @@ const Slider = () => {
         y: 0,
       });
     },
-    onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }]),
+    onPanResponderMove: Animated.event([
+      null,
+      { dx: pan.x, dy: pan.y }
+    ]),
     onPanResponderRelease: () => {
       pan.flattenOffset();
     },
@@ -24,7 +27,10 @@ const Slider = () => {
       <Animated.View
         style={{
           position: 'absolute',
-          transform: [{ translateX: pan.x }, { translateY: 0 }],
+          transform: [
+            { translateX: pan.x },
+            { translateY: 0 }
+          ],
         }}
         {...panResponder.panHandlers}
       >
@@ -85,4 +91,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Slider;
+
+export {Slider}

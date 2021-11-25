@@ -1,8 +1,5 @@
-import { always, converge, curry, identity, map, memoizeWith, pipe } from 'ramda';
-import { Field } from '../../react-app-env';
-import Manual, { IManual } from '../components/forms/Manual';
-import { ColumnType } from '../constants/typing';
-import { IMapperItem } from './actionsMapper';
+import { converge, curry, identity, map, memoizeWith, pipe } from 'ramda';
+import React from 'react';
 import { addValueAndOnChange, getReactComponentFromCollect as getComponentByName } from './form';
 
 /**
@@ -15,7 +12,7 @@ import { addValueAndOnChange, getReactComponentFromCollect as getComponentByName
 // export const buildForm = (type: ColumnType, mapper: IMapperItem, idx: number)=>pipe<ColumnType, IManual>(always)
 
 export const makeInstance = curry((
-  Component: any, props: Field 
+  Component: any, props: any 
 ): JSX.Element => <Component {...props} /> );
 
 export default ({
@@ -31,7 +28,8 @@ export default ({
   map(converge(
     makeInstance,
     [
-      getComponentByName, addValueAndOnChange(
+      getComponentByName,
+      addValueAndOnChange(
         dispatch,
         idx
       ),

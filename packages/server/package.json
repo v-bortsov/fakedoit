@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.ts",
   "dependencies": {
+    "@types/validator": "^13.6.6",
     "apollo-server-express": "2.24.0",
     "babel-node": "^0.0.1-security",
     "bluebird": "^3.5.4",

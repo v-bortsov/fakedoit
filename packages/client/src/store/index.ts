@@ -1,42 +1,73 @@
-import { pipe, pair, converge, prop, __, clone, path, apply, zipObj, call, map, paths, pipeWith, zip } from "ramda";
-import { Actions, } from "../constants/Actions";
-import { addColumn } from "../business/column";
-import { cartesianCondition } from "../business/start";
+import { adjust, always, apply, applyTo, assocPath, call, clone, converge, curry, isNil, map, of, pair, path, paths, pipe, pipeWith, prop, tap, zip, __ } from 'ramda';
+import { addColumn } from '../business/column';
+import { cartesianCondition } from '../business/start';
+import { Actions } from '../types/enums';
+import { addCollectItem, updColumpProp } from '../utils';
+
+/* eslint array-element-newline: ["error", "never"] */
+export enum Data {
+  state = 0,
+  payload = 1
+}
 
 const reducers = {
   [Actions.ADD_COLUMN]: [[[1, 'payload', 'type'], [0, 'columns']], addColumn, [0, 'columns']],
   [Actions.START_GEN]: [[[0, 'columns'], [0, 'limiting']], cartesianCondition, [0, 'rows']],
-  [Actions.COLUMN_UPD_COLLECT]: clone,
-  [Actions.UPD_COLUMN_VALUE]: clone,
-  [Actions.UPD_COLUMN_EDIT]: clone,
+  [Actions.ADD_COLUMN_COLLECT_ITEM]: [[[0, 'columns'], [1, 'payload','idx'], [1, 'payload','value']], addCollectItem, ['columns']],
+  // [Actions.COLUMN_UPD_COLLECT]: clone,
+  [Actions.UPD_COLUMN_VALUE]: [[[0, 'columns'], [1, 'payload','path'], [1, 'payload','value']], updColumpProp, ['columns']],
+  [Actions.UPD_COLUMN_EDIT]: [[[0, 'columns'], [1, 'payload','path'], [1, 'payload','value']], updColumpProp, ['columns']],
   [Actions.ACTION_SHEET_ADD_MENU]: clone,
   [Actions.ACTION_SHEET_CLEAR]: clone,
-  [Actions.FIELD_CHANGE_VALUE]: clone,
+  // [Actions.FIELD_CHANGE_VALUE]: clone,
 }
-const extract =  paths
-const load = zipObj
-const etl = [extract, apply, load]
+
+const extract = paths
+const transform = clone
+const load = curry((
+  obj: any, path: (string|number)[], newValue: any
+) => assocPath(
+  path,
+  newValue,
+  obj
+))
+
+const ETL = [extract, transform, load]
 
 export const home = pipe(
   pair,
   converge(
-    call,
+    apply,
     [
-      pipe(
-        path([1, 'type']),
-        prop<any,any>(__, reducers),
-        zip<any,any>(__, etl),
-        map(apply),
-        converge(
-          pipeWith,
-          [
-            call,
-            clone
-          ]
-        )
-      ),
-      clone
+      converge(
+        pipeWith,
+        [
+          always((
+            f: any, res: any
+          )=> isNil(res) ? res : f(res)), pipe(
+            converge(
+              zip,
+              [
+                pipe(
+                  prop(0),
+                  applyTo,
+                  converge(
+                    adjust(2),
+                    [clone, always(ETL)]
+                  )
+                ), pipe(
+                  path([1, 'type']),
+                  prop<any, any>(
+                    __,
+                    reducers
+                  ),
+                )
+              ],
+            ), 
+            map((ps:any[])=>ps[0](ps[1])),
+          )
+        ]
+      ), of
     ]
-  ),
-  prop(0)
+  )
 )

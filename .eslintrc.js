@@ -33,6 +33,8 @@ module.exports = {
     EXPERIMENTAL_useSourceOfProjectReferenceRedirect: false,
   },
   rules: {
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off', 
     // 'prettier/prettier': 'off',
     'no-use-before-define': 'off',
     '@typescript-eslint/no-use-before-define': 'off',
@@ -54,7 +56,7 @@ module.exports = {
     ],
     'newline-per-chained-call': [
       'error',
-      { ignoreChainWithDepth: 1, 'minItems': 3 }
+      { ignoreChainWithDepth: 1 }
     ],
     indent: [
       'error',
@@ -95,7 +97,7 @@ module.exports = {
     ],
     'array-element-newline': [
       'error',
-      { ArrayExpression: 'never', ArrayPattern: { minItems: 3 } },
+      { ArrayExpression: 'always', ArrayPattern: { minItems: 3 } },
     ],
     'object-curly-newline': 'off',
     

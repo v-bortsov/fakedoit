@@ -114,12 +114,11 @@ module.exports = {
           plugins: ['react-native-web'],
         },
       }, isDevEnv && {
-        test: /\.(t|j)sx?$/,
+        test: /\.(tsx|jsx|js|ts)$/,
         loader: 'ts-loader',
         options: {
           // silent: false,
           transpileOnly: true,
-          // declaration: true,
           configFile: __dirname + '/../packages/client/tsconfig.json',
           errorFormatter: function customErrorFormatter(
             error, colors
@@ -146,7 +145,7 @@ module.exports = {
     ].filter(Boolean),
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.json', '.tsx', '.ts'],
     alias: {
       'react-native$': 'react-native-web',
       'react-native-svg$': 'react-native-web-svg',

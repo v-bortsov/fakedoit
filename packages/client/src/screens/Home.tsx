@@ -1,24 +1,19 @@
-import { ColumnTypeBase, GeneratorState } from 'packages/client/react-app-env';
-import {
-  curry, pipe, tap
-} from 'ramda';
+import { curry, pipe } from 'ramda';
 import React, { MutableRefObject } from 'react';
-import {
-  Animated, Button, Pressable, ScrollView, StyleSheet,
-  Text, TouchableOpacity, View
-} from 'react-native';
-import Fields from '../business/field';
+import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ColumnType, headType } from '../types/enums';
+import { GeneratorState } from '../types/react-app-env';
 import Collapse from '../components/Effects/Collapse';
-import Manual, {ExampleManual} from '../components/forms/Manual';
+import { ExampleManual } from '../components/forms/Manual';
 import SvgArrowDown from '../components/icons/SvgArrowDown';
 import SvgKey from '../components/icons/SvgKey';
 import SvgOption from '../components/icons/SvgOption';
 import SvgPlus from '../components/icons/SvgPlus';
-import Slider from '../components/Primitives/Slider';
-import { Input, TextInputHover } from '../components/Primitives/TextInput';
-import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue, Dispatch } from '../constants/Actions';
+import { Slider } from '../components/Primitives/Slider';
+import { TextInputHover } from '../components/Primitives/TextInput';
+import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue } from '../constants/Actions';
 import { theme } from '../constants/Colors';
-import { headType } from '../constants/Fields';
+
 const HeaderBody = curry(({ items: [
   type,
   name,
@@ -31,13 +26,31 @@ const HeaderBody = curry(({ items: [
         justifyContent: 'space-between',
         flex: 1,
         flexDirection: 'row'
-      }, styles.accordionItem
+      },
+      styles.accordionItem
     ]}>
     <View style={styles.leftSummary}>
       <Text>{type.name}</Text>
     </View>
     <View style={styles.titleSummary}>
-      {[['name', name.label, name.component.edit, 30, 24, 30], ['label', label.label, label.component.edit, 18, 20, 20]].map((
+      {[
+        [
+          headType.NAME,
+          name.value,
+          name.edit,
+          30,
+          24,
+          30
+        ],
+        [
+          headType.LABEL,
+          label.value,
+          label.edit,
+          18,
+          20,
+          20
+        ]
+      ].map((
         [
           prop,
           text,
@@ -51,10 +64,11 @@ const HeaderBody = curry(({ items: [
         text={text}
         height={height}
         fontSize={fontSize}
+        isStaticIcon={false}
         edit={toggle}
         width={width}
-        setToggle={()=>updColumnEdit({dispatch, key: 'columns', idx, prop, value: toggle })}
-        onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, key: 'columns', idx, prop, value: value.currentTarget.value})}
+        setToggle={()=>updColumnEdit({dispatch, idx, prop, value: toggle })}
+        onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, idx, prop, value: value.currentTarget.value})}
       />)}
     </View>
     <View style={styles.keyIconSummary}>
@@ -69,8 +83,14 @@ const HeaderBody = curry(({ items: [
         transform: [
           {
             rotate: animation.interpolate({
-              inputRange: [0, 1],
-              outputRange: ['0deg', '180deg'],
+              inputRange: [
+                0,
+                1
+              ],
+              outputRange: [
+                '0deg',
+                '180deg'
+              ],
               extrapolate: 'clamp',
             })
           }
@@ -97,7 +117,8 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
         ()=> startGen({dispatch})
       )}
       style={[
-        styles.FABButton, {
+        styles.FABButton,
+        {
           backgroundColor: '#ffa500',
           // verticalAlign: 'center',
           // textAlign: 'center',
@@ -111,13 +132,19 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
         () => actionSheetRef.current?.show(),
         ()=> addMenuToActionSheet({dispatch})
       )}
-      style={[styles.FABButton, { backgroundColor: '#ffa500' }]}
+      style={[
+        styles.FABButton,
+        { backgroundColor: '#ffa500' }
+      ]}
     >
       <SvgPlus />
     </TouchableOpacity>
     <TouchableOpacity
       onPress={() => setOpen(!open)}
-      style={[styles.FABButton, { backgroundColor: '#ffa500' }]}
+      style={[
+        styles.FABButton,
+        { backgroundColor: '#ffa500' }
+      ]}
     >
       <Animated.View
         key={`header_${idx}`}
@@ -125,8 +152,14 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
           transform: [
             {
               rotate: animation.interpolate({
-                inputRange: [0, 1],
-                outputRange: ['0deg', '180deg'],
+                inputRange: [
+                  0,
+                  1
+                ],
+                outputRange: [
+                  '0deg',
+                  '180deg'
+                ],
                 extrapolate: 'clamp',
               }),
             },
@@ -148,8 +181,8 @@ export interface IHomePropsScreen {
 export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
   <>
     <ScrollView>
-      {state.columns.map((
-        item: ColumnTypeBase, idx: number
+      {state.columns && state.columns.map((
+        item: CollapseForm<FormTypes>, idx: number
       )=>(
         <Collapse
           key={idx}
@@ -157,7 +190,14 @@ export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
           duration={200}
           Header={HeaderBody({ key: `header_${idx}`, idx, dispatch, items: item.head })}
         >
-          <ExampleManual/>
+          {(() => {
+            switch(item.head[headType.TYPE].component.value){
+            case ColumnType.CUSTOM:
+              return <ExampleManual idx={idx} collect={item.body.collect.value} addItem={item.body.addItem} dispatch={dispatch} />
+            default:
+              return <ExampleManual idx={idx}  collect={item.body.collect.value} addItem={item.body.addItem} dispatch={dispatch} />
+            }
+          })()}
         </Collapse>
       ))}
     </ScrollView>

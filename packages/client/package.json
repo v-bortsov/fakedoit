@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.4.12",
+    "@types/validator": "^13.6.6",
     "fork-ts-checker-webpack-plugin": "^6.3.3",
     "graphql": "^15.6.0",
     "moment": "^2.29.1",

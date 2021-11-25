@@ -8,7 +8,6 @@ import {
   multipledParts,
 } from "./popular";
 
-import { DaysOfWeek } from "../../react-app-env.d";
 import { add, always, propEq } from "ramda";
 import moment from "moment";
 import { dayOfWeekToDate } from "./dates";

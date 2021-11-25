@@ -1,5 +1,7 @@
+import { always, clone } from 'ramda';
 import {useReducer, useRef, useEffect} from 'react'
-import { GeneratorState } from '../../react-app-env';
+import { GeneratorState } from '../types/react-app-env';
+
 const loggerBefore = (
   action: any, state: GeneratorState
 ): void => {
@@ -30,6 +32,10 @@ const useReducerWithMiddleware = (
     reducer,
     initialState
   );
+  console.log(
+    initialState,
+    state
+  );
   
   const aRef = useRef();
   
@@ -53,12 +59,18 @@ const useReducerWithMiddleware = (
         state
       ));
   
-      aRef.current = null;
+      aRef?.current = null;
     },
-    [afterwareFns, state]
+    [
+      afterwareFns,
+      state
+    ]
   );
   
-  return [state, dispatchWithMiddleware];
+  return [
+    state,
+    dispatchWithMiddleware
+  ];
 };
 
 export {useReducerWithMiddleware, loggerBefore, loggerAfter}

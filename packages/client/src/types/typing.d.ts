@@ -1,55 +1,48 @@
-import { ColumnTypeBase, ColumnTypeNumber, ColumnTypeDate, Field } from '../../react-app-env'
+// import { ColumnTypeBase, ColumnTypeNumber, ColumnTypeDate, Field } from './react-app-env'
 
-export enum ColumnType {
-   CUSTOM = 'CUSTOM',
-   DATE = 'DATE',
-   NUMBER = 'NUMBER',
-   DICTIONARY = 'DICTIONARY',
+type Dispatch = (params: Action)=>void
+
+type Value = number | boolean
+type Path = (string|number)[] | null
+
+interface Action{
+   type: Actions
+   payload: Payload | null
+ }
+ 
+type Payload = {
+   type?: ColumnType;
+   value?: Value;
+   path?: Path;
 }
-/** Start AllList */
 
+/** Start AllList */
 type ColumnList = ColumnTypeBase | ColumnTypeNumber | ColumnTypeDate
 
 type ScreensList = ScreenHome | ScreenError
 
-export interface Collapse {
-   head: [Field<ComponentSelectBase>, Field<ComponentInputNumberBase>, Field<ComponentInputNumberBase>]
+interface CollapseForm<T> {
+   head: [Field<ComponentSelectBase>, Field<ComponentInputNumberBase>, Field<ComponentInputNumberBase>],
+   body: T
 }
-export interface ManualCollapseForm extends Collapse{
-   body: {
-      collect: Field<ComponentTextAreaBase>
-   }
-}
-export enum Props {
-   NAME = 'name',
-   LABEL = 'label',
-   TYPE = 'type',
-   LIMIT = 'limit',
-   VALUE = 'value'
-}
-export enum Components {
-   Switch = 'Switch',
-   ActionSheet = 'ActionSheet',
-   Menu = 'Menu',
-   Input = 'Input',
-   InputWithButton = 'InputWithButton',
-   TextArea = 'TextArea',
-   Select = 'Select',
-   InputNumber = 'InputNumber',
-   DatePicker = 'DatePicker',
-   Weekdays = 'Weekdays',
-   ButtonGroup = 'ButtonGroup',
-   /** FormComponent */
-   // Manual = 'Manual'
-}
+
+type FormTypes = ManualForm
+
 /** End AllList */
 interface ComponentBase {
    name: Components
-}
-interface ComponentInputBase extends ComponentBase {
    value: string | null | number[]
    defaultValue: string | null | number[];
-   rules: string[][];
+   rules: string[][] | null;
+}
+
+interface ManualComponent extends ComponentInputBase {
+   onPress: ()=>void
+   onSave: ()=>void
+   onDelete: ()=>void
+}
+
+interface ComponentInputBase extends ComponentBase {
    edit: boolean
    // onChange: Dispatch<typeof COLUMN_UPD_LABEL | typeof COLUMN_UPD_NAME, string>
    // onEdit: Dispatch<typeof COLUMN_UPD_LABEL_EDIT | typeof COLUMN_UPD_NAME_EDIT, boolean>
@@ -62,10 +55,7 @@ interface ComponentWeekdaysBase extends ComponentBase {
    name: Components.Weekdays
    range: number[]
 }
-export enum NumberType {
-   'ceil',
-   'float'
-}
+
 interface ComponentButtonGroupBase extends ComponentBase {
    name: Components.ButtonGroup
    options: string[]
