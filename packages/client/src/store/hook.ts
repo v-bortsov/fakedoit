@@ -1,8 +1,4 @@
-import {
-  always, assoc, assocPath, clone, concat, cond, converge, evolve, ifElse, isEmpty, map, not, of, pair, path, pathEq, pipe, prepend, prop, propEq,
-  tap,
-  __
-} from 'ramda';
+import { always, assoc, assocPath, clone, concat, cond, converge, ifElse, isEmpty, map, not, of, pair, path, pathEq, pipe, prepend, prop, propEq, tap, __ } from 'ramda';
 import { getFieldsByType } from '../business/form';
 import { findAndMerge } from '../utils/popular';
 

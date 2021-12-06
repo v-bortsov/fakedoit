@@ -21,26 +21,26 @@ class ConcreteBuilder1 implements Builder {
    * который используется в дальнейшей сборке.
    */
   constructor() {
-      this.reset();
+    this.reset();
   }
 
   public reset(): void {
-      this.product = new Product1();
+    this.product = new Product1();
   }
 
   /**
    * Все этапы производства работают с одним и тем же экземпляром продукта.
    */
   public producePartA(): void {
-      this.product.parts.push('PartA1');
+    this.product.parts.push('PartA1');
   }
 
   public producePartB(): void {
-      this.product.parts.push('PartB1');
+    this.product.parts.push('PartB1');
   }
 
   public producePartC(): void {
-      this.product.parts.push('PartC1');
+    this.product.parts.push('PartC1');
   }
 
   /**
@@ -59,9 +59,9 @@ class ConcreteBuilder1 implements Builder {
    * клиента, прежде чем избавиться от предыдущего результата.
    */
   public getProduct(): Product1 {
-      const result = this.product;
-      this.reset();
-      return result;
+    const result = this.product;
+    this.reset();
+    return result;
   }
 }
 
@@ -77,7 +77,7 @@ class Product1 {
   public parts: string[] = [];
 
   public listParts(): void {
-      console.log(`Product parts: ${this.parts.join(', ')}\n`);
+    console.log(`Product parts: ${this.parts.join(', ')}\n`);
   }
 }
 
@@ -96,7 +96,7 @@ class Director {
    * тип вновь собираемого продукта.
    */
   public setBuilder(builder: Builder): void {
-      this.builder = builder;
+    this.builder = builder;
   }
 
   /**
@@ -104,13 +104,13 @@ class Director {
    * шаги построения.
    */
   public buildMinimalViableProduct(): void {
-      this.builder.producePartA();
+    this.builder.producePartA();
   }
 
   public buildFullFeaturedProduct(): void {
-      this.builder.producePartA();
-      this.builder.producePartB();
-      this.builder.producePartC();
+    this.builder.producePartA();
+    this.builder.producePartB();
+    this.builder.producePartC();
   }
 }
 
@@ -125,17 +125,20 @@ function clientCode(director: Director) {
 
   console.log('Standard basic product:');
   director.buildMinimalViableProduct();
-  builder.getProduct().listParts();
+  builder.getProduct()
+    .listParts();
 
   console.log('Standard full featured product:');
   director.buildFullFeaturedProduct();
-  builder.getProduct().listParts();
+  builder.getProduct()
+    .listParts();
 
   // Помните, что паттерн Строитель можно использовать без класса Директор.
   console.log('Custom product:');
   builder.producePartA();
   builder.producePartC();
-  builder.getProduct().listParts();
+  builder.getProduct()
+    .listParts();
 }
 
 const director = new Director();

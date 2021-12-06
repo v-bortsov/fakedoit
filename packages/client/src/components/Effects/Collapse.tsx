@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { Animated, Easing, Pressable, ScrollView, StyleSheet } from 'react-native';
-import { Text, View } from '../Themed';
+import React, { useState } from 'react';
+import { Animated, ScrollView, StyleSheet } from 'react-native';
+import { useAnimateCollapse } from '../../hooks/useAnimateCollapse';
+import { View } from '../Themed';
+
 interface Collapse {
   idx: number;
   duration: number;
-  Header: JSX.Element;
+  Header: React.FC<(animation: any, setOpen: any, open: boolean) => JSX.Element>;
   children: JSX.Element;
   icon?: JSX.Element;
   borderStyle?: any;
@@ -13,61 +15,28 @@ interface Collapse {
   Button?: any;
   style?: any;
 }
-export const collapseView = (
-  duration: number,
-  animationHeight: any,
-  toValue: number   
-) => {
-  Animated.timing(
-    animationHeight,
-    {
-      duration,
-      easing: Easing.back(1),
-      toValue,
-      useNativeDriver: false,
-    }
-  )
-    .start();
-};
+
 const Collapse = ({
   idx,
   duration,
   Header,
-  children,
-  icon,
-  style,
-  borderStyle,
-  backgroundColor,
-  Button,
-  buttonProps,
+  children
 }: Collapse) => {
+
   const [open, setOpen] = useState(false);
-  const animationHeight = useRef(new Animated.Value(0)).current;
-  useEffect(
-    () => collapseView(
-      duration,
-      animationHeight,
-      !open ? 0 : 1
-    ),
-    [open]
-  );
+
+  const {maxHeight, value} = useAnimateCollapse(
+    duration,
+    open
+  )
+  
   return (
     <View key={idx}>
-      <Header animation={animationHeight} setOpen={setOpen} open={open} />
+      <Header animation={value} setOpen={setOpen} open={open} />
       <Animated.View
         key={`desc_${idx}`}
         style={{
-          maxHeight: animationHeight.interpolate({
-            inputRange: [
-              0,
-              1
-            ],
-            outputRange: [
-              0,
-              300
-            ],
-            extrapolate: 'clamp',
-          }),
+          maxHeight,
           overflow: 'hidden',
         }}
       >
@@ -76,18 +45,21 @@ const Collapse = ({
     </View>
   );
 };
+
 const parentMargin = {
   marginTop: 0,
   marginRight: 0,
   marginBottom: 0,
   marginLeft: -5,
 };
+
 const childMargin = {
   marginTop: 0,
   marginRight: 0,
   marginBottom: 5,
   marginLeft: 5,
 };
+
 const styles = StyleSheet.create({
   summary: {
     flex: 1,
@@ -99,4 +71,5 @@ const styles = StyleSheet.create({
   },
   turnoverSummary: { flex: 1, alignItems: 'flex-end', ...childMargin },
 });
+
 export default Collapse;

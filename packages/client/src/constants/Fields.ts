@@ -102,6 +102,7 @@ export const unionFields = {
         rules: [],
         name: 'Manual',
         defaultValue: [],
+        value: [],
         rows: 4,
       }
     }

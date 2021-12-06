@@ -28,7 +28,10 @@ export default ({
   map(converge(
     makeInstance,
     [
-      getComponentByName,
+      getComponentByName([
+        'component',
+        'name'
+      ]),
       addValueAndOnChange(
         dispatch,
         idx

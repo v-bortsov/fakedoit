@@ -15,13 +15,5 @@ export const configInitialState = {
   loading: false,
   format: 'json',
 }
+
 export const ConfigContext = createContext();
-export const initialState = {
-  columns: exampleFields,
-  editColumn: null,
-  rows: [],
-  limiting: null,
-  loading: false,
-  format: 'json',
-};
-export const GeneratorContext = createContext(initialState);

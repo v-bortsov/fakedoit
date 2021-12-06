@@ -8,7 +8,7 @@
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "build-react": "cd web && cross-env NODE_ENV=production webpack --env production",
-    "start": "cd ../../web && cross-env NODE_ENV=development webpack serve --open"
+    "start": "export NODE_OPTIONS=\"--max-old-space-size=8192\" && cd ../../web && cross-env NODE_ENV=development webpack serve --open"
   },
   "dependencies": {
     "@apollo/client": "^3.4.12",

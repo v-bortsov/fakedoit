@@ -1,15 +1,15 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from 'react';
 import {
   Animated,
   TouchableOpacity,
   View,
   Text,
   Pressable,
-} from "react-native";
+} from 'react-native';
 // import { RectButton } from "react-native-gesture-handler";
-import styles from "./styles/style";
-import closeItems from "./tools/closeItems";
-import showItems from "./tools/showItems";
+import styles from './styles/style';
+import closeItems from './tools/closeItems';
+import showItems from './tools/showItems';
 
 interface FABProps {
   list: { key: string; component: JSX.Element }[];
@@ -27,42 +27,62 @@ export interface ItemList {
 const FAB: React.FC<FABProps> = ({
   list,
   icon,
-  backgroundColor = "#ffffffee",
-  buttonColor = "#ff8a62",
+  backgroundColor = '#ffffffee',
+  buttonColor = '#ff8a62',
 }) => {
   const [isShow, setIsShow] = useState(false);
 
-  const itemsData = useMemo(() => {
-    const itemsList: ItemList[] = [];
-    list.forEach((item) =>
-      itemsList.push({
+  const itemsData = useMemo(
+    () => {
+      const itemsList: ItemList[] = [];
+      list.forEach((item) => itemsList.push({
         key: item.key,
         component: item.component,
         animated: new Animated.Value(0),
-      })
-    );
-    return itemsList;
-  }, [list]);
+      }));
+      return itemsList;
+    },
+    [list]
+  );
 
-  const handleShowItems = useCallback(() => {
-    showItems(itemsData, () => {
-      setIsShow(true);
-    });
-  }, [itemsData]);
+  const handleShowItems = useCallback(
+    () => {
+      showItems(
+        itemsData,
+        () => {
+          setIsShow(true);
+        }
+      );
+    },
+    [itemsData]
+  );
 
-  const handleCloseItems = useCallback(() => {
-    closeItems(itemsData, () => {
-      setIsShow(false);
-    });
-  }, [itemsData]);
+  const handleCloseItems = useCallback(
+    () => {
+      closeItems(
+        itemsData,
+        () => {
+          setIsShow(false);
+        }
+      );
+    },
+    [itemsData]
+  );
 
-  const handlePressButton = useCallback(() => {
-    if (isShow) {
-      handleCloseItems();
-    } else {
-      handleShowItems();
-    }
-  }, [handleCloseItems, handleShowItems, isShow]);
+  const handlePressButton = useCallback(
+    () => {
+      if (isShow) {
+        handleCloseItems();
+      } else {
+        handleShowItems();
+      }
+    },
+    [
+      handleCloseItems,
+      handleShowItems,
+      isShow
+    ]
+  );
   return (
     <>
       {isShow && (
@@ -71,7 +91,10 @@ const FAB: React.FC<FABProps> = ({
             {itemsData.map(({ key, component, animated }) => (
               <Animated.View
                 key={key}
-                style={[styles.Item, { opacity: animated }]}
+                style={[
+                  styles.Item,
+                  { opacity: animated }
+                ]}
               >
                 {component}
               </Animated.View>
@@ -81,7 +104,10 @@ const FAB: React.FC<FABProps> = ({
       )}
       <TouchableOpacity
         onPress={handlePressButton}
-        style={[styles.FABButton, { backgroundColor: buttonColor }]}
+        style={[
+          styles.FABButton,
+          { backgroundColor: buttonColor }
+        ]}
       >
         {icon}
       </TouchableOpacity>

@@ -33,6 +33,7 @@ module.exports = {
     EXPERIMENTAL_useSourceOfProjectReferenceRedirect: false,
   },
   rules: {
+    'no-prototype-builtins': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off', 
     // 'prettier/prettier': 'off',
@@ -82,6 +83,18 @@ module.exports = {
     'react/jsx-max-props-per-line': [
       'warn',
       { when: 'multiline' }
+    ],
+    'react/jsx-wrap-multilines': [
+      'warn',
+      {
+        'declaration': 'parens-new-line',
+        'assignment': 'parens',
+        'return': 'parens',
+        'arrow': 'parens-new-line',
+        'condition': 'parens-new-line',
+        'logical': 'parens-new-line',
+        'prop': 'parens-new-line'
+      }
     ],
     'function-paren-newline': [
       'error',

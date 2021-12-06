@@ -55,23 +55,97 @@ export const exampleFields = [
       collect: {
         name: 'collect',
         label: 'Collect',
+        component: {
+          name: 'Manual',
+          rules: [
+            [
+              'isEmpty',
+              'field is empty'
+            ]
+          ],
+          defaultValue: null,
+          rows: 4,
+          value: [
+            'msc',
+            'spb',
+            'ekt',
+            'sochi',
+            'vladik'
+          ],
+        },
+      }
+    },
+  },
+  {
+    head: [
+      {
+        name: 'type',
+        label: 'Type',
         rules: [
           [
             'isEmpty',
             'field is empty'
           ]
         ],
-        component: 'TextArea',
+        component: 'Select',
+        options: areas,
         defaultValue: null,
-        rows: 4,
-        value: [
-          'msc',
-          'spb',
-          'ekt',
-          'sochi',
-          'vladik'
-        ],
+        value: ColumnType.CUSTOM,
       },
+      {
+        name: 'name',
+        label: 'Name',
+        rules: [
+          [
+            'isEmpty',
+            'field is empty'
+          ],
+          [
+            'uniqNameByColumns',
+            'The name is not unique in the current scope'
+          ],
+        ],
+        component: 'Input',
+        defaultValue: 'asdfasf',
+        value: 'work',
+        edit: false
+      },
+      {
+        name: 'label',
+        label: 'Label',
+        rules: [
+          [
+            'isEmpty',
+            'field is empty'
+          ]
+        ],
+        component: 'Input',
+        defaultValue: null,
+        value: 'work',
+        edit: false
+      },
+    ],
+    body: {
+      collect: {
+        name: 'collect',
+        label: 'Collect',
+        component: {
+          name: 'Manual',
+          rules: [
+            [
+              'isEmpty',
+              'field is empty'
+            ]
+          ],
+          defaultValue: null,
+          rows: 4,
+          value: [
+            'developer',
+            'senior software engineer',
+            'full-stack developer'
+          ],
+        },
+      }
     },
   }
 ];

@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { always, andThen, append, assoc, assocPath, both, call, chain, clone, compose, cond, converge, curry, equals, evolve, has, includes, indexBy, join, lensPath, map, mergeRight, objOf, of, over, path, pathEq, pipe, pluck, prepend, prop, propEq, slice, split, T, when, __ } from 'ramda';
+import { always, andThen, append, assoc, assocPath, both, call, chain, clone, compose, cond, converge, curry, dissocPath, equals, evolve, has, includes, indexBy, join, lensPath, map, mergeRight, objOf, of, over, path, pathEq, pipe, pluck, prepend, prop, propEq, slice, split, T, when, __ } from 'ramda';
 import { Field } from '../types/react-app-env';
 import components from '../components/Primitives';
 import { customFields, dateFields, dictionaryFields, integerFields, requestByAreas } from '../constants/Fields';
@@ -10,33 +10,30 @@ export const updColumpProp = ([
   columns,
   path,
   value]: [CollapseForm<FormTypes>[], (number|string)[], string
-])=> {
-  console.log(
-    path,
-    value,
-    columns,
-    assocPath(
-      path,
-      value,
-      columns
-    )
-  );
+])=> assocPath(
+  path,
+  value,
+  columns
+)
+
+export const delColumnCollectItem = ([columns, path]: [CollapseForm<FormTypes>[], (number|string)[], string])=> dissocPath(
+  path,
+  columns
+)
   
-  return assocPath(
-    path,
-    value,
-    columns
-  )
-}
 export const addCollectItem = ([
   columns,
   idx,
   value]: [CollapseForm<FormTypes>[], number, string
 ])=>{
+
+  console.log(columns);
+  
   const pathUntillValue = [
     idx,
     'body',
     'collect',
+    'component',
     'value'
   ]
   const getValue = pipe(
@@ -49,7 +46,6 @@ export const addCollectItem = ([
     getValue,
     columns
   )
-  
 }
 
 export const getFieldsByType = cond<ColumnType, any>([
@@ -247,11 +243,8 @@ export const extractValueOfComponent = curry((
   ],
 ])(props));
 
-export const getReactComponentFromCollect = pipe<Field<any>, any, JSX.Element>(
-  path([
-    'component',
-    'name'
-  ]),
+export const getReactComponentFromCollect =(arr: (number|string)[])=> pipe<Field<any>, any, JSX.Element>(
+  path(arr),
   prop(
     __,
     components

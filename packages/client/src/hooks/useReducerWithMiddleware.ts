@@ -1,5 +1,4 @@
-import { always, clone } from 'ramda';
-import {useReducer, useRef, useEffect} from 'react'
+import { useEffect, useReducer, useRef } from 'react';
 import { GeneratorState } from '../types/react-app-env';
 
 const loggerBefore = (
@@ -31,10 +30,6 @@ const useReducerWithMiddleware = (
   const [state, dispatch] = useReducer(
     reducer,
     initialState
-  );
-  console.log(
-    initialState,
-    state
   );
   
   const aRef = useRef();
@@ -73,4 +68,4 @@ const useReducerWithMiddleware = (
   ];
 };
 
-export {useReducerWithMiddleware, loggerBefore, loggerAfter}
+export { useReducerWithMiddleware, loggerBefore, loggerAfter };

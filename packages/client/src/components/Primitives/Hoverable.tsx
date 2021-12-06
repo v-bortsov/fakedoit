@@ -18,7 +18,10 @@ export default function Hoverable({ onHoverIn, onHoverOut, children }: Hoverable
         setHovered(true);
       }
     },
-    [isHovered, onHoverIn]
+    [
+      isHovered,
+      onHoverIn
+    ]
   );
 
   const handleMouseLeave = useCallback(
@@ -28,7 +31,10 @@ export default function Hoverable({ onHoverIn, onHoverOut, children }: Hoverable
         setHovered(false);
       }
     },
-    [isHovered, onHoverOut]
+    [
+      isHovered,
+      onHoverOut
+    ]
   );
 
   const handleGrant = useCallback(

@@ -4,8 +4,8 @@ import { MenuActionAddColumn } from './Fields'
 
 type DispathParams = {
   dispatch: Dispatch
-  key?: string|number
-  prop: string
+  key: string|number
+  prop?: string
   idx: number
   value: any
   path?: (string|number)[]
@@ -19,24 +19,36 @@ export const addColumnCollectItem = curry(({dispatch, idx, value}): DispathParam
     value
   }
 }))
-export const delColumnCollectItem = curry(({dispatch, path}): DispathParams => dispatch({
+export const delColumnCollectItem = curry(({dispatch, idx, key}): DispathParams => dispatch({
   type: Actions.DEL_COLUMN_COLLECT_ITEM,
   payload: {
-    path
+    path: [
+      idx,
+      'body',
+      'collect',
+      'value',
+      key
+    ]
   }
 }))
-export const updColumnCollectItem = curry(({dispatch, path, value}): DispathParams => dispatch({
+export const updColumnCollectItem = curry(({dispatch, idx, key, value}): DispathParams => dispatch({
   type: Actions.UPD_COLUMN_COLLECT_ITEM,
   payload: {
-    path,
+    path: [
+      idx,
+      'body',
+      'collect',
+      'value',
+      key
+    ],
     value
   }
 }))
-export const addMenuToActionSheet = curry(({dispatch}): DispathParams => dispatch({
-  type: Actions.ACTION_SHEET_ADD_MENU,
+export const addMenuToActionSheet = curry(({dispatch, value}): DispathParams => dispatch({
+  type: Actions.ACTION_SHEET_ADD,
   payload: {
     path: ['actionSheet'],
-    value: { component: 'Menu', data: {items: MenuActionAddColumn}}
+    value
   }
 }))
 
@@ -64,12 +76,15 @@ export const updColumnEdit = curry(({dispatch, idx, prop, value}: DispathParams)
     value: !value
   }
 }))
-export const delColumn = curry(({dispatch, key, idx}: DispathParams)=> dispatch({
+export const delColumn = curry(({dispatch, idx, key}: DispathParams)=> dispatch({
   type: Actions.DEL_COLUMN,
   payload: {
     path: [
-      key,
-      idx
+      idx,
+      'body',
+      'collect',
+      'value',
+      key
     ]
   }
 }))

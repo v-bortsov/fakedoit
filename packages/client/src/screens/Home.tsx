@@ -1,20 +1,24 @@
-import { curry, pipe } from 'ramda';
-import React, { MutableRefObject } from 'react';
+import { curry, pipe, tap } from 'ramda';
+import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { ColumnType, headType } from '../types/enums';
-import { GeneratorState } from '../types/react-app-env';
 import Collapse from '../components/Effects/Collapse';
 import { ExampleManual } from '../components/forms/Manual';
 import SvgArrowDown from '../components/icons/SvgArrowDown';
+import SvgEdit from '../components/icons/SvgEdit';
 import SvgKey from '../components/icons/SvgKey';
 import SvgOption from '../components/icons/SvgOption';
 import SvgPlus from '../components/icons/SvgPlus';
+import { Button } from '../components/Primitives/Button';
 import { Slider } from '../components/Primitives/Slider';
-import { TextInputHover } from '../components/Primitives/TextInput';
-import { addMenuToActionSheet, startGen, updColumnEdit, updColumnValue } from '../constants/Actions';
+import { Hover, Input, TextInputHover } from '../components/Primitives/TextInput';
+import { addMenuToActionSheet, startGen, updColumnValue } from '../constants/Actions';
 import { theme } from '../constants/Colors';
+import { MenuActionAddColumn } from '../constants/Fields';
+import useDebounce from '../hooks/useDebounce';
+import { ColumnType, headType } from '../types/enums';
+import { GeneratorState } from '../types/react-app-env';
 
-const HeaderBody = curry(({ items: [
+const HeaderBody = ({ items: [
   type,
   name,
   label
@@ -38,7 +42,7 @@ const HeaderBody = curry(({ items: [
           headType.NAME,
           name.value,
           name.edit,
-          30,
+          32,
           24,
           30
         ],
@@ -46,7 +50,7 @@ const HeaderBody = curry(({ items: [
           headType.LABEL,
           label.value,
           label.edit,
-          18,
+          27,
           20,
           20
         ]
@@ -58,18 +62,62 @@ const HeaderBody = curry(({ items: [
           height,
           fontSize,
           width
-        ], key
-      )=> <TextInputHover
-        key={key}
-        text={text}
-        height={height}
-        fontSize={fontSize}
-        isStaticIcon={false}
-        edit={toggle}
-        width={width}
-        setToggle={()=>updColumnEdit({dispatch, idx, prop, value: toggle })}
-        onChange={(value: React.FormEvent<HTMLInputElement>) => updColumnValue({dispatch, idx, prop, value: value.currentTarget.value})}
-      />)}
+        ], keyNumber: number
+      )=> {
+
+        const [edit, setEdit] = useState(toggle)
+
+        useEffect(
+          () => {
+            setEdit(toggle)
+          },
+          [toggle]
+        )
+
+        const [valueText, setValue] = useState(text)
+        const ref = useRef<HTMLInputElement>(null)
+
+        const onQueryChange = useDebounce(setValue)
+
+        const saveStore = pipe(
+          tap(()=> setEdit(false)),
+          () => updColumnValue({dispatch, idx, prop, value: valueText})
+        )
+        const padding = {paddingLeft: 6,  paddingRight: 6,  marginTop: 5, marginBottom: 5}
+        // console.log(ref)
+        return (<TextInputHover
+          key={keyNumber}
+          input={(
+            <Input
+              style={{fontSize, height, width: (200-width)}}
+              padding={padding}
+              defaultValue={valueText}
+              onKeyPress={(e: any) => e.nativeEvent.key === 'Enter' ? saveStore(null) : null}
+              onChangeText={(value: any)=> onQueryChange(value)}
+              ref={ref}
+              rightElement={(
+                <Button onPress={saveStore} buttonStyle={{width, height, backgroundColor: 'green'}} title={'OK'} />
+                // <Pressable onPress={saveStore}>
+                //   <SvgEdit height={height} width={width} />
+                // </Pressable>
+              )}
+            />
+          )}
+          hover={(
+            <Hover
+              text={text}
+              onPress={()=>pipe(tap(() => setEdit(!edit)),
+                // tap(()=> ref.current?.focus())
+              )(null)}
+              icon={(
+                <SvgEdit height={height} width={width} />
+              )}
+              fontSize={fontSize}
+              padding={padding}
+            />
+          )}
+          edit={edit} />)
+      })}
     </View>
     <View style={styles.keyIconSummary}>
       <SvgKey />
@@ -100,9 +148,9 @@ const HeaderBody = curry(({ items: [
       <SvgArrowDown/>
     </Animated.View>
   </Pressable>
-));
+);
 
-const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animation, open, setOpen }: any) => (
+const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => ({ animation, open, setOpen }: any) => (
   <View
     style={{
       backgroundColor: '#ffa500',
@@ -114,7 +162,8 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
     <TouchableOpacity
       onPress={pipe(
         () => actionSheetRef.current?.show(),
-        ()=> startGen({dispatch})
+        ()=> startGen({dispatch}),
+        ()=> addMenuToActionSheet({dispatch, value: { component: 'Formatter', data: {}}})
       )}
       style={[
         styles.FABButton,
@@ -130,7 +179,7 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
     <TouchableOpacity
       onPress={pipe(
         () => actionSheetRef.current?.show(),
-        ()=> addMenuToActionSheet({dispatch})
+        ()=> addMenuToActionSheet({ dispatch, value: { component: 'Menu', data: {items: MenuActionAddColumn} } })
       )}
       style={[
         styles.FABButton,
@@ -170,7 +219,7 @@ const HeaderFooter = curry(({ dispatch, actionSheetRef, idx }: any) => ({ animat
       </Animated.View>
     </TouchableOpacity>
   </View>
-));
+);
 
 export interface IHomePropsScreen {
   actionSheetRef: MutableRefObject<null>
@@ -188,14 +237,14 @@ export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
           key={idx}
           idx={idx}
           duration={200}
-          Header={HeaderBody({ key: `header_${idx}`, idx, dispatch, items: item.head })}
+          Header={HeaderBody({ idx, dispatch, items: item.head })}
         >
           {(() => {
             switch(item.head[headType.TYPE].component.value){
             case ColumnType.CUSTOM:
-              return <ExampleManual idx={idx} collect={item.body.collect.value} addItem={item.body.addItem} dispatch={dispatch} />
+              return <ExampleManual idx={idx} collect={item.body.collect.component.value} dispatch={dispatch} />
             default:
-              return <ExampleManual idx={idx}  collect={item.body.collect.value} addItem={item.body.addItem} dispatch={dispatch} />
+              return <ExampleManual idx={idx}  collect={item.body.collect.component.value} dispatch={dispatch} />
             }
           })()}
         </Collapse>
@@ -205,7 +254,7 @@ export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
       style={styles.collapseFooter}
       idx={12341}
       duration={200}
-      Header={HeaderFooter({ actionSheetRef, dispatch })}
+      Header={HeaderFooter({idx: 12341, actionSheetRef, dispatch, rows: state.rows, format: state.format })}
     >
       <Slider />
     </Collapse>
@@ -242,6 +291,7 @@ const styles = StyleSheet.create({
   titleSummary: {
     flex: 1,
     flexGrow: 4,
+    height: 70,
     flexDirection: 'column',
     justifyContent: 'space-around',
     alignItems: 'flex-start',

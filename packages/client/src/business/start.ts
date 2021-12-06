@@ -1,15 +1,17 @@
-import { always, clone, converge, flatten, is, map, pipe, pluck, propEq, slice, when, xprod, zipObj, __ } from 'ramda';
-import { TypeLimiting } from 'src/types/react-app-env';
-import { propFilterAndPluck, sliceAndTranspose } from '../utils';
+import { always, clone, converge, flatten, is, map, path, pipe, propEq, slice, when, xprod, zipObj, __ } from 'ramda';
+import { headType } from '../types/enums';
+import { TypeLimiting } from '../types/react-app-env';
+import { sliceAndTranspose } from '../utils';
 
 export const multipledParts: any = (parts: any[][]) => parts.reduce(<any>xprod)
 
 export const cartesianCondition: any = ([columns, limiting]: [CollapseForm<FormTypes>[], TypeLimiting]) => pipe<any, any, any, any, any, any>(
-  propFilterAndPluck(
-    'name',
-    limiting,
-    'collect'
-  ),
+  map(path([
+    'body',
+    'collect',
+    'component',
+    'value'
+  ])),
   multipledParts,
   when(
     always(is(
@@ -40,8 +42,12 @@ export const cartesianCondition: any = ([columns, limiting]: [CollapseForm<FormT
     converge(
       zipObj,
       [
-        always(pluck<string, any>(
-          'name',
+        always(map(
+          path([
+            'head',
+            headType.NAME,
+            'value'
+          ]),
           columns
         )),
         clone

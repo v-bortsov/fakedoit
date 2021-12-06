@@ -1,55 +1,17 @@
-import { assoc, assocPath, clone, converge, ifElse, pair, path, pathEq, pipe, prop, tap } from 'ramda';
+import { assoc, converge, pipe, prop } from 'ramda';
 import React, { useRef } from 'react';
 import { hot } from 'react-hot-loader/root';
-import { Dimensions, SafeAreaView, StyleSheet, View } from 'react-native';
+import { Dimensions, SafeAreaView, ScrollView, StyleSheet, View } from 'react-native';
 import { makeInstance } from './business';
 import ActionSheet from './components/actionsheet/ActionSheet';
 import { ConfigContext, configInitialState } from './context';
+import { loggerAfter, loggerBefore, useReducerWithMiddleware } from './hooks/useReducerWithMiddleware';
 import Home from './screens/Home';
 import { home } from './store';
-import { loggerAfter, loggerBefore, useReducerWithMiddleware } from './store/store';
-import { evolveInitialState, getReactComponentFromCollect } from './utils';
+import { getReactComponentFromCollect } from './utils';
 const { height } = Dimensions.get('window');
-const colors = [
-  '#4a4e4d',
-  '#0e9aa7',
-  '#3da4ab',
-  '#f6cd61',
-  '#fe8a71'
-];
 
 // const AnimatedView = Animated.createAnimatedComponent(View);
-export const reduceConfig = pipe(
-  pair,
-  ifElse(
-    pathEq(
-      [
-        1,
-        'type'
-      ],
-      'actionSheet'
-    ),
-    converge(
-      assocPath([
-        0,
-        'actionSheet'
-      ]),
-      [
-        path([
-          1,
-          'value'
-        ]),
-        clone
-      ]
-    ),
-    clone
-  ),
-  tap(x => console.log(
-    'configState',
-    x
-  )),
-  prop<any>(0)
-)
 const App: React.FC<any> = (props: any) => {
   const actionSheetRef = useRef(null);
 
@@ -80,14 +42,19 @@ const App: React.FC<any> = (props: any) => {
           gestureEnabled={true}
           defaultOverlayOpacity={0.3}
         >
-          <View
-            style={{paddingHorizontal: 12}}
+
+          <ScrollView
+            // nestedScrollEnabled
+            onMomentumScrollEnd={() => {
+              actionSheetRef.current?.handleChildScrollEnd();
+            }}
+            style={styles.scrollview}
           >
             <ConfigContext.Consumer>
-              {({state, dispatch}: any) => pipe(converge(
+              {({state, dispatch}: any) => pipe<any, any>(converge(
                 makeInstance,
                 [
-                  getReactComponentFromCollect,
+                  getReactComponentFromCollect(['component']),
                   pipe(
                     prop('data'),
                     assoc(
@@ -142,45 +109,15 @@ const App: React.FC<any> = (props: any) => {
               </View>
               <View style={styles.footer} />
             </ScrollView> */}
+
             </ConfigContext.Consumer>
-          </View>
+          </ScrollView>
         </ActionSheet>
       </ConfigContext.Provider>
     </SafeAreaView>
   );
 };
 
-export default hot(App);
-const items = [
-  100,
-  60,
-  150,
-  200,
-  170,
-  80,
-  41,
-  101,
-  61,
-  151,
-  202,
-  172,
-  82,
-  43,
-  103,
-  64,
-  155,
-  205,
-  176,
-  86,
-  46,
-  106,
-  66,
-  152,
-  203,
-  173,
-  81,
-  42,
-];
 
 const styles = StyleSheet.create({
   footer: {
@@ -248,3 +185,6 @@ const styles = StyleSheet.create({
     height
   }
 });
+
+
+export default hot(App);

@@ -1,34 +1,9 @@
-import {
-  always,
-  apply,
-  assoc,
-  clone,
-  complement,
-  converge,
-  curry,
-  evolve,
-  ifElse,
-  includes,
-  isEmpty,
-  isNil,
-  map,
-  mergeRight,
-  path,
-  paths,
-  pipe,
-  prepend,
-  prop, reduce,
-  reduced, values,
-  when,
-  whereEq,
-  zipObj,
-  __
-} from 'ramda';
+import { always, apply, assoc, clone, complement, converge, curry, evolve, ifElse, includes, isEmpty, isNil, map, mergeRight, path, paths, pipe, prepend, prop, reduce, reduced, values, when, whereEq, zipObj, __ } from 'ramda';
 import validator from 'validator';
 import { configInitialState } from '../context';
+import { Field } from '../types/react-app-env';
 
 /* eslint array-element-newline: ["error", "never"] */
-
 const customRules = {
   uniqNameByColumns: (value: string) => pipe<any, any, any, any, any>(
     paths([['columns'], ['editColumn']]),

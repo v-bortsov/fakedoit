@@ -1,9 +1,13 @@
-import { isEmpty, pipe, tap } from 'ramda'
+import { adjust, F, isEmpty, pipe, T, tap } from 'ramda'
 import React, { useEffect, useRef, useState } from 'react'
-import { Button, View } from 'react-native'
-import { Input, InputProps, InputWithButtonProps, TextInputHover, TextInputHoverProps } from '../Primitives/TextInput'
-import { theme } from '../../constants/Colors';
-import { addColumnCollectItem } from '../../constants/Actions';
+import { NativeSyntheticEvent, Pressable, TextInputChangeEventData, View } from 'react-native'
+import { addColumnCollectItem, delColumnCollectItem, updColumnCollectItem } from '../../constants/Actions'
+import { theme } from '../../constants/Colors'
+import { useDebounceWithCollect } from '../../hooks/useDebounce'
+import SvgCross from '../icons/SvgCross'
+import SvgEdit from '../icons/SvgEdit'
+import { Button } from '../Primitives/Button'
+import { Hover, Input, InputProps, TextInputHover } from '../Primitives/TextInput'
 
 export interface EditableItem {
   input: InputProps
@@ -11,24 +15,12 @@ export interface EditableItem {
 export interface IManual {
   InputWithButton: any
   EditableItemList?: React.FC<EditableItem>[] | null | undefined
-  addItem?: React.FC<InputWithButtonProps>
-  editable?: React.FC<TextInputHoverProps>
-  output?: string[]
 }
 
-// const Manual: React.FC<IManual> = ({addItem, editable, output}) => (
-//     <View>
-//       <View>{addItem}</View>
-//       <View>{output.map((text: string, idx: number)=> editable({text, /* onChange, setToggle: , */ edit: false, height: 18, fontSize: 20, width: 20}))}</View>
-//     </View>
-//   )
-{/* <View><InputWithButton {...{onPress, value, onChangeText}} /></View> */}
-{/* <View>{output.map((text: string, idx: number)=> editable({text, /* onChange, setToggle: ,  edit: false, height: 18, fontSize: 20, width: 20}))}</View> */}
-
 const Manual: React.FC<IManual> = ({InputWithButton, EditableItemList}) => (
-  <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <View style={{flex: 1, flexGrow: 1,  justifyContent: 'space-between'}}>{InputWithButton}</View>
-    <View style={{flex: 1, flexGrow: 1}}>{EditableItemList}</View>
+  <View style={{flex: 1, gap: 10, marginTop: 10, marginRight: 10, marginLeft: 10}}>
+    <View>{InputWithButton}</View>
+    <View>{EditableItemList}</View>
   </View>
 )
 
@@ -39,93 +31,128 @@ export interface UseStateInterface {
 
 export interface IManualProps {
   collect: string[]
-  addItem: any
   dispatch: Dispatch
   idx: number
 }
+
+const submitAddColumn = (
+  ref:  React.RefObject<HTMLInputElement>, dispatch: Dispatch, idx: number
+)=> async ()=>{
+ 
+  if(!isEmpty(ref?.current?.value)){
+    await addColumnCollectItem({dispatch, idx, value: ref?.current?.value})
+    ref.current?.clear()
+  }
+  ref.current?.focus()
+}
+
 export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
   // const value = pipe<null, any, any[], UseStateInterface>(
   //   useRef,
   //   useState,
   //   zipObj(['value', 'onChange'])
   // )(null)
-  // [
-  // {global: {onPress}, local: {onChange, value}},
-  // {global: {onSave, onDelete}, local: ref}
-  // ]
-  console.log(collect);
   const ref = useRef<HTMLInputElement>(null)
-  const [value, setValue] = useState<any>('');
-
-
-  useEffect(
-    () => {
-      console.log(ref);
-      setValue(ref.current?.value);
-    },
-    []
-  );
   // const itemsRef:React.MutableRefObject<any[]> = useRef([]);
+  const [edit, setEdit] = useState(collect.map(F))
+  const [valueText, setValue] = useState(collect)
 
-  // useEffect(
-  //   () => {
-  //     itemsRef.current = itemsRef.current.slice(
-  //       0,
-  //       collect.length
-  //     );
-  //   },
-  //   [collect]
-  // );
-  console.log(
-    value,
-    ref
-  );
+  const onQueryChange = useDebounceWithCollect(setValue)
   
-  // addStoreMethod: onSave, onDelete, onPress
-  return <Manual
+  const saveStore =(keyNumber: number)=> pipe(
+    tap(()=> setEdit(adjust(
+      keyNumber,
+      F
+    ))),
+    () => updColumnCollectItem({dispatch, value: valueText[keyNumber], idx, key: keyNumber})
+  )
+  
+  useEffect(
+    () => { 
+      setEdit(collect.map(F))
+      setValue(collect)
+    },
+    [collect] 
+  )
+
+  return (<Manual
     {...{
       InputWithButton: <Input
         style={{
           padding: 5,
-          // borderWidth: 1,
-          // borderColor: theme.colors.dart,
+          flexGrow: 1,
+          height: 50,
+          fontSize: 20,
+          borderWidth: 1,
+          borderColor: theme.colors.dart,
           // backgroundColor: '#fff',
         }}
-        // value={ref.current.value}
-        // onChangeText={setValue}
-        // onChangeText={(text: string)=> ref.current.value = text}
+        onKeyPress={(e: NativeSyntheticEvent<TextInputChangeEventData>) => e.nativeEvent.key === 'Enter' ? submitAddColumn(
+          ref,
+          dispatch,
+          idx 
+        )() : null}
         passRef={ref}
-        rightElement={
+        rightElement={(
           <Button
+            textStyle={{fontSize: 26}}
+            buttonStyle={{ height: 50}}
             // {...pick(['title', 'onPress', 'color']), props}
-            title={'Добавить'}
-            color={'green'}
-            // clearLocal, sendAction, setFocus
-            onPress={()=>{
-              if(!isEmpty(ref?.current?.value)){
-                addColumnCollectItem({dispatch, idx, value: ref.current.value})
-                ref.current.clear()
-              }
-              ref.current.focus()
-            }}
-            // onPress={()=>pipe(tap((ref: any)=> console.log(ref)))(ref)}
-            accessibilityLabel="Learn more about this purple button"
+            title={'ADD'}
+            onPress={submitAddColumn(
+              ref,
+              dispatch,
+              idx
+            )}
           />
-        }
+        )}
       />,
       EditableItemList: collect.map((
-        item: any, idx: number
-      ) => <TextInputHover
-        height={18}
-        isStaticIcon={true}
-        width={20}
-        text={item}
-        fontSize={20}
-        // input={<Input style={{}} ref={(el: any) => itemsRef.current[idx] = el} key={idx} rightElement={}/>}
-        
-      />)
+        item: any, keyNumber: number
+      ) => (
+        <View key={keyNumber} style={{flex: 1, flexDirection: 'row', borderColor: 'black', borderWidth: 1,  alignItems: 'center'}}>
+          <View style={{flex: 1,  alignItems: 'stretch', paddingLeft: 10, paddingRight: 10}}>
+            <TextInputHover
+              input={(
+                <Input
+                  style={{fontSize: 20, height: 40, padding: 10}}
+                  defaultValue={valueText[keyNumber]}
+                  onKeyPress={(e: any) => e.nativeEvent.key === 'Enter' ? saveStore(keyNumber)(null) : null}
+                  onChangeText={(value: any)=>onQueryChange(
+                    keyNumber,
+                    value
+                  )}
+                  rightElement={(
+                    <Pressable onPress={saveStore(keyNumber)}>
+                      <SvgEdit height={20} width={20} />
+                    </Pressable>
+                  )}
+                />
+              )}
+              hover={(
+                <Hover
+                  text={item}
+                  onPress={() => setEdit(adjust(
+                    keyNumber,
+                    T
+                  ))}
+                  icon={(
+                    <SvgEdit height={20} width={20} />
+                  )}
+                  fontSize={20}
+                />
+              )}
+              edit={edit[keyNumber]} />
+          </View>
+          <View style={{flex: 1, alignItems: 'flex-end', alignContent: 'stretch', paddingLeft: 10, paddingRight: 10}}>
+            <Pressable onPress={() => delColumnCollectItem({dispatch, key: keyNumber, idx})}>
+              <SvgCross fill='rgb(153 28 28)' height={20} width={20} />
+            </Pressable>
+          </View>
+        </View>
+      ))
     }} 
-  />
+  />)
 }
 
 export default Manual

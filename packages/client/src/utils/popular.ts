@@ -64,16 +64,6 @@ export const calcCount = (
     ))), []
   ))
  */
-// TODO: REDUCE ~> one cycle
-export const propFilterAndPluck = (
-  propNameEq: string, propValue: string, propPluck: string
-): any => pipe<any, any, any>(
-  reject(propEq(
-    propNameEq,
-    propValue
-  )), 
-  pluck(propPluck)
-)
 export const enumToObject: any = pipe<any, any, any, any>(
   values,
   converge(
