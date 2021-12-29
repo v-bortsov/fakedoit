@@ -26,6 +26,7 @@ export const delColumnCollectItem = curry(({dispatch, idx, key}): DispathParams 
       idx,
       'body',
       'collect',
+      'component',
       'value',
       key
     ]

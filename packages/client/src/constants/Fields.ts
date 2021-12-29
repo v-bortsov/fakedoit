@@ -145,9 +145,9 @@ export const dateFields = {
 }
 
 export const integerFields = {
-  head: [...unionFields.head,],
+  head: [...unionFields.head],
   body: {
-    ...unionFields.body, 
+    // ...unionFields.body, 
     'from-to': {
       name: 'from-to',
       label: 'From To',

@@ -1,6 +1,13 @@
 import { ColumnType } from '../types/enums';
 import { areas } from './Fields';
 
+export const exampleFilters = {
+  uniq: {},
+  total: {},
+  shuffle: {},
+  column: {}
+}
+
 export const exampleFields = [
   {
     head: [

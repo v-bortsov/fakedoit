@@ -1,6 +1,6 @@
 import { adjust, F, isEmpty, pipe, T, tap } from 'ramda'
 import React, { useEffect, useRef, useState } from 'react'
-import { NativeSyntheticEvent, Pressable, TextInputChangeEventData, View } from 'react-native'
+import { NativeSyntheticEvent, Pressable, TextInputKeyPressEventData, View } from 'react-native'
 import { addColumnCollectItem, delColumnCollectItem, updColumnCollectItem } from '../../constants/Actions'
 import { theme } from '../../constants/Colors'
 import { useDebounceWithCollect } from '../../hooks/useDebounce'
@@ -12,6 +12,7 @@ import { Hover, Input, InputProps, TextInputHover } from '../Primitives/TextInpu
 export interface EditableItem {
   input: InputProps
 }
+
 export interface IManual {
   InputWithButton: any
   EditableItemList?: React.FC<EditableItem>[] | null | undefined
@@ -37,10 +38,10 @@ export interface IManualProps {
 
 const submitAddColumn = (
   ref:  React.RefObject<HTMLInputElement>, dispatch: Dispatch, idx: number
-)=> async ()=>{
+)=> ()=>{
  
   if(!isEmpty(ref?.current?.value)){
-    await addColumnCollectItem({dispatch, idx, value: ref?.current?.value})
+    addColumnCollectItem({dispatch, idx, value: ref?.current?.value})
     ref.current?.clear()
   }
   ref.current?.focus()
@@ -87,7 +88,7 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
           borderColor: theme.colors.dart,
           // backgroundColor: '#fff',
         }}
-        onKeyPress={(e: NativeSyntheticEvent<TextInputChangeEventData>) => e.nativeEvent.key === 'Enter' ? submitAddColumn(
+        onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) => e.nativeEvent.key === 'Enter' ? submitAddColumn(
           ref,
           dispatch,
           idx 
@@ -142,7 +143,8 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
                   fontSize={20}
                 />
               )}
-              edit={edit[keyNumber]} />
+              edit={edit[keyNumber]}
+            />
           </View>
           <View style={{flex: 1, alignItems: 'flex-end', alignContent: 'stretch', paddingLeft: 10, paddingRight: 10}}>
             <Pressable onPress={() => delColumnCollectItem({dispatch, key: keyNumber, idx})}>
@@ -151,8 +153,8 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
           </View>
         </View>
       ))
-    }} 
-  />)
+    }}
+          />)
 }
 
 export default Manual

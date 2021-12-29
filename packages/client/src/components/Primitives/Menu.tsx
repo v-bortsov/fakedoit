@@ -1,5 +1,5 @@
 import React from 'react'
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 
 export const Menu = ({items, dispatch}: any) => (
   <View>
@@ -16,4 +16,4 @@ export const Menu = ({items, dispatch}: any) => (
   </View>
 )
 
-const styles = StyleSheet.create({})
+// const styles = StyleSheet.create({})

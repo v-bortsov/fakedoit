@@ -19,7 +19,6 @@
     "graphql-relay": "^0.6.0",
     "graphql-sequelize": "9.4.3",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.24.0",
     "node-ssh": "^6.0.0",
     "nodemon": "^2.0.7",
     "nunjucks": "^3.2.0",
@@ -28,6 +27,7 @@
     "pg-hstore": "^2.3.3",
     "ramda": "^0.27.1",
     "ramda-debug": "^0.1.4",
+    "react-native-svg-web": "^1.0.9",
     "sequelize": "6.6.2",
     "sequelize-auto": "^0.8.2",
     "sequelize-hierarchy": "^1.3.2",
@@ -48,6 +48,7 @@
     "@types/ramda": "^0.27.40",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
+    "dayjs": "^1.10.7",
     "eslint": "^7.25.0",
     "regenerator-runtime": "^0.13.3",
     "typescript": "^4.2.3"

@@ -33,16 +33,19 @@ const App: React.FC<any> = (props: any) => {
       <ConfigContext.Provider value={{state, dispatch}}>
         <Home actionSheetRef={actionSheetRef} dispatch={dispatch} state={state} />
         <ActionSheet
-          initialOffsetFromBottom={1}
+          // initialOffsetFromBottom={100}
+          // extraScroll={100}
+          // headerAlwaysVisible={true}
+          // bottomOffset={100}
+          // delayActionSheetDraw={0}
           ref={actionSheetRef}
           statusBarTranslucent
           bounceOnOpen={true}
-          drawUnderStatusBar={true}
+          drawUnderStatusBar={false}
           bounciness={4}
           gestureEnabled={true}
           defaultOverlayOpacity={0.3}
         >
-
           <ScrollView
             // nestedScrollEnabled
             onMomentumScrollEnd={() => {
@@ -179,7 +182,7 @@ const styles = StyleSheet.create({
     shadowRadius: 0.7 * 4
   },
   safeareview: {
-    // justifyContent: "center",
+    // justifyContent: 'center',
     // flex: 1,
     // backgroundColor: '#eee',
     height

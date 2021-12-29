@@ -7,29 +7,33 @@ import Timer from './Timer';
 
 const HALF_RAD = Math.PI/2
 
-export default class AnimateNumber extends Component {
+type Props = {
+  countBy?: number,
+  interval?: number,
+  steps?: number,
+  value: number,
+  timing: 'linear' | 'easeOut' | 'easeIn' | any,
+  formatter: any,
+  onProgress: any,
+  onFinish: any,
+  startAt?: number,
+  initialValue?: number
+}
+type State = {
+  value: number,
+  displayValue: number
+}
 
-  props : {
-    countBy? : number,
-    interval? : number,
-    steps? : number,
-    value : number,
-    timing : 'linear' | 'easeOut' | 'easeIn' | any,
-    formatter : any,
-    onProgress : any,
-    onFinish : any,
-    startAt? : number,
-    initialValue? : number
-  };
+export default class AnimateNumber extends Component<Props, State> {
 
   static defaultProps = {
     interval : 14,
-    timing : 'linear',
+    timing : 'easeIn',
     steps : 45,
     value : 0,
     initialValue : 0,
     formatter : (val:any) => val,
-    onFinish : () => {}
+    onFinish : () => ({})
   };
 
   static TimingFunctions = {
@@ -46,12 +50,6 @@ export default class AnimateNumber extends Component {
       interval:number, progress:number
     ):number => interval * Math.sin((HALF_RAD - HALF_RAD*progress)) * 5,
   };
-
-  state : {
-    value? : number,
-    displayValue? : number
-  };
-
   /**
    * Animation direction, true means positive, false means negative.
    * @type {bool}
@@ -68,12 +66,14 @@ export default class AnimateNumber extends Component {
    */
   endWith : number;
 
-  constructor(props:any) {
+  dirty: boolean;
+
+  constructor(props: Props) {
     super(props);
     // default values of state and non-state variables
     this.state = {
-      value : props.initialValue,
-      displayValue : props.formatter(props.initialValue)
+      value: props.initialValue,
+      displayValue: props.formatter(props.initialValue)
     }
     this.dirty = false;
     this.startFrom = 0;
@@ -83,6 +83,12 @@ export default class AnimateNumber extends Component {
   componentDidMount() {
     this.startFrom = this.state.value
     this.endWith = this.props.value
+
+    console.log(
+      this.state.value,
+      this.props.value
+    );
+    
     this.dirty = true
     setTimeout(
       () => {
@@ -92,10 +98,23 @@ export default class AnimateNumber extends Component {
     );
   }
 
-  componentWillUpdate(
-    nextProps, nextState
+  UNSAFE_componentWillUpdate (
+    nextProps: Props, nextState: State
   ) {
-
+    // console.log(
+    //   'nextProps',
+    //   nextProps
+    // );
+    // console.log(
+    //   'nextState',
+    //   nextState
+    // );
+    // console.log(
+    //   'nextPropsэ',
+    //   this.startFrom,
+    //   this.endWith
+    // );
+    
     // check if start an animation
     if(this.props.value !== nextProps.value) {
       this.startFrom = this.props.value
@@ -134,7 +153,6 @@ export default class AnimateNumber extends Component {
 
     Timer.setTimeout(
       () => {
-
         let value = (this.endWith - this.startFrom)/this.props.steps
         let sign = value >= 0 ? 1 : -1
         if(this.props.countBy)
@@ -169,7 +187,6 @@ export default class AnimateNumber extends Component {
         progress
       )
     )
-
   }
 
   getAnimationProgress():number {
@@ -196,5 +213,4 @@ export default class AnimateNumber extends Component {
         progress
       )
   }
-
 }

@@ -1,9 +1,10 @@
 # OSX
 #
 .DS_Store
-
+.history
+dist
+stats
 # Xcode
-#
 build/
 *.pbxuser
 !default.pbxuser
@@ -22,17 +23,12 @@ DerivedData
 *.xcuserstate
 
 # Android/IntelliJ
-#
 build/
 .idea
 .gradle
 local.properties
 *.iml
-.history
-dist/
-stats/
 # node.js
-#
 node_modules/
 npm-debug.log
 yarn-error.log

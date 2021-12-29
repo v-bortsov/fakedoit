@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { always, andThen, append, assoc, assocPath, both, call, chain, clone, compose, cond, converge, curry, dissocPath, equals, evolve, has, includes, indexBy, join, lensPath, map, mergeRight, objOf, of, over, path, pathEq, pipe, pluck, prepend, prop, propEq, slice, split, T, when, __ } from 'ramda';
 import { Field } from '../types/react-app-env';
 import components from '../components/Primitives';
@@ -78,8 +78,10 @@ export const timestampToMoment = when(
       'startDay',
       'value'
     ]),
-    (e: any) => moment(e)
-      .format('DD.MM.YYYY')
+    (e: any) => dayjs(
+      e,
+      'DD.MM.YYYY'
+    )
   )
 );
 

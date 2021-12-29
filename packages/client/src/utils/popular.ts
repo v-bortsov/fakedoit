@@ -1,4 +1,4 @@
-import { always, append, assoc, chain, clone, converge, curry, filter, flatten, is, length, map, mergeRight, objOf, of, omit, path, pick, pipe, pluck, prop, propEq, reject, slice, splitAt, transpose, values, when, zipObj, __, xprod, adjust, findIndex, tap, cond, find, hasPath, identity, pathEq, product, T } from 'ramda';
+import { always, append, assoc, chain, clone, converge, curry, filter, flatten, is, length, map, mergeRight, objOf, of, omit, path, pick, pipe, pluck, prop, propEq, reject, slice, splitAt, transpose, values, when, zipObj, __, xprod, adjust, findIndex, tap, cond, find, hasPath, identity, pathEq, product, T, pathSatisfies } from 'ramda';
 import { ObjectLiteral } from 'src/types/react-app-env';
 
 // import { multipledParts } from 'ramda-combo';
@@ -31,39 +31,33 @@ export const sliceAndTranspose = curry((
   ),
   transpose
 )(columns))
+
 export const multipleCount = pipe<any,any,any,any,any>(
-  filter(hasPath(['collect', 'value', 'length'])),
-  map(path(['collect', 'value', 'length'])),
+  filter(pathSatisfies(
+    (length: number)=> (length>0),
+    ['body', 'collect', 'component', 'value', 'length']
+  )),
+  map(path(['body', 'collect', 'component', 'value', 'length'])),
   values,
-  product
+  product,
 )
+
 export const calcCount = (
   columns: any, limiting: (null | string | number)
 )=>cond([
   [is(Number), identity], [
     is(String), pipe<any,any,any,any,any>(
-      pathEq(['name', 'value']),
+      pathEq(['body', 'collect', 'component', 'value']),
       find<any>(
         __,
         columns
       ),
-      path(['collect', 'value']),
+      path(['body', 'collect', 'component', 'value']),
       length
     )
   ], [T, always(multipleCount(columns))]
 ])(limiting)
-/**
- *   CartesianProduct Non using Ramda
-  const result = parts.reduce((
-    a, b
-  ) => a.reduce(
-    (
-      r, v
-    ) => r.concat(b.map(w => [].concat(
-      v, w
-    ))), []
-  ))
- */
+
 export const enumToObject: any = pipe<any, any, any, any>(
   values,
   converge(

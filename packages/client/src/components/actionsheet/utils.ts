@@ -24,7 +24,13 @@ export const SUPPORTED_ORIENTATIONS: (
   | 'landscape'
   | 'landscape-left'
   | 'landscape-right'
-)[] = ['portrait', 'portrait-upside-down', 'landscape', 'landscape-left', 'landscape-right'];
+)[] = [
+  'portrait',
+  'portrait-upside-down',
+  'landscape',
+  'landscape-left',
+  'landscape-right'
+];
 
 export const waitAsync = (ms: number): Promise<null> => new Promise((resolve) => {
   setTimeout(

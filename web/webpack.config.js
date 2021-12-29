@@ -77,6 +77,10 @@ module.exports = {
     // contentBase: path.resolve("dist"),
     // publicPath: "/dist/",
     // inline: true,
+    open: true,
+    client: {
+      overlay: false,
+    },
     historyApiFallback: true,
     // proxy: {
     //   "/static": {
@@ -86,6 +90,7 @@ module.exports = {
     // },
     static: __dirname + '/../dist/',
     hot: true,
+    liveReload: false,
     compress: false,
     port: 3000,
   },
@@ -152,7 +157,8 @@ module.exports = {
     },
   },
   stats: {
-    errorDetails: true
+    errorDetails: false,
+    warnings: false
   },
   plugins: [
     // new ForkTsCheckerWebpackPlugin({

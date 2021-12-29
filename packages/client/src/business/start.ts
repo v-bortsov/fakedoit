@@ -4,7 +4,18 @@ import { TypeLimiting } from '../types/react-app-env';
 import { sliceAndTranspose } from '../utils';
 
 export const multipledParts: any = (parts: any[][]) => parts.reduce(<any>xprod)
-
+/**
+ *   CartesianProduct Non using Ramda
+  const result = parts.reduce((
+    a, b
+  ) => a.reduce(
+    (
+      r, v
+    ) => r.concat(b.map(w => [].concat(
+      v, w
+    ))), []
+  ))
+ */
 export const cartesianCondition: any = ([columns, limiting]: [CollapseForm<FormTypes>[], TypeLimiting]) => pipe<any, any, any, any, any, any>(
   map(path([
     'body',

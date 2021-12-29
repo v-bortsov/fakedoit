@@ -43,10 +43,8 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'prefer-const': 'off',
     'react/display-name': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': [
-      'warn',
-      { ignoreArgsIfArgsAfterAreUsed: false },
-    ],
+    '@typescript-eslint/no-unused-vars-experimental': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
     'arrow-body-style': [
       'error',
       'as-needed'
@@ -72,10 +70,8 @@ module.exports = {
       'single',
       { avoidEscape: true }
     ],
-    'react/jsx-key': [
-      'warn',
-      { checkFragmentShorthand: false }
-    ],
+    'no-case-declarations': 'off',
+    'react/jsx-key': 'off',
     'react/jsx-first-prop-new-line': [
       'warn',
       'multiline'
@@ -83,6 +79,10 @@ module.exports = {
     'react/jsx-max-props-per-line': [
       'warn',
       { when: 'multiline' }
+    ],
+    'react/jsx-closing-bracket-location': [
+      1,
+      'tag-aligned'
     ],
     'react/jsx-wrap-multilines': [
       'warn',

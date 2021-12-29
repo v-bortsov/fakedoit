@@ -21,6 +21,7 @@ const reducers = {
   [Actions.DEL_COLUMN]: [[[0, 'columns'], [1, 'payload','path']], delColumnCollectItem, ['columns']],
   [Actions.ACTION_SHEET_ADD]: [[[1, 'payload', 'value']], prop(0), ['actionSheet']],
   [Actions.ACTION_SHEET_CLEAR]: clone,
+  
   // [Actions.FIELD_CHANGE_VALUE]: clone,
 }
 

@@ -1,11 +1,11 @@
 import { WeekDays } from './WeekDays';
 // import InputSpinner from 'react-native-input-spinner';
-import { Slider } from './Slider';
+import { NewSlider } from './Slider/NewSlider';
 import { Input } from './TextInput';
 import { Menu } from './Menu';
 import { TextArea } from './TextArea';
 import { DatePicker } from './DatePicker';
-import { Multislider } from './Multislider';
+import { Multislider } from './Slider/Multislider';
 import { Formatter } from './Formatter';
 // export {Input} from './TextInput'
 // export {Slider as InputNumber} from './Slider'
@@ -17,7 +17,7 @@ import { Formatter } from './Formatter';
 export default {
   Input,
   Menu,
-  InputNumber: Slider /* InputSpinner */,
+  InputNumber: NewSlider /* InputSpinner */,
   TextArea,
   WeekDays,
   DatePicker,

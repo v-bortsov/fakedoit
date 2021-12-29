@@ -1,15 +1,18 @@
-import { curry, pipe, tap } from 'ramda';
-import React, { MutableRefObject, useEffect, useRef, useState } from 'react';
+import { curry, path, pipe, tap } from 'ramda';
+import React, { MutableRefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import AnimateCounter from '../components/Effects/AnimateCounter';
 import Collapse from '../components/Effects/Collapse';
+import DateForm from '../components/forms/Date';
+import FilterForm from '../components/forms/Filter';
 import { ExampleManual } from '../components/forms/Manual';
+import NumberForm from '../components/forms/Number';
 import SvgArrowDown from '../components/icons/SvgArrowDown';
 import SvgEdit from '../components/icons/SvgEdit';
 import SvgKey from '../components/icons/SvgKey';
 import SvgOption from '../components/icons/SvgOption';
 import SvgPlus from '../components/icons/SvgPlus';
 import { Button } from '../components/Primitives/Button';
-import { Slider } from '../components/Primitives/Slider';
 import { Hover, Input, TextInputHover } from '../components/Primitives/TextInput';
 import { addMenuToActionSheet, startGen, updColumnValue } from '../constants/Actions';
 import { theme } from '../constants/Colors';
@@ -17,6 +20,7 @@ import { MenuActionAddColumn } from '../constants/Fields';
 import useDebounce from '../hooks/useDebounce';
 import { ColumnType, headType } from '../types/enums';
 import { GeneratorState } from '../types/react-app-env';
+import { calcCount } from '../utils';
 
 const HeaderBody = ({ items: [
   type,
@@ -32,7 +36,8 @@ const HeaderBody = ({ items: [
         flexDirection: 'row'
       },
       styles.accordionItem
-    ]}>
+    ]}
+  >
     <View style={styles.leftSummary}>
       <Text>{type.name}</Text>
     </View>
@@ -106,9 +111,7 @@ const HeaderBody = ({ items: [
           hover={(
             <Hover
               text={text}
-              onPress={()=>pipe(tap(() => setEdit(!edit)),
-                // tap(()=> ref.current?.focus())
-              )(null)}
+              onPress={pipe(tap(() => setEdit(!edit)))}
               icon={(
                 <SvgEdit height={height} width={width} />
               )}
@@ -116,7 +119,8 @@ const HeaderBody = ({ items: [
               padding={padding}
             />
           )}
-          edit={edit} />)
+          edit={edit}
+        />)
       })}
     </View>
     <View style={styles.keyIconSummary}>
@@ -150,7 +154,7 @@ const HeaderBody = ({ items: [
   </Pressable>
 );
 
-const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => ({ animation, open, setOpen }: any) => (
+const HeaderFooter = curry(({  idx, getStart, addColumn, totalCombination }: any) => ({animation, setOpen, open}: any) => (
   <View
     style={{
       backgroundColor: '#ffa500',
@@ -160,11 +164,7 @@ const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => (
     }}
   >
     <TouchableOpacity
-      onPress={pipe(
-        () => actionSheetRef.current?.show(),
-        ()=> startGen({dispatch}),
-        ()=> addMenuToActionSheet({dispatch, value: { component: 'Formatter', data: {}}})
-      )}
+      onPress={getStart}
       style={[
         styles.FABButton,
         {
@@ -174,13 +174,19 @@ const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => (
         },
       ]}
     >
-      <Text style={{ fontSize: 36 }}>GO!</Text>
+      <Text style={{ fontSize: 36 }}>GO ( 
+        {/* <AnimateNumber
+          value={totalCombination}
+          interval={5} // in miliseconds
+          formatter={(number: any) => parseInt(number)}
+          timing={'easeIn'}
+        /> */}
+        <AnimateCounter totalCombination={totalCombination}/>
+      )!</Text>
+
     </TouchableOpacity>
     <TouchableOpacity
-      onPress={pipe(
-        () => actionSheetRef.current?.show(),
-        ()=> addMenuToActionSheet({ dispatch, value: { component: 'Menu', data: {items: MenuActionAddColumn} } })
-      )}
+      onPress={addColumn}
       style={[
         styles.FABButton,
         { backgroundColor: '#ffa500' }
@@ -189,7 +195,7 @@ const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => (
       <SvgPlus />
     </TouchableOpacity>
     <TouchableOpacity
-      onPress={() => setOpen(!open)}
+      onPress={()=>setOpen(!open)}
       style={[
         styles.FABButton,
         { backgroundColor: '#ffa500' }
@@ -198,6 +204,9 @@ const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => (
       <Animated.View
         key={`header_${idx}`}
         style={{
+          flex: 1,
+          // alignItems: 'center',
+          justifyContent: 'center',
           transform: [
             {
               rotate: animation.interpolate({
@@ -215,11 +224,11 @@ const HeaderFooter = ({ dispatch, actionSheetRef, idx, rows, format }: any) => (
           ],
         }}
       >
-        <SvgOption />
+        <SvgOption fill={!open ? 'rgb(0,0,0)' : 'rgb(202, 217, 219)'} />
       </Animated.View>
     </TouchableOpacity>
   </View>
-);
+));
 
 export interface IHomePropsScreen {
   actionSheetRef: MutableRefObject<null>
@@ -227,39 +236,79 @@ export interface IHomePropsScreen {
   state: GeneratorState
 }
 
-export default ({ actionSheetRef, dispatch, state }: IHomePropsScreen) => (
-  <>
-    <ScrollView>
-      {state.columns && state.columns.map((
-        item: CollapseForm<FormTypes>, idx: number
-      )=>(
-        <Collapse
-          key={idx}
-          idx={idx}
-          duration={200}
-          Header={HeaderBody({ idx, dispatch, items: item.head })}
-        >
-          {(() => {
-            switch(item.head[headType.TYPE].component.value){
-            case ColumnType.CUSTOM:
-              return <ExampleManual idx={idx} collect={item.body.collect.component.value} dispatch={dispatch} />
-            default:
-              return <ExampleManual idx={idx}  collect={item.body.collect.component.value} dispatch={dispatch} />
-            }
-          })()}
-        </Collapse>
-      ))}
-    </ScrollView>
-    <Collapse
-      style={styles.collapseFooter}
-      idx={12341}
-      duration={200}
-      Header={HeaderFooter({idx: 12341, actionSheetRef, dispatch, rows: state.rows, format: state.format })}
-    >
-      <Slider />
-    </Collapse>
-  </>
-)
+export default ({ actionSheetRef, dispatch, state: {columns, limiting, filter} }: IHomePropsScreen) => {
+  const totalCombination = useMemo(
+    ()=>columns.length<=1 ? 0 : calcCount(
+      columns,
+      limiting
+    ),
+    [
+      columns,
+      limiting
+    ]
+  )
+  const getStart = pipe(
+    () => actionSheetRef.current?.setModalVisible(),
+    ()=> startGen({dispatch}),
+    ()=> addMenuToActionSheet({dispatch, value: { component: 'Formatter', data: {}}})
+  )
+
+  const addColumn = pipe(
+    () => actionSheetRef.current?.setModalVisible(),
+    ()=> addMenuToActionSheet({ dispatch, value: { component: 'Menu', data: {items: MenuActionAddColumn} } })
+  )
+  
+  const columnsList = columns.map((column: CollapseForm<FormTypes>)=> path(
+    [
+      'head',
+      headType.LABEL,
+      'value'
+    ],
+    column
+  )) as string[]
+
+  filter.byColumn.options = columnsList
+  filter.total.max = totalCombination
+
+  return (
+    <>
+      <ScrollView>
+        {columns && columns.map((
+          item: CollapseForm<FormTypes>, idx: number
+        )=>(
+          <Collapse
+            backgroundColor='rgb(202, 217, 219)'
+            key={idx}
+            idx={idx}
+            duration={200}
+            Header={HeaderBody({ idx, dispatch, items: item.head })}
+          >
+            {(() => {
+              switch(item.head[headType.TYPE].component.value){
+              case ColumnType.CUSTOM:
+                return <ExampleManual idx={idx} collect={item.body.collect.component.value} dispatch={dispatch} />
+              case ColumnType.NUMBER:
+                return <NumberForm idx={idx} options={item.body} dispatch={dispatch} />
+              case ColumnType.DATE:
+                return <DateForm idx={idx} options={item.body} dispatch={dispatch} />
+              default:
+                return <ExampleManual idx={idx}  collect={item.body.collect.component.value} dispatch={dispatch} />
+              }
+            })()}
+          </Collapse>
+        ))}
+      </ScrollView>
+      <Collapse
+        backgroundColor='rgb(202, 217, 219)'
+        idx={12341}
+        duration={200}
+        Header={HeaderFooter({addColumn, getStart, idx: 12341, totalCombination })}
+      >
+        <FilterForm {...filter} />
+      </Collapse>
+    </>
+  )
+}
 
 const childMargin = {
   marginTop: 0,
@@ -269,13 +318,6 @@ const childMargin = {
 };
 
 const styles = StyleSheet.create({
-  collapseFooter: {
-    flex: 1,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    height: 50,
-    alignItems: 'flex-end',
-  },
   btnTitle: {
     color: 'white',
     fontWeight: 'bold',

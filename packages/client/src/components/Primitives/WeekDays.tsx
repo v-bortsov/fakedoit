@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { findAndMerge } from '../../utils/popular';
 import { theme } from '../../constants/Colors'
+import { Day, WeekDay } from '../../types/react-app-env';
 
 export const setDay = (
   day: Day, days: Day[], setDays: any
@@ -24,7 +25,7 @@ const Circle = (props: any) => {
   const size = props.size || 40;
   const style = {
     borderRadius: size / 2,
-    backgroundColor: !props.active ? 'rgb(255, 255, 255)' : theme.colors.primary,
+    backgroundColor: !props.active ? 'rgb(255, 255, 255)' : 'rgb(0, 0, 0)',
     justifyContent:'center',
     alignItems:'center',
     width: size,
@@ -39,16 +40,19 @@ export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (
     { 
       value.map((
         day: Day, idx: number
-      ) => <TouchableOpacity
+      ) => (
+        <TouchableOpacity
         // style={[styles.day, day.active && styles.dayActive]}
-        onPress={()=> setDay(
-          day,
-          value,
-          onChange
-        )
-        }>
-        <Circle key={ idx } active={day.active}><Text>{day.abbr}</Text></Circle>
-      </TouchableOpacity>)
+          onPress={()=> setDay(
+            day,
+            value,
+            onChange
+          )
+          }
+        >
+          <Circle key={ idx } active={day.active}><Text style={{color: day.active ? 'rgb(255,255,255)' : 'rgb(0,0,0)'}}>{day.abbr}</Text></Circle>
+        </TouchableOpacity>
+      ))
     }
   </View>
 )

@@ -1,6 +1,6 @@
 /// <reference types="react-scripts" />
 
-type Nullable<T> = T | null;
+type Nullable<T> = T | null | undefined;
 
 declare type Tuple<T, N extends number> = N extends N
   ? number extends N
@@ -23,12 +23,20 @@ const type = <const>[
 
 type TypeLimiting = null | number | ColumnType.name;
 
+interface FilterType {
+  uniq: {value: number, min?: number, max?: number, step?: number}
+  total: {value: number, max: number, step?: number}
+  shuffle: {value: boolean }
+  byColumn: { value: string, options: Nullable<string[]> }
+}
+
 interface GeneratorState {
   theme: 'dark' | 'light';
   lang: string;
   columns: CollapseForm[];
   rows: any[];
   limiting: TypeLimiting;
+  filter: FilterType;
   loading: boolean | undefined;
   editColumn: Nullable<string>;
   format: typeof type[number];

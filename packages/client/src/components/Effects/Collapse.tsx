@@ -20,7 +20,8 @@ const Collapse = ({
   idx,
   duration,
   Header,
-  children
+  children,
+  backgroundColor
 }: Collapse) => {
 
   const [open, setOpen] = useState(false);
@@ -37,6 +38,7 @@ const Collapse = ({
         key={`desc_${idx}`}
         style={{
           maxHeight,
+          backgroundColor,
           overflow: 'hidden',
         }}
       >

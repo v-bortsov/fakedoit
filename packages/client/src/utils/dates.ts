@@ -1,5 +1,7 @@
+import dayjs from 'dayjs';
 import moment from 'moment';
 import { always, aperture, append, assoc, chain, clone, concat, converge, curry, divide, filter, flatten, ifElse, is, last, length, map, of, omit, pair, pipe, prop, reduce, repeat, when, __ } from 'ramda';
+import { Interval, DaysOfWeek } from '../types/enums';
 import { addParam, enumToObject } from './popular';
 // const opt = { days: [1, 2, 3], lengthDays: 7, limit: 10, mode: 'week|range', startDate: '', endDate: '' }
 const interval = 7;
@@ -37,15 +39,14 @@ export const addDaysToDate = curry((
   currentDate: string,
   count: number,
   flag: Interval
-) => moment(
+) => dayjs(
   currentDate,
   'DD.MM.YYYY'
 )
   .add(
     count,
     flag
-  )
-  .format('DD.MM.YYYY'));
+  ));
 
 export const dayToDate = pipe<string[], any, any, any>(
   pair,

@@ -1,19 +1,25 @@
 import React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
+import { daysOfWeek } from '../../constants/Fields'
+import { NewSlider } from '../Primitives/Slider/NewSlider'
+import { WeekDays } from '../Primitives/WeekDays'
 
 interface IDateForm {
   addItem: React.FC<any>
   output: any[]
   editableItem: React.FC<any>
 }
-function DateForm({addItem, output, editableItem}: IDateForm){
-  return <View>
-    <View>
-      {addItem}
-    </View>
-    <View>
-      {output}
-    </View>
-  </View>
+function DateForm(){
+  return (<View>
+    <Text>Days of Week:</Text>
+    <WeekDays value={daysOfWeek} />
+    <Text>Count:</Text>
+    <NewSlider
+      animateTransitions
+      value={2}
+      maximumValue={10}
+      onValueChange={console.log}
+    />
+  </View>)
 }
 export default DateForm

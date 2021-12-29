@@ -35,9 +35,14 @@ const addValueAndGroupBy = pipe(
 
 const bindTypeToHandler = cond([
   [
-    propEq(
-      'type',
-      'dates'
+    pathEq(
+      [
+        'head',
+        headType.TYPE,
+        'component',
+        'value'
+      ],
+      ColumnType.DATE
     ),
     clone /**dayOfWeekToDate */
   ],
@@ -60,9 +65,10 @@ const pathLabel: ['head', headType, Props] = [
   headType.LABEL,
   Props.VALUE
 ]
-const pathType: ['head', headType, Props] = [
+const pathType: ['head', headType, 'component', Props] = [
   'head',
   headType.TYPE,
+  'component',
   Props.VALUE
 ]
 const pathComponent: ['head', headType, Props] = [
@@ -85,6 +91,10 @@ const transformPropValue: transformPropValue = pipe(ifElse(
     pathEq(
       pathType,
       ColumnType.DICTIONARY
+    ),
+    pathEq(
+      pathType,
+      ColumnType.NUMBER
     )
   ]),
   clone,
@@ -121,10 +131,6 @@ const getColumnStructure: getColumnStructure = pipe(
     pathLabel,
     pathName
   ),
-  tap(x => console.log(
-    'column',
-    x
-  )),
   /** @ts-ignore */
   when(
     hasPath(pathLimit),
@@ -168,7 +174,11 @@ type transformPropValue = (x: CollapseForm<FormTypes>) => CollapseForm<FormTypes
 
 export const addColumn: AddColumn = ([type, columns]) => pipe<ColumnType, CollapseForm<FormTypes>,  CollapseForm<FormTypes>, CollapseForm<FormTypes>[]>(
   getColumnStructure,
-  transformPropValue,
+  tap(x => console.log(
+    'clg',
+    x
+  )),
+  // transformPropValue,
   (column: CollapseForm<FormTypes>) => [
     ...columns,
     column

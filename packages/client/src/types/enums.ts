@@ -9,7 +9,8 @@ export enum Props {
   LABEL = 'label',
   TYPE = 'type',
   LIMIT = 'limit',
-  VALUE = 'value'
+  VALUE = 'value',
+  COMPONENT = 'component'
 }
 
 export enum headType {
@@ -62,9 +63,9 @@ export enum Actions {
 }
 
 export enum Interval {
-  days = 'days',
-  weeks = 'weeks',
-  hours = 'hours',
+  days = 'day',
+  weeks = 'week',
+  hours = 'hour',
 }
 
 export enum DaysOfWeek {
