@@ -1,7 +1,9 @@
 module.exports = {
   root: true,
   extends: [
-    "eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:react/recommended",
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react/recommended',
   ],
   env: {
     node: true,
@@ -16,61 +18,101 @@ module.exports = {
       jsx: true,
       impliedStrict: true,
     },
-    sourceType: 'module',
+    // sourceType: 'module',
     useJSXTextNode: true,
+    // tsconfigRootDir: __dirname,
+    // project: ['./tsconfig.json'],
     sourceType: 'module',
+    project: [
+      './tsconfig.eslint.json',
+      './packages/*/tsconfig.json'
+    ],
+    allowAutomaticSingleRunInference: true,
     tsconfigRootDir: __dirname,
-    project: ['./tsconfig.json'],
+    warnOnUnsupportedTypeScriptVersion: false,
+    EXPERIMENTAL_useSourceOfProjectReferenceRedirect: false,
   },
   rules: {
+    'no-prototype-builtins': 'off',
+    '@typescript-eslint/ban-ts-comment': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off', 
     // 'prettier/prettier': 'off',
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     'prefer-const': 'off',
     'react/display-name': 'off',
-    '@typescript-eslint/no-unused-vars-experimental': [
-      'warn', { ignoreArgsIfArgsAfterAreUsed: false },
+    '@typescript-eslint/no-unused-vars-experimental': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'arrow-body-style': [
+      'error',
+      'as-needed'
     ],
-    'arrow-body-style': ['error', 'as-needed'],
-    'max-statements-per-line': ['error', { max: 2 }],
-    'newline-per-chained-call': ['error', { ignoreChainWithDepth: 1 }],
-    indent: ['error', 2],
-    'implicit-arrow-linebreak': ['error', 'beside'],
-    quotes: ['warn', 'single', { avoidEscape: true }],
-    'react/jsx-key': ['warn', { checkFragmentShorthand: false }],
-    'react/jsx-first-prop-new-line': ['warn', 'multiline'],
-    'react/jsx-max-props-per-line': ['warn', { when: 'multiline' }],
-    'function-paren-newline': ['error', { minItems: 2 }],
-    'function-call-argument-newline': ['error', 'always'],
-    'array-bracket-newline': ['error', { multiline: true }],
+    'max-statements-per-line': [
+      'error',
+      { max: 2 }
+    ],
+    'newline-per-chained-call': [
+      'error',
+      { ignoreChainWithDepth: 1 }
+    ],
+    indent: [
+      'error',
+      2
+    ],
+    'implicit-arrow-linebreak': [
+      'error',
+      'beside'
+    ],
+    quotes: [
+      'warn',
+      'single',
+      { avoidEscape: true }
+    ],
+    'no-case-declarations': 'off',
+    'react/jsx-key': 'off',
+    'react/jsx-first-prop-new-line': [
+      'warn',
+      'multiline'
+    ],
+    'react/jsx-max-props-per-line': [
+      'warn',
+      { when: 'multiline' }
+    ],
+    'react/jsx-closing-bracket-location': [
+      1,
+      'tag-aligned'
+    ],
+    'react/jsx-wrap-multilines': [
+      'warn',
+      {
+        'declaration': 'parens-new-line',
+        'assignment': 'parens',
+        'return': 'parens',
+        'arrow': 'parens-new-line',
+        'condition': 'parens-new-line',
+        'logical': 'parens-new-line',
+        'prop': 'parens-new-line'
+      }
+    ],
+    'function-paren-newline': [
+      'error',
+      { minItems: 2 }
+    ],
+    'function-call-argument-newline': [
+      'error',
+      'always'
+    ],
+    'array-bracket-newline': [
+      'error',
+      { multiline: true }
+    ],
     'array-element-newline': [
-      'error', { ArrayExpression: 'never', ArrayPattern: { minItems: 3 } },
+      'error',
+      { ArrayExpression: 'always', ArrayPattern: { minItems: 3 } },
     ],
-    "object-curly-newline": "off",
+    'object-curly-newline': 'off',
     
-  },
-  settings: {
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx', '.d.ts'],
-    },
-    react: {
-      createClass: 'createReactClass', // Regex for Component Factory to use,
-      // default to "createReactClass"
-      pragma: 'React', // Pragma to use, default to "React"
-      fragment: 'Fragment', // Fragment to use (may be a property of <pragma>), default to "Fragment"
-      version: 'detect', // React version. "detect" automatically picks the version you have installed.
-      // You can also use `16.0`, `16.3`, etc, if you want to override the detected value.
-      // default to latest and warns if missing
-      // It will default to "detect" in the future
-      flowVersion: '0.53', // Flow version
-    },
-    propWrapperFunctions: [
-      // The names of any function used to wrap propTypes, e.g. `forbidExtraProps`. If this isn't set, any propTypes wrapped in a function will be skipped.
-      'forbidExtraProps', { property: 'freeze', object: 'Object' }, { property: 'myFavoriteWrapper' },
-    ],
-    linkComponents: [
-      // Components used as alternatives to <a> for linking, eg. <Link to={ url } />
-      'Hyperlink', { name: 'Link', linkAttribute: 'to' },
-    ],
-  },
+  }
 };

@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  // "files": ["index.web.ts"],
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "pretty": true,
+    "sourceMap": true,
+    "composite": true,
+    "rootDir": "./src/",
+    "baseUrl": "./src/",
+    "resolveJsonModule": true,
+    "module": "es6",
+    "target": "es5",    
+    "jsx": "react",
+    // "declaration": true,
+    // "declarationDir": "packages/cline/src/types/*",
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types"
+    ],
+    // "paths": {
+    //   "ramda": [ "src/types/ramda.d.ts" ],
+    //   "*": [
+    //     "node_modules/*"
+    //   ],
+    // },
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.d.ts", "**/*.json"],
+}
