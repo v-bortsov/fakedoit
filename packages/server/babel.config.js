@@ -7,6 +7,7 @@ const presets = [
     }
   ], '@babel/typescript'
 ];
+
 const plugins = [
   '@babel/plugin-syntax-class-properties',
   '@babel/proposal-object-rest-spread',

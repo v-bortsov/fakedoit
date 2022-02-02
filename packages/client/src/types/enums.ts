@@ -2,7 +2,7 @@ export enum ColumnType {
   CUSTOM = 'CUSTOM',
   DATE = 'DATE',
   NUMBER = 'NUMBER',
-  DICTIONARY = 'DICTIONARY',
+  ONTOLOGY = 'ONTOLOGY',
 }
 export enum Props {
   NAME = 'name',

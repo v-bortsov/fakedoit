@@ -32,7 +32,8 @@ export const Hover = ({fontSize, icon, text, onPress, padding}: HoverProps)=> (
           style={[
             styles.topField,
             {fontSize}
-          ]}>
+          ]}
+        >
           {text}
         </Text>
         {isHovered /* && !isStaticIcon  */&& (
@@ -141,8 +142,7 @@ export const Input = (props: InputProps) => {
           ],
           props
         )
-      }
-    />
+      }/>
     {props.rightElement && props.rightElement}
   </View>)
 };
@@ -174,10 +174,8 @@ export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWith
           'onPress',
           'color'
         ]), props}
-        accessibilityLabel="Learn more about this purple button"
-      />
-    )}
-  />
+        accessibilityLabel="Learn more about this purple button"/>
+    )}/>
 )
 
 const styles = StyleSheet.create({

@@ -18,8 +18,7 @@ function DateForm(){
       animateTransitions
       value={2}
       maximumValue={10}
-      onValueChange={console.log}
-    />
+      onValueChange={console.log}/>
   </View>)
 }
 export default DateForm

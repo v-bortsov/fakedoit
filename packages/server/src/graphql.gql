@@ -15,7 +15,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [cities]
-  citiess(after: String, first: Int, before: String, last: Int, orderBy: [citiesConnectionOrderBy]): citiessConnection
+  citiess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [citiesConnectionOrderBy]
+  ): citiessConnection
   continents(
     id: Int
 
@@ -27,7 +40,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [continents]
-  continentss(after: String, first: Int, before: String, last: Int, orderBy: [continentsConnectionOrderBy]): continentssConnection
+  continentss(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [continentsConnectionOrderBy]
+  ): continentssConnection
   countries(
     id: Int
 
@@ -39,7 +65,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [countries]
-  countriess(after: String, first: Int, before: String, last: Int, orderBy: [countriesConnectionOrderBy]): countriessConnection
+  countriess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [countriesConnectionOrderBy]
+  ): countriessConnection
   countries_languages(
     id: Int
 
@@ -51,7 +90,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [countries_languages]
-  countries_languagess(after: String, first: Int, before: String, last: Int, orderBy: [countries_languagesConnectionOrderBy]): countries_languagessConnection
+  countries_languagess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [countries_languagesConnectionOrderBy]
+  ): countries_languagessConnection
   courses(
     id: String
 
@@ -63,7 +115,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [courses]
-  coursess(after: String, first: Int, before: String, last: Int, orderBy: [coursesConnectionOrderBy]): coursessConnection
+  coursess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [coursesConnectionOrderBy]
+  ): coursessConnection
   currencies(
     id: Int
 
@@ -75,7 +140,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [currencies]
-  currenciess(after: String, first: Int, before: String, last: Int, orderBy: [currenciesConnectionOrderBy]): currenciessConnection
+  currenciess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [currenciesConnectionOrderBy]
+  ): currenciessConnection
   districts(
     id: Int
 
@@ -87,7 +165,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [districts]
-  districtss(after: String, first: Int, before: String, last: Int, orderBy: [districtsConnectionOrderBy]): districtssConnection
+  districtss(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [districtsConnectionOrderBy]
+  ): districtssConnection
   districts_regions(
     id: Int
 
@@ -99,7 +190,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [districts_regions]
-  districts_regionss(after: String, first: Int, before: String, last: Int, orderBy: [districts_regionsConnectionOrderBy]): districts_regionssConnection
+  districts_regionss(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [districts_regionsConnectionOrderBy]
+  ): districts_regionssConnection
   exonyms(
     id: Int
 
@@ -111,7 +215,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [exonyms]
-  exonymss(after: String, first: Int, before: String, last: Int, orderBy: [exonymsConnectionOrderBy]): exonymssConnection
+  exonymss(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [exonymsConnectionOrderBy]
+  ): exonymssConnection
   languages(
     id: Int
 
@@ -123,7 +240,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [languages]
-  languagess(after: String, first: Int, before: String, last: Int, orderBy: [languagesConnectionOrderBy]): languagessConnection
+  languagess(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [languagesConnectionOrderBy]
+  ): languagessConnection
   regions(
     id: Int
 
@@ -135,7 +265,20 @@ type RootQuery {
     order: String
     offset: Int
   ): [regions]
-  regionss(after: String, first: Int, before: String, last: Int, orderBy: [regionsConnectionOrderBy]): regionssConnection
+  regionss(
+    """Returns the items in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the first n items from the list."""
+    first: Int
+
+    """Returns the items in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the last n items from the list."""
+    last: Int
+    orderBy: [regionsConnectionOrderBy]
+  ): regionssConnection
 }
 
 type cities {

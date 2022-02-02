@@ -1,17 +1,5 @@
 import React, {PureComponent} from 'react';
-import {
-  Animated,
-  Easing,
-  I18nManager,
-  Image,
-  ImageSourcePropType,
-  LayoutChangeEvent,
-  PanResponder,
-  PanResponderInstance,
-  View,
-  ViewStyle,
-} from 'react-native';
-// styles
+import { Animated, Easing, I18nManager, Image, ImageSourcePropType, LayoutChangeEvent, PanResponder, PanResponderInstance, View, ViewStyle, } from 'react-native';
 import {defaultStyles as styles} from './styles';
 import type {Dimensions, SliderProps, SliderState} from './types';
 
@@ -300,12 +288,10 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
         },
       );
     };
-
-    _handlePanResponderRequestEnd = () =>
     /* e, gestureState: GestureState */
     
     // Should we allow another component to take over this pan?
-      false;
+    _handlePanResponderRequestEnd = () => false;
 
     _handlePanResponderEnd = (
       _e: any, gestureState: any
@@ -620,8 +606,7 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
           style={[
             styles.debugThumbTouchArea,
             positionStyle
-          ]}
-        />
+          ]} />
       );
     };
 
@@ -638,8 +623,7 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                     (Array.isArray(thumbImage)
                       ? thumbImage[thumbIndex]
                       : thumbImage) as ImageSourcePropType
-          }
-        />
+          }/>
       );
     };
 
@@ -757,7 +741,7 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                 <Animated.View
                   key={`slider-above-thumb-${i}`}
                   style={[
-                    styles.renderThumbComponent, // eslint-disable-next-line react-native/no-inline-styles
+                    styles.renderThumbComponent, 
                     {
                       bottom: 0,
                       transform: [
@@ -770,7 +754,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                       ],
                       ...valueVisibleStyle,
                     },
-                  ]}>
+                  ]}
+                >
                   {renderAboveThumbComponent(i)}
                 </Animated.View>
               ))}
@@ -783,7 +768,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
               vertical ? {transform: [{rotate: '-90deg' }]} : {},
               containerStyle
             ]}
-            onLayout={this._measureContainer}>
+            onLayout={this._measureContainer}
+          >
             <View
               renderToHardwareTextureAndroid
               style={[
@@ -793,16 +779,14 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                 },
                 trackStyle,
               ]}
-              onLayout={this._measureTrack}
-            />
+              onLayout={this._measureTrack}/>
             <Animated.View
               renderToHardwareTextureAndroid
               style={[
                 styles.track,
                 trackStyle,
                 minimumTrackStyle
-              ]}
-            />
+              ]}/>
             {renderTrackMarkComponent &&
                         interpolatedTrackMarksValues &&
                         interpolatedTrackMarksValues.map((
@@ -823,7 +807,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                                 ],
                                 ...valueVisibleStyle,
                               },
-                            ]}>
+                            ]}
+                          >
                             {renderTrackMarkComponent(i)}
                           </Animated.View>
                         ))}
@@ -854,7 +839,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                     ...valueVisibleStyle,
                   },
                 ]}
-                onLayout={this._measureThumb}>
+                onLayout={this._measureThumb}
+              >
                 {renderThumbComponent
                   ? renderThumbComponent()
                   : this._renderThumbImage(i)}
@@ -865,7 +851,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                 styles.touchArea,
                 touchOverflowStyle
               ]}
-              {...this._panResponder.panHandlers}>
+              {...this._panResponder.panHandlers}
+            >
               {!!debugTouchArea &&
                 interpolatedThumbValues.map((
                   value, i

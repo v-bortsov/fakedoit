@@ -4,17 +4,18 @@ import type { countries, countriesId } from './countries';
 import type { languages, languagesId } from './languages';
 
 export interface countries_languagesAttributes {
-  id?: number;
+  id: number;
   country_id: number;
   language_id?: number;
 }
 
 export type countries_languagesPk = "id";
 export type countries_languagesId = countries_languages[countries_languagesPk];
-export type countries_languagesCreationAttributes = Optional<countries_languagesAttributes, countries_languagesPk>;
+export type countries_languagesOptionalAttributes = "id" | "language_id";
+export type countries_languagesCreationAttributes = Optional<countries_languagesAttributes, countries_languagesOptionalAttributes>;
 
 export class countries_languages extends Model<countries_languagesAttributes, countries_languagesCreationAttributes> implements countries_languagesAttributes {
-  id?: number;
+  id!: number;
   country_id!: number;
   language_id?: number;
 
@@ -30,7 +31,7 @@ export class countries_languages extends Model<countries_languagesAttributes, co
   createLanguage!: Sequelize.BelongsToCreateAssociationMixin<languages>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof countries_languages {
-    countries_languages.init({
+    return countries_languages.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -68,6 +69,5 @@ export class countries_languages extends Model<countries_languagesAttributes, co
       },
     ]
   });
-  return countries_languages;
   }
 }

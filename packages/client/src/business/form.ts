@@ -26,7 +26,6 @@ export const addCollectItem = ([
   idx,
   value]: [CollapseForm<FormTypes>[], number, string
 ])=>{
-
   console.log(columns);
   
   const pathUntillValue = [
@@ -62,7 +61,7 @@ export const getFieldsByType = cond<ColumnType, any>([
     always(dateFields)
   ],
   [
-    equals<ColumnType>(ColumnType.DICTIONARY),
+    equals<ColumnType>(ColumnType.ONTOLOGY),
     always(dictionaryFields)
   ],
   [

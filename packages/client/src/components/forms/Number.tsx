@@ -4,6 +4,7 @@ import { StyleSheet, Switch, Text, View } from 'react-native'
 import { NewSlider } from '../Primitives/Slider/NewSlider'
 
 export default function NumberForm() {
+  const isEnablede = true
   return (
     <View>
       <Text>Range:</Text>
@@ -14,23 +15,20 @@ export default function NumberForm() {
           2
         ]}
         maximumValue={10}
-        onValueChange={(value: any) => console.log(value)}
-      />
+        onValueChange={(value: any) => console.log(value)}/>
       <Text>Count:</Text>
       <NewSlider
         animateTransitions
         value={2}
         maximumValue={10}
-        onValueChange={(value: any) => console.log(value)}
-      />
+        onValueChange={(value: any) => console.log(value)}/>
       <Text>Random:</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#81b0ff' }}
-        thumbColor={true ? '#f5dd4b' : '#f4f3f4'}
+        thumbColor={isEnablede ? '#f5dd4b' : '#f4f3f4'}
         ios_backgroundColor="#3e3e3e"
         onValueChange={console.log}
-        value={false}
-      />
+        value={false}/>
     </View>
   )
 }

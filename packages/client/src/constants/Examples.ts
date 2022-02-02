@@ -20,9 +20,7 @@ export const exampleFields = [
             'field is empty'
           ]
         ],
-        component: 'Select',
-        options: areas,
-        defaultValue: null,
+        component: {name: 'Select', value: ColumnType.CUSTOM, options: areas, defaultValue: null},
         value: ColumnType.CUSTOM,
       },
       {
@@ -94,9 +92,7 @@ export const exampleFields = [
             'field is empty'
           ]
         ],
-        component: 'Select',
-        options: areas,
-        defaultValue: null,
+        component: {name: 'Select', value: ColumnType.CUSTOM, options: areas, defaultValue: null},
         value: ColumnType.CUSTOM,
       },
       {

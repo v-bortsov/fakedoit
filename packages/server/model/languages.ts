@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { countries_languages, countries_languagesId } from './countries_languages';
 
 export interface languagesAttributes {
-  id?: number;
+  id: number;
   native: string;
   name: string;
   abbr: string;
@@ -12,10 +12,11 @@ export interface languagesAttributes {
 
 export type languagesPk = "id";
 export type languagesId = languages[languagesPk];
-export type languagesCreationAttributes = Optional<languagesAttributes, languagesPk>;
+export type languagesOptionalAttributes = "id" | "rtl";
+export type languagesCreationAttributes = Optional<languagesAttributes, languagesOptionalAttributes>;
 
 export class languages extends Model<languagesAttributes, languagesCreationAttributes> implements languagesAttributes {
-  id?: number;
+  id!: number;
   native!: string;
   name!: string;
   abbr!: string;
@@ -35,7 +36,7 @@ export class languages extends Model<languagesAttributes, languagesCreationAttri
   countCountries_languages!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof languages {
-    languages.init({
+    return languages.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -74,6 +75,5 @@ export class languages extends Model<languagesAttributes, languagesCreationAttri
       },
     ]
   });
-  return languages;
   }
 }

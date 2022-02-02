@@ -1,10 +1,10 @@
 // import { MaterialIcons } from '@expo/vector-icons';
-import * as React from "react";
-import { StyleSheet } from "react-native";
-import { languages } from "../../constants/Translations";
-import { Text, View } from "../Themed";
-import ActionSheet, { Items } from "./ActionSheet";
-import IconButton from "../../components/Complex/IconButton";
+import * as React from 'react';
+import { StyleSheet } from 'react-native';
+import { languages } from '../../constants/Translations';
+import { Text, View } from '../Themed';
+import ActionSheet, { Items } from './ActionSheet';
+import IconButton from '../../components/Complex/IconButton';
 
 export default function AppBar({
   setAdd,
@@ -26,6 +26,6 @@ export default function AppBar({
   );
 }
 const styles = StyleSheet.create({
-  container: { flex: 1, color: "#fff", flexDirection: "row" },
+  container: { flex: 1, color: '#fff', flexDirection: 'row' },
   item: { flex: 1 },
 });

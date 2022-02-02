@@ -1,16 +1,12 @@
 import { Actions, ColumnType } from '../types/enums';
-import {
-  countries,
-  languages,
-  currencies,
-  getCitiesByCountry,
-} from '../services/network';
+import { countries, languages, currencies, getCitiesByCountry, } from '../services/network';
 
 export const MenuActionAddColumn = [
-  { icon: 'playlist-plus', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.CUSTOM }}, backgroundColor: '#b72424' },
-  { icon: 'calendar-today', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.DATE }}, backgroundColor: '#8524b7' },
-  { icon: 'format-list-numbered', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.NUMBER }}, backgroundColor: '#24b773' },
-  { icon: 'database', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.DICTIONARY }}, backgroundColor: '#ea8c2b' }
+  { icon: 'playlist-plus', label: 'Custom', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.CUSTOM }}, backgroundColor: '#b72424' },
+  { icon: 'calendar-today', label: 'Dates', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.DATE }}, backgroundColor: '#8524b7' },
+  { icon: 'format-list-numbered', label: 'Numbers', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.NUMBER }}, backgroundColor: '#24b773' },
+  { icon: 'database', label: 'Cities', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.ONTOLOGY, prop: 'country' }}, backgroundColor: '#ea8c2b' },
+  { icon: 'database', label: 'Countries', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.ONTOLOGY, prop: 'language' }}, backgroundColor: '#ea8c2b' }
 ];
 
 export const daysOfWeek = [
@@ -22,12 +18,14 @@ export const daysOfWeek = [
   { label: 'Friday', abbr: 'Fri', active: true },
   { label: 'Saturday', abbr: 'Sat', active: false }
 ];
+
 export const areas = [
   { label: 'Custom', value: ColumnType.CUSTOM },
   { label: 'Number', value: ColumnType.NUMBER },
   { label: 'Dates', value: ColumnType.DATE },
-  { label: 'Dictionary', value: ColumnType.DICTIONARY },
+  { label: 'Ontology', value: ColumnType.ONTOLOGY },
 ];
+
 export const dictionaries = [
   { label: 'Cities', value: 'cities' },
   { label: 'Countries', value: 'countries' },
@@ -172,25 +170,28 @@ export const integerFields = {
   }
 }
 
+
+
 export const dictionaryFields = {
   head: [...unionFields.head],
   body: {
     ...unionFields.body, 
-    dictionary: {
-      name: 'dictionary',
-      label: 'Type',
-      component: {
-        rules: [
-          [
-            'isEmpty',
-            'field is empty'
-          ]
-        ],
-        name: 'Select',
-        options: dictionaries,
-        defaultValue: null,
-      }
-    },
+    country:  {label: 'Country', component: {name: 'country', value: 1, options: areas, defaultValue: null}},
+    // dictionary: {
+    //   name: 'dictionary',
+    //   label: 'Type',
+    //   component: {
+    //     rules: [
+    //       [
+    //         'isEmpty',
+    //         'field is empty'
+    //       ]
+    //     ],
+    //     name: 'Select',
+    //     options: dictionaries,
+    //     defaultValue: null,
+    //   }
+    // },
   }
 }
 

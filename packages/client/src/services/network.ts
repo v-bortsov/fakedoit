@@ -1,7 +1,7 @@
 import { client } from '../client';
 import { gql } from '@apollo/client';
 
-export const getCitiesByCountry = (variables: any) => client.query({
+export const getCitiesByCountry = (variables: {countryId: number, limit: number}) => client.query({
   query: gql`
       query getCitiesByCountry($countryId: Int, $limit: Int) {
         countries(id: $countryId) {
@@ -17,7 +17,8 @@ export const getCitiesByCountry = (variables: any) => client.query({
     `,
   variables,
 });
-export const countries = () => client.query({
+
+export const getCountries = () => client.query({
   query: gql`
       query countries {
         countries {
@@ -27,6 +28,7 @@ export const countries = () => client.query({
       }
     `,
 });
+
 export const currencies = () => client.query({
   query: gql`
       query {
@@ -37,6 +39,7 @@ export const currencies = () => client.query({
       }
     `,
 });
+
 export const languages = () => client.query({
   query: gql`
       query languages {

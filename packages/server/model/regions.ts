@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface regionsAttributes {
-  id?: number;
+  id: number;
   name?: string;
   native?: string;
   code?: string;
@@ -11,10 +11,11 @@ export interface regionsAttributes {
 
 export type regionsPk = "id";
 export type regionsId = regions[regionsPk];
-export type regionsCreationAttributes = Optional<regionsAttributes, regionsPk>;
+export type regionsOptionalAttributes = "id" | "name" | "native" | "code" | "country_id";
+export type regionsCreationAttributes = Optional<regionsAttributes, regionsOptionalAttributes>;
 
 export class regions extends Model<regionsAttributes, regionsCreationAttributes> implements regionsAttributes {
-  id?: number;
+  id!: number;
   name?: string;
   native?: string;
   code?: string;
@@ -22,7 +23,7 @@ export class regions extends Model<regionsAttributes, regionsCreationAttributes>
 
 
   static initModel(sequelize: Sequelize.Sequelize): typeof regions {
-    regions.init({
+    return regions.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -60,6 +61,5 @@ export class regions extends Model<regionsAttributes, regionsCreationAttributes>
       },
     ]
   });
-  return regions;
   }
 }

@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export const TextArea = (props: any): JSX.Element => 
+export const TextArea = (props: any): JSX.Element => (
   <TextInput
     style={{backgroundColor: '#fff', outlineStyle: 'none', outlineWidth: 0}}
     onChangeText={props.onChange}
@@ -19,15 +19,5 @@ export const TextArea = (props: any): JSX.Element =>
       props
     )}
     numberOfLines={4}
-    multiline
-    // h={20}
-    // aria-label="t1"
-    // placeholder="Text Area Placeholder"
-    // variant="filled"
-    // _light={{
-    //   placeholderTextColor: 'blueGray.400',
-    // }}
-    // _dark={{
-    //   placeholderTextColor: 'blueGray.50',
-    // }}
-    />
+    multiline/>
+)

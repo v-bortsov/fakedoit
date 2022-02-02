@@ -1,18 +1,13 @@
-/** @ts-ignore */
 // import options from 'dotenv/lib/env-options';
 import {
   GraphQLEnumType, GraphQLInt, GraphQLList
 } from 'graphql';
 
-import {
-  defaultArgs, defaultListArgs, JSONType, resolver
-  /** @ts-ignore */
-} from 'graphql-sequelize';
+import { defaultArgs, defaultListArgs, JSONType, resolver } from 'graphql-sequelize';
 import { curry } from 'ramda';
 
 // simple query
 export const collectFrame = (
-  /** @ts-ignore */
   model: any, num: any, k: any
 ) => ({
   type: new GraphQLList(num),
@@ -23,11 +18,9 @@ export const collectFrame = (
 });
 
 export const cudResolvers = (
-  /** @ts-ignore */
   model: any, inputTypeName: any, primaryKey: any, resolvers: any
 ) => ({
   [`${inputTypeName}Create`]: (
-    /** @ts-ignore */
     source: any, args: any, context: any, info: any
   ) => {
     if (inputTypeName == 'User') {
@@ -109,6 +102,7 @@ export const cudResolvers = (
     return model.destroy({ where }); // Returns the number of rows affected (0 or more)
   },
 });
+
 export const crudFrame = (
   /** @ts-ignore */
   model: any, num: any, inputTypeName: any, outputs: any, inputs: any

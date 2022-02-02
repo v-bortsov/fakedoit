@@ -13,7 +13,11 @@ function formatDate(date: string) {
     month = '0' + month;
   if (day.length < 2)
     day = '0' + day;
-  return [day, month, year].join('-');
+  return [
+    day,
+    month,
+    year
+  ].join('-');
 }
 
 export function DatePicker(props: any) {
@@ -32,7 +36,10 @@ export function DatePicker(props: any) {
       setOpen(false);
       setDate(params.date);
     },
-    [setOpen, setDate]
+    [
+      setOpen,
+      setDate
+    ]
   );
   return (
     <>
@@ -41,8 +48,7 @@ export function DatePicker(props: any) {
         title={isNil(props.value) || isEmpty(props.value) ? 'Pick single date' : is(
           String,
           props.value
-        ) ? props.value : formatDate(props.value.toString())}
-      />
+        ) ? props.value : formatDate(props.value.toString())}/>
       {/* <DatePickerModal
         // locale={'en'} optional, default: automatic
         mode="single"

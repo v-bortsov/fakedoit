@@ -16,6 +16,7 @@ const BundleAnalyzerPlugin =
 const CopyPlugin = require('copy-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+
 module.exports = {
   entry: [
     isDevEnv && 'webpack/hot/dev-server.js', isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=true', path.join(
@@ -164,13 +165,15 @@ module.exports = {
     // new ForkTsCheckerWebpackPlugin({
     //   configFile: __dirname + '/../tsconfig.json'
     // }),
-    new ESLintPlugin({ extensions: ['ts', 'tsx'] }), new HtmlWebpackPlugin({
+    new ESLintPlugin({ extensions: ['ts', 'tsx'] }),
+    new HtmlWebpackPlugin({
       inject: true,
       template: path.join(
         __dirname,
         './index.html'
       ),
-    }), isProdEnv && new CompressionPlugin(),
+    }),
+    isProdEnv && new CompressionPlugin(),
 
     // new Visualizer({
     //   filename: path.join("..", "stats", "statistics.html"),

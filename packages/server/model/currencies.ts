@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { countries, countriesId } from './countries';
 
 export interface currenciesAttributes {
-  id?: number;
+  id: number;
   native?: string;
   name?: string;
   abbr: string;
@@ -11,10 +11,11 @@ export interface currenciesAttributes {
 
 export type currenciesPk = "id";
 export type currenciesId = currencies[currenciesPk];
-export type currenciesCreationAttributes = Optional<currenciesAttributes, currenciesPk>;
+export type currenciesOptionalAttributes = "id" | "native" | "name";
+export type currenciesCreationAttributes = Optional<currenciesAttributes, currenciesOptionalAttributes>;
 
 export class currencies extends Model<currenciesAttributes, currenciesCreationAttributes> implements currenciesAttributes {
-  id?: number;
+  id!: number;
   native?: string;
   name?: string;
   abbr!: string;
@@ -33,7 +34,7 @@ export class currencies extends Model<currenciesAttributes, currenciesCreationAt
   countCountries!: Sequelize.HasManyCountAssociationsMixin;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof currencies {
-    currencies.init({
+    return currencies.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -67,6 +68,5 @@ export class currencies extends Model<currenciesAttributes, currenciesCreationAt
       },
     ]
   });
-  return currencies;
   }
 }

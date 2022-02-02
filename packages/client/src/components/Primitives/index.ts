@@ -5,7 +5,6 @@ import { Input } from './TextInput';
 import { Menu } from './Menu';
 import { TextArea } from './TextArea';
 import { DatePicker } from './DatePicker';
-import { Multislider } from './Slider/Multislider';
 import { Formatter } from './Formatter';
 // export {Input} from './TextInput'
 // export {Slider as InputNumber} from './Slider'
@@ -21,6 +20,5 @@ export default {
   TextArea,
   WeekDays,
   DatePicker,
-  Multislider,
   Formatter
 };

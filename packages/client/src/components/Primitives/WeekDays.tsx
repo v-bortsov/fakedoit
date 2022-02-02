@@ -1,5 +1,5 @@
-import { lensProp, not, over, pipe, __ } from 'ramda';
 import React from 'react';
+import { lensProp, not, over, pipe, __ } from 'ramda';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { findAndMerge } from '../../utils/popular';
 import { theme } from '../../constants/Colors'
@@ -35,6 +35,7 @@ const Circle = (props: any) => {
 
   return <View style={style}>{props.children}</View>;
 };
+
 export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (
   <View style={styles.container}>
     { 
@@ -56,6 +57,7 @@ export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (
     }
   </View>
 )
+
 const styles = StyleSheet.create({
   container: { 
     flex: 1,

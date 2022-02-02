@@ -278,8 +278,7 @@ const SelectDropdown = (
               backgroundColor: dropdownOverlayColor,
             },
           ]}
-          onPress={() => closeDropdown()}
-        />
+          onPress={() => closeDropdown()}/>
         <View
           style={[
             styles.dropdownOverlayView,
@@ -306,16 +305,16 @@ const SelectDropdown = (
               keyExtractor={(
                 item, index
               ) => index.toString()}
-              ref={(ref) => (dropDownFlatlistRef.current = ref)}
+              ref={(ref) => (dropDownFlatlistRef?.current = ref)}
               renderItem={renderFlatlistItem}
               getItemLayout={(
                 data, index
               ) => ({
                 index,
-                length: data.length,
+                length: data?.length,
                 offset:
-                    rowStyle && rowStyle.height
-                      ? rowStyle.height * index
+                    rowStyle && rowStyle?.height
+                      ? rowStyle?.height * index
                       : 50 * index,
               })}
               onLayout={() => {
@@ -328,15 +327,13 @@ const SelectDropdown = (
                     animated: true,
                   });
                 }
-              }}
-            />
+              }}/>
           )}
         </View>
       </Modal>
     )
   );
   
-
   return (
     <Pressable
       disabled={disabled}
