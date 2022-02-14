@@ -1,0 +1,48 @@
+version:  '3'
+services:
+    # sonarqube:
+    #     container_name:  sonarqube
+    #     image:  sonarqube:latest
+    #     ports:
+    #         -  "9000:9000"
+    #         -  "9092:9092"
+    # frontend:
+    db:
+        # image: postgres
+        # restart: always
+        container_name: db
+        environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=mysecretpassword
+        - POSTGRES_DB=postgres
+        # env_file:
+        # - packages/server/production.env
+        build:
+            args:
+            - POSTGRES_USER=$DB_USER
+            - POSTGRES_DB=$DB_NAME
+            - POSTGRES_PASSWORD=$DB_PASS
+            context: ./
+            dockerfile: ./scripts/db/Dockerfile.db
+        ports:
+        - 5432:5432
+        # volumes:
+        # - postgres:/var/lib/postgresql/data
+    backend:
+        image: pm2graphql
+        container_name: backend
+        build:
+            context: ./packages/server
+            dockerfile: Dockerfile
+            # args:
+            #     buildno: 1
+        depends_on:
+        - "db"
+        command: ["./scripts/db/wait-for-postgres.sh", "db"]
+    # adminer:
+    #     image: adminer
+    #     restart: always
+    #     depends_on:
+    #     - "db"
+    #     ports:
+    #     - 8080:8080

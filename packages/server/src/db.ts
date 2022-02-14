@@ -1,17 +1,13 @@
 import { Sequelize } from 'sequelize';
 import pg from 'pg';
 
-export  const db = () => new Sequelize(
-  process.env.DB_LINE,
+export default () => new Sequelize(
+  `postgres://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}?sslmode=require`,
   {
-    // operatorsAliases: Op,
-    // native: true,
     logging: false,
     define: {
       freezeTableName: true,
     },
-    // ssl: true,
-    // pgsslmode: 'no-verify',
     dialect: 'postgres',
     dialectModule: pg,
     dialectOptions: {

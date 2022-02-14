@@ -8,36 +8,46 @@ const nodeExternals = require('webpack-node-externals');
 const Dotenv = require('dotenv-webpack');
 const NodemonPlugin = require('nodemon-webpack-plugin'); 
 
-const rootDir = path.join(
-  __dirname,
-  '..' 
-);
+const rootDir = __dirname;
 const ASSET_PATH = process.env.OLDPWD || '/';
 
 const webpackEnv = process.env.NODE_ENV || 'development';
 const isProdEnv = webpackEnv === 'production';
 const isDevEnv = webpackEnv === 'development';
+const { resolve } = require('path')
 
-console.log(rootDir);
+// const dotenv = require('dotenv').config( {
+//   path: path.join(__dirname, 'production.env')
+// } );
+
+console.log(webpackEnv, resolve(__dirname, './production.env'))
 
 module.exports = {
-  entry: [
+  entry: {
     // isDevEnv && 'webpack/hot/dev-server.js',
     // // 'webpack-hot-middleware/client?path=/__webpack_hmr&timeout=20000',
     // isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=false',
     // isDevEnv && 'webpack/hot/poll?1000',
-    path.join(
-      rootDir,
-    './packages/server/src/makeModels.ts'
-    ),
-    path.join(
-      rootDir,
-      './packages/server/src/server.ts'
-    )
-  ].filter(Boolean),
+    // () => ['./src/makeModels.ts',
+    make: {
+      import: path.join(
+        rootDir,
+        './src/makeModels.ts'
+      ),
+      filename: 'makeModels.js'
+    },
+    server: {
+      import: path.join(
+        rootDir,
+        './src/server.ts'
+      ),
+      dependOn: 'make',
+      filename: 'server.bundle.js'
+    }
+  },
   mode: webpackEnv,
   output: {
-    filename: 'server.bundle.js',
+    // filename: 'server.bundle.js',
     path: path.resolve(
       rootDir,
       'dist'
@@ -57,7 +67,7 @@ module.exports = {
       overlay: false,
     },
     historyApiFallback: true,
-    static: __dirname + '/../dist/',
+    static: __dirname + '/dist/',
     hot: isDevEnv,
     liveReload: false,
     compress: false,
@@ -92,7 +102,7 @@ module.exports = {
           // silent: false,
           // babelrc: true,
           transpileOnly: true,
-          configFile: __dirname + '/../packages/server/tsconfig.json',
+          configFile: __dirname + '/tsconfig.json',
           errorFormatter: function customErrorFormatter(
             error, colors
           ) {
@@ -118,7 +128,7 @@ module.exports = {
       'pg-native': 'noop2',
     }
   },
-  externals: [nodeExternals({ allowlist: ['sequelize', 'pg-hstore', 'pg'], modulesDir: '../packages/server/node_modules'})],
+  externals: [nodeExternals({ allowlist: ['sequelize', 'pg-hstore', 'pg'], modulesDir: './node_modules'})],
   externalsPresets: {
     node: true // in order to ignore built-in modules like path, fs, etc. 
   },
@@ -137,16 +147,18 @@ module.exports = {
     //   DEBUG: false,
     // }),
     new Dotenv({
-      path: __dirname+'/../.env',
-      defaults: false,
+      path: resolve(__dirname, './production.env'),
+      // safe: true,
     }),
     new webpack.DefinePlugin({
+      // process: {
+      //   env: dotenv.parsed
+      // }
       'process.env.MODE': JSON.stringify(isProdEnv ? 'production' : 'development'),
       'process.env.NODE_TLS_REJECT_UNAUTHORIZED': 0
     }),
     // isProdEnv && new CompressionPlugin(),
     isDevEnv && new NodemonPlugin(),
     // isDevEnv && new webpack.HotModuleReplacementPlugin(),
-
   ].filter(Boolean),
 }
