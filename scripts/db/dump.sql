@@ -108,4 +108,4 @@ COPY continents FROM '/app/data/continents' WITH (FORMAT csv);
 COPY countries_languages FROM '/app/data/countries_languages' WITH (FORMAT csv);
 COPY regions FROM '/app/data/regions' WITH (FORMAT csv);
 COPY districts FROM '/app/data/districts' WITH (FORMAT csv);
-COPY cities FROM '/app/data/cities' WITH (FORMAT csv, delimiter ';');
+-- COPY cities FROM '/app/data/cities' WITH (FORMAT csv/* , delimiter ';' */);

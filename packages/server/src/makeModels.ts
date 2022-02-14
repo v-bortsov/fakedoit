@@ -2,6 +2,10 @@ import SequelizeAuto from 'sequelize-auto'
 import fs from 'fs'
 import pg from 'pg';
 
+// require('dotenv').config( {
+//   path: __dirname+'/../production.env'
+// } );
+
 export const isDirEmpty = (path: any): Promise<boolean> => fs.promises.readdir(path)
   .then((files: string[]) =>files.length === 0);
 
@@ -16,7 +20,7 @@ function isDir(path: string) {
 }
 
 const dir = __dirname+'/../'+process.env.MODELS_DIR
-
+console.log(dir, isDir(dir))
 if(isDir(dir)){
 
   const gen = new SequelizeAuto(
@@ -24,7 +28,7 @@ if(isDir(dir)){
     process.env.DB_USER,
     process.env.DB_PASS,
     {
-      dialect: process.env.DB_DIALECT,
+      dialect: 'postgres',
       dialectModule: pg,
       directory: dir,
       host: process.env.DB_HOST,
