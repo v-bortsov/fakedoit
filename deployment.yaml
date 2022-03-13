@@ -27,10 +27,24 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: pm2graphql
-        image: noname001/pm2graphql
-        env:
-        - name: DB_HOST
-          value: postgres://db
+        image: pm2graphql
+        imagePullPolicy: Never
+        envFrom:
+          - configMapRef:
+              name: configmap
+        # lifecycle:
+        #   postStart:
+        #     exec:
+        #       command:
+        #       - "sh"
+        #       - "-c"
+        #       - >
+        #         yarn build
+        #         node ./dist/makeModels.js
+        # pm2 start ./dist/server.bundle.js
+        # env:
+        # - name: DB_HOST
+        #   value: postgres://db
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -49,7 +63,11 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: db
-        image: noname001/db
+        image: db
+        imagePullPolicy: Never
+        envFrom:
+          - configMapRef:
+              name: configmap
 ---
 apiVersion: v1
 kind: Service

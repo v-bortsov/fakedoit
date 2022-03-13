@@ -109,6 +109,14 @@ module.exports = {
       //     },
       //   },
       // },
+      {
+        test: /\.m?js$/,
+        include: /node_modules/,
+        type: "javascript/auto",
+        resolve: {
+          fullySpecified: false
+        }
+      },
       isProdEnv && {
         test: /\.(tsx?|jsx?)$/,
         loader: 'babel-loader',

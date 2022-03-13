@@ -1,0 +1,3 @@
+[submodule "react-native-actions-sheet-web"]
+	path = react-native-actions-sheet-web
+	url = https://github.com/v-bortsov/react-native-actions-sheet-web

@@ -1,0 +1,11 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: configmap 
+data:
+  POSTGRES_USER: postgres
+  POSTGRES_PASS: mysecretpassword
+  POSTGRES_NAME: postgres
+  POSTGRES_HOST: db
+  POSTGRES_PORT: "5432"
+  MODELS_DIR: model

@@ -1,8 +1,8 @@
 {
   "name": "rn-nodejs-monorep",
   "version": "1.0.0",
-  "description": "Starter for Monorepos: Lerna, TypeScript, CRA and Storybook",
-  "repository": "https://github.com/v-bortsov/react-typescript-data-gen.git",
+  "description": "Starter for Monorepos: Lerna, TypeScript, CRNA and Storybook",
+  "repository": "https://github.com/v-bortsov/fakedoit.git",
   "license": "MIT",
   "private": true,
   "workspaces": {

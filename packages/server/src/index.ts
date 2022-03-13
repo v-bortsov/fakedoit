@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { andThen, clone, converge, mergeRight, path, pipe, tap } from 'ramda';
-import { modelsToGraphQlType, resolvers, typeDefs } from './scaffolds/gql/schemas';
+import { modelsToGraphQlType, resolvers, typeDefs } from './schemas';
 import db from './db';
 
 export default pipe<any, any, any>(

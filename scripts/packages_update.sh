@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # delete node_modules on linux
 rm -rf ./node_modules ./yarn.lock ./packages/*/node_modules 
 # install again

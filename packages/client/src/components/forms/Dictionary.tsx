@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import { Field } from 'sequelize-auto/types/types'
+import { Field } from '../../types/react-app-env'
 import { getCitiesByCountry, getCountries } from '../../utils'
-import SvgArrowDown from '../icons/SvgArrowDown'
-import SelectDropdown from '../Primitives/Select/types'
 
 export interface IDictionaryProps {
   country: Field<ComponentSelectBase>
   dispatch: Dispatch
-  idx: number
+  idx?: number
 }
 
-const DictionaryForm = ({country, dispatch}): IDictionaryProps => {
+const DictionaryForm = ({country, dispatch}: IDictionaryProps) => {
   const [countries, setCountries] = useState([])
   const [cities, setCities] = useState([])
 

@@ -29,19 +29,19 @@ module.exports = {
     // isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=false',
     // isDevEnv && 'webpack/hot/poll?1000',
     // () => ['./src/makeModels.ts',
-    make: {
-      import: path.join(
-        rootDir,
-        './src/makeModels.ts'
-      ),
-      filename: 'makeModels.js'
-    },
+    // make: {
+    //   import: path.join(
+    //     rootDir,
+    //     './src/makeModels.ts'
+    //   ),
+    //   filename: 'makeModels.js'
+    // },
     server: {
       import: path.join(
         rootDir,
         './src/server.ts'
       ),
-      dependOn: 'make',
+      // dependOn: 'make',
       filename: 'server.bundle.js'
     }
   },
@@ -54,25 +54,9 @@ module.exports = {
     ),
     clean: true,
   },
-  devtool: isProdEnv ? 'source-map' : 'eval',
+  devtool: 'eval',
   target: 'node',
   watch: isDevEnv,
-  devServer: {
-    open: false,
-    // https: {
-    //   // minVersion: 'TLSv1.1',
-    //   requestCert: false,
-    // },
-    client: {
-      overlay: false,
-    },
-    historyApiFallback: true,
-    static: __dirname + '/dist/',
-    hot: isDevEnv,
-    liveReload: false,
-    compress: false,
-    port: 3010,
-  },
   module: {
     rules: [
       // isProdEnv && {
@@ -146,18 +130,18 @@ module.exports = {
     //   MODE: isProdEnv ? 'production' : 'development', // use 'development' unless process.env.NODE_ENV is defined
     //   DEBUG: false,
     // }),
-    new Dotenv({
-      path: resolve(__dirname, './production.env'),
-      // safe: true,
-    }),
-    new webpack.DefinePlugin({
-      // process: {
-      //   env: dotenv.parsed
-      // }
-      'process.env.MODE': JSON.stringify(isProdEnv ? 'production' : 'development'),
-      'process.env.NODE_TLS_REJECT_UNAUTHORIZED': 0
-    }),
-    // isProdEnv && new CompressionPlugin(),
+    // new Dotenv({
+    //   path: resolve(__dirname, './production.env'),
+    //   // safe: true,
+    // }),
+    // new webpack.DefinePlugin({
+    //   // process: {
+    //   //   env: dotenv.parsed
+    //   // }
+    //   'process.env.MODE': JSON.stringify(isProdEnv ? 'production' : 'development'),
+    //   'process.env.NODE_TLS_REJECT_UNAUTHORIZED': 0
+    // }),
+    isProdEnv && new CompressionPlugin(),
     isDevEnv && new NodemonPlugin(),
     // isDevEnv && new webpack.HotModuleReplacementPlugin(),
   ].filter(Boolean),

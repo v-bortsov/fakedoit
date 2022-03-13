@@ -2,8 +2,9 @@
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/v-bortsov/react-typescript-data-gen/blob/master/LICENSE)
 
 ## Prerequisites
-* Docker
-* Kubernetus
+#### Please install the below pre-requisites if using this on your local machine.
+* kubectl      :   https://kubernetes.io/docs/tasks/tools/install-kubectl/
+* docker       :   https://docs.docker.com/engine/install/
 
 ## Getting Started
 
