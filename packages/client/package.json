@@ -7,7 +7,7 @@
     "start:metro": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "build-react": "cd web && cross-env NODE_ENV=production webpack --env production",
+    "build": "cd ../../web && cross-env NODE_ENV=production webpack --env production",
     "start": "export NODE_OPTIONS=\"--max-old-space-size=8192\" && cross-env NODE_ENV=development && webpack serve --config ../../web/webpack.config.js --open"
   },
   "dependencies": {

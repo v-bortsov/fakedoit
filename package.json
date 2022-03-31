@@ -24,6 +24,7 @@
   "scripts": {
     "start": "lerna run start --parallel --stream --scope fakedoit --scope pm2graphql",
     "web:start": "lerna run start --parallel --stream --scope fakedoit",
+    "web:build": "lerna run build --parallel --stream --scope fakedoit",
     "server:build": "lerna run build --stream --scope pm2graphql",
     "server:start": "lerna run start --parallel --stream --scope pm2graphql",
     "sonar": "node ./packages/client/sonar-project.js",

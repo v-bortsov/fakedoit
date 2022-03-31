@@ -8,7 +8,7 @@ type Path = (string|number)[] | null
 interface Action{
    type: Actions
    payload: Payload | null
- }
+}
  
 type Payload = {
    type?: ColumnType;

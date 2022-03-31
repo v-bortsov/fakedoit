@@ -74,7 +74,7 @@ export const TextInputHover: React.FC<InputHoverProps> = ({edit, input, hover})=
     style={{
       opacity: fadeAnim,         // Bind opacity to animated value
     }}
-  >
+          >
     {edit ? input : hover}
   </Animated.View>)
 }
@@ -118,7 +118,7 @@ export const Input = (props: InputProps) => {
         props.style
       )
     ]}
-  >
+          >
     <TextInput
       style={[
         styles.input,
@@ -169,11 +169,14 @@ export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWith
     )}
     rightElement={(
       <Button
-        {...pick([
-          'title',
-          'onPress',
-          'color'
-        ]), props}
+        {...pick(
+          [
+            'title',
+            'onPress',
+            'color'
+          ],
+          props
+        )}
         accessibilityLabel="Learn more about this purple button"/>
     )}/>
 )

@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle, } from 'react';
+import React, { useEffect, useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Dimensions, ActivityIndicator, Modal, Pressable, I18nManager, } from 'react-native';
 import { equals } from 'ramda';
-import {SelectDropdown, SelectDropdownProps} from './types';
+import { SelectDropdownProps} from './types';
 
 const { width, height } = Dimensions.get('window');
 
@@ -68,7 +68,7 @@ const SelectDropdown = (
     }
   };
   ///////////////////////////////////////////////////////
-  const DropdownButton = useRef(); // button ref to get positions
+  const DropdownButton = useRef<HTMLInputElement | null>(null); // button ref to get positions
   const [isVisible, setIsVisible] = useState(false); // dropdown visible ?
   const [dropdownPX, setDropdownPX] = useState(0); // position x
   const [dropdownPY, setDropdownPY] = useState(0); // position y
@@ -145,7 +145,7 @@ const SelectDropdown = (
   );
 
   const openDropdown = () => {
-    DropdownButton.current.measure((
+    DropdownButton.current?.measure((
       fx, fy, w, h, px, py
     ) => {
       // console.log('position y => ', py, '\nheight', h, '\nposition x => ', px)
@@ -305,7 +305,7 @@ const SelectDropdown = (
               keyExtractor={(
                 item, index
               ) => index.toString()}
-              ref={(ref) => (dropDownFlatlistRef?.current = ref)}
+              ref={(ref: null) => (dropDownFlatlistRef.current = ref)}
               renderItem={renderFlatlistItem}
               getItemLayout={(
                 data, index
@@ -319,7 +319,7 @@ const SelectDropdown = (
               })}
               onLayout={() => {
                 if (index >= 3 && dropDownFlatlistRef) {
-                  dropDownFlatlistRef.current.scrollToOffset({
+                  dropDownFlatlistRef.current?.scrollToOffset({
                     offset:
                         rowStyle && rowStyle?.height
                           ? rowStyle?.height * index

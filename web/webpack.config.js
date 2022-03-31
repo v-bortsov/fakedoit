@@ -186,9 +186,11 @@ module.exports = {
     // new Visualizer({
     //   filename: path.join("..", "stats", "statistics.html"),
     // }),
-    isProdEnv && new BundleAnalyzerPlugin(), isProdEnv &&
-      new CopyPlugin({
-        patterns: [{ from: './mains.css', to: '../dist/mains.css' }],
-      }), new webpack.HotModuleReplacementPlugin(),
+    // isProdEnv && new BundleAnalyzerPlugin(),
+    isProdEnv &&
+    new CopyPlugin({
+      patterns: [{ from: './mains.css', to: '../dist/mains.css' }],
+    }),
+    isDevEnv && new webpack.HotModuleReplacementPlugin()
   ].filter(Boolean),
 };

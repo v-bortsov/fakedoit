@@ -9,3 +9,26 @@ data:
   POSTGRES_HOST: db
   POSTGRES_PORT: "5432"
   MODELS_DIR: model
+  nginx.conf: |
+    server {
+      listen 80;
+      server_name _;
+      charset utf-8;
+      root  /var/www;
+      access_log /dev/stdout;
+      error_log /dev/stderr;
+
+      location / {
+          index index.html;
+      }
+
+      # location ~ / {
+      #     proxy_pass http://localhost:232;
+      # }
+
+      # location ~ ^/admin/(app/|images/|img/|javascript/|js/|css/|dist/|media/|static/|robots.txt|humans.txt|favicon.ico) {
+      #     root /var/www/test/admin;
+      #     access_log off;
+      #     expires max;
+      # }
+    }
