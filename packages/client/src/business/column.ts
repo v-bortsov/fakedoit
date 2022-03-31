@@ -90,7 +90,7 @@ const transformPropValue: transformPropValue = pipe(ifElse(
     ),
     pathEq(
       pathType,
-      ColumnType.DICTIONARY
+      ColumnType.ONTOLOGY
     ),
     pathEq(
       pathType,

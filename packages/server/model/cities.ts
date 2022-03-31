@@ -3,7 +3,7 @@ import { DataTypes, Model, Optional } from 'sequelize';
 import type { countries, countriesId } from './countries';
 
 export interface citiesAttributes {
-  id?: number;
+  id: number;
   name: string;
   slug?: string;
   native?: string;
@@ -18,12 +18,13 @@ export interface citiesAttributes {
   longitude?: string;
 }
 
-export type citiesPk = "id";
+export type citiesPk = 'id';
 export type citiesId = cities[citiesPk];
-export type citiesCreationAttributes = Optional<citiesAttributes, citiesPk>;
+export type citiesOptionalAttributes = 'id' | 'slug' | 'native' | 'capital' | 'population' | 'tz' | 'timezone' | 'region_id' | 'distrinct_id' | 'longitude';
+export type citiesCreationAttributes = Optional<citiesAttributes, citiesOptionalAttributes>;
 
 export class cities extends Model<citiesAttributes, citiesCreationAttributes> implements citiesAttributes {
-  id?: number;
+  id!: number;
   name!: string;
   slug?: string;
   native?: string;
@@ -44,80 +45,80 @@ export class cities extends Model<citiesAttributes, citiesCreationAttributes> im
   createCountry!: Sequelize.BelongsToCreateAssociationMixin<countries>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof cities {
-    cities.init({
-    id: {
-      autoIncrement: true,
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true
-    },
-    name: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    slug: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    native: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    capital: {
-      type: DataTypes.BOOLEAN,
-      allowNull: true
-    },
-    country_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'countries',
-        key: 'id'
-      }
-    },
-    population: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    latitude: {
-      type: DataTypes.STRING(255),
-      allowNull: false
-    },
-    tz: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    timezone: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    region_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    distrinct_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true
-    },
-    longitude: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    }
-  }, {
-    sequelize,
-    tableName: 'cities',
-    schema: 'public',
-    timestamps: false,
-    indexes: [
+    return cities.init(
       {
-        name: "cities_pkey",
-        unique: true,
-        fields: [
-          { name: "id" },
-        ]
+        id: {
+          autoIncrement: true,
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          primaryKey: true
+        },
+        name: {
+          type: DataTypes.STRING(255),
+          allowNull: false
+        },
+        slug: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+        },
+        native: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+        },
+        capital: {
+          type: DataTypes.BOOLEAN,
+          allowNull: true
+        },
+        country_id: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: {
+            model: 'countries',
+            key: 'id'
+          }
+        },
+        population: {
+          type: DataTypes.INTEGER,
+          allowNull: true
+        },
+        latitude: {
+          type: DataTypes.STRING(255),
+          allowNull: false
+        },
+        tz: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+        },
+        timezone: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+        },
+        region_id: {
+          type: DataTypes.INTEGER,
+          allowNull: true
+        },
+        distrinct_id: {
+          type: DataTypes.INTEGER,
+          allowNull: true
+        },
+        longitude: {
+          type: DataTypes.STRING(255),
+          allowNull: true
+        }
       },
-    ]
-  });
-  return cities;
+      {
+        sequelize,
+        tableName: 'cities',
+        schema: 'public',
+        timestamps: false,
+        indexes: [
+          {
+            name: 'cities_pkey',
+            unique: true,
+            fields: [{ name: 'id' },]
+          },
+        ]
+      }
+    );
   }
 }

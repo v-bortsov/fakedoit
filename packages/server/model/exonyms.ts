@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface exonymsAttributes {
-  id?: number;
+  id: number;
   name: string;
   language_id: number;
   placeable_id: number;
@@ -11,10 +11,11 @@ export interface exonymsAttributes {
 
 export type exonymsPk = "id";
 export type exonymsId = exonyms[exonymsPk];
-export type exonymsCreationAttributes = Optional<exonymsAttributes, exonymsPk>;
+export type exonymsOptionalAttributes = "id";
+export type exonymsCreationAttributes = Optional<exonymsAttributes, exonymsOptionalAttributes>;
 
 export class exonyms extends Model<exonymsAttributes, exonymsCreationAttributes> implements exonymsAttributes {
-  id?: number;
+  id!: number;
   name!: string;
   language_id!: number;
   placeable_id!: number;
@@ -22,7 +23,7 @@ export class exonyms extends Model<exonymsAttributes, exonymsCreationAttributes>
 
 
   static initModel(sequelize: Sequelize.Sequelize): typeof exonyms {
-    exonyms.init({
+    return exonyms.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -60,6 +61,5 @@ export class exonyms extends Model<exonymsAttributes, exonymsCreationAttributes>
       },
     ]
   });
-  return exonyms;
   }
 }

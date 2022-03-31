@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface coursesAttributes {
-  id?: number;
+  id: number;
   name?: string;
   alias?: string;
   desc?: string;
@@ -24,10 +24,11 @@ export interface coursesAttributes {
 
 export type coursesPk = "id";
 export type coursesId = courses[coursesPk];
-export type coursesCreationAttributes = Optional<coursesAttributes, coursesPk>;
+export type coursesOptionalAttributes = "id" | "name" | "alias" | "desc" | "title" | "meta_k" | "meta_d" | "h1" | "duration" | "img" | "active" | "parent_id" | "lft" | "rgt" | "depth" | "priority" | "bg" | "home";
+export type coursesCreationAttributes = Optional<coursesAttributes, coursesOptionalAttributes>;
 
 export class courses extends Model<coursesAttributes, coursesCreationAttributes> implements coursesAttributes {
-  id?: number;
+  id!: number;
   name?: string;
   alias?: string;
   desc?: string;
@@ -48,7 +49,7 @@ export class courses extends Model<coursesAttributes, coursesCreationAttributes>
 
 
   static initModel(sequelize: Sequelize.Sequelize): typeof courses {
-    courses.init({
+    return courses.init({
     id: {
       autoIncrement: true,
       type: DataTypes.BIGINT,
@@ -139,6 +140,5 @@ export class courses extends Model<coursesAttributes, coursesCreationAttributes>
       },
     ]
   });
-  return courses;
   }
 }

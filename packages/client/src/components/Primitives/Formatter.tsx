@@ -94,7 +94,6 @@ export const Formatter = ({state:{rows, format}}: any) => (
         ...item,
         key: index,
       };
-    }}
-  />
+    }}/>
   // </ScrollView>
 )

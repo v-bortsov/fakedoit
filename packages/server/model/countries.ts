@@ -5,7 +5,7 @@ import type { countries_languages, countries_languagesId } from './countries_lan
 import type { currencies, currenciesId } from './currencies';
 
 export interface countriesAttributes {
-  id?: number;
+  id: number;
   currency_id: number;
   name: string;
   native: string;
@@ -16,10 +16,11 @@ export interface countriesAttributes {
 
 export type countriesPk = "id";
 export type countriesId = countries[countriesPk];
-export type countriesCreationAttributes = Optional<countriesAttributes, countriesPk>;
+export type countriesOptionalAttributes = "id" | "abbr" | "capital";
+export type countriesCreationAttributes = Optional<countriesAttributes, countriesOptionalAttributes>;
 
 export class countries extends Model<countriesAttributes, countriesCreationAttributes> implements countriesAttributes {
-  id?: number;
+  id!: number;
   currency_id!: number;
   name!: string;
   native!: string;
@@ -58,7 +59,7 @@ export class countries extends Model<countriesAttributes, countriesCreationAttri
   createCurrency!: Sequelize.BelongsToCreateAssociationMixin<currencies>;
 
   static initModel(sequelize: Sequelize.Sequelize): typeof countries {
-    countries.init({
+    return countries.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -108,6 +109,5 @@ export class countries extends Model<countriesAttributes, countriesCreationAttri
       },
     ]
   });
-  return countries;
   }
 }

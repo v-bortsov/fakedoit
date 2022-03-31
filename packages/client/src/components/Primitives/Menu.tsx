@@ -4,13 +4,14 @@ import { Pressable, Text, View } from 'react-native'
 export const Menu = ({items, dispatch}: any) => (
   <View>
     {items.map((
-      {backgroundColor, icon, action}: any, k: number
+      {backgroundColor, icon, action, label}: any, k: number
     )=>(
       <Pressable
-        style={{backgroundColor, padding: 10, fontSize: 25}}
+        key={k}
+        style={{backgroundColor, padding: 10}}
         onPress={()=>dispatch(action)}
       >
-        <Text>{action.payload.type}</Text>
+        <Text style={{fontSize: 25}}>{label}</Text>
       </Pressable>
     ))}
   </View>

@@ -1,4 +1,4 @@
-import type * as React from 'react';
+import React from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 
 export type SelectDropdownProps = {

@@ -1,6 +1,6 @@
-import { adjust, F, isEmpty, pipe, T, tap } from 'ramda'
 import React, { useEffect, useRef, useState } from 'react'
 import { NativeSyntheticEvent, Pressable, TextInputKeyPressEventData, View } from 'react-native'
+import { adjust, F, isEmpty, pipe, T, tap } from 'ramda'
 import { addColumnCollectItem, delColumnCollectItem, updColumnCollectItem } from '../../constants/Actions'
 import { theme } from '../../constants/Colors'
 import { useDebounceWithCollect } from '../../hooks/useDebounce'
@@ -104,10 +104,8 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
               ref,
               dispatch,
               idx
-            )}
-          />
-        )}
-      />,
+            )}/>
+        )}/>,
       EditableItemList: collect.map((
         item: any, keyNumber: number
       ) => (
@@ -127,8 +125,7 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
                     <Pressable onPress={saveStore(keyNumber)}>
                       <SvgEdit height={20} width={20} />
                     </Pressable>
-                  )}
-                />
+                  )}/>
               )}
               hover={(
                 <Hover
@@ -140,11 +137,9 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
                   icon={(
                     <SvgEdit height={20} width={20} />
                   )}
-                  fontSize={20}
-                />
+                  fontSize={20}/>
               )}
-              edit={edit[keyNumber]}
-            />
+              edit={edit[keyNumber]}/>
           </View>
           <View style={{flex: 1, alignItems: 'flex-end', alignContent: 'stretch', paddingLeft: 10, paddingRight: 10}}>
             <Pressable onPress={() => delColumnCollectItem({dispatch, key: keyNumber, idx})}>
@@ -153,8 +148,7 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
           </View>
         </View>
       ))
-    }}
-          />)
+    }}/>)
 }
 
 export default Manual

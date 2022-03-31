@@ -1,23 +1,39 @@
 {
   "name": "rn-nodejs-monorep",
   "version": "1.0.0",
-  "description": "Starter for Monorepos: Lerna, TypeScript, CRA and Storybook",
-  "repository": "https://github.com/v-bortsov/react-typescript-data-gen.git",
+  "description": "Starter for Monorepos: Lerna, TypeScript, CRNA and Storybook",
+  "repository": "https://github.com/v-bortsov/fakedoit.git",
   "license": "MIT",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/pm2graphql",
+      "**/pm2graphql/**"
+    ]
+  },
   "devDependencies": {
+    "dotenv-webpack": "^7.1.0",
     "lerna": "^4.0.0"
+  },
+  "resolutions": {
+    "graphql": "^14"
   },
   "scripts": {
     "start": "lerna run start --parallel --stream --scope fakedoit --scope pm2graphql",
-    "web:start": "lerna run start --parallel --stream --scope fakedoit --scope fakedoit",
+    "web:start": "lerna run start --parallel --stream --scope fakedoit",
+    "web:build": "lerna run build --parallel --stream --scope fakedoit",
+    "server:build": "lerna run build --stream --scope pm2graphql",
+    "server:start": "lerna run start --parallel --stream --scope pm2graphql",
     "sonar": "node ./packages/client/sonar-project.js",
-    "test": "lerna run test --stream"
+    "test": "lerna run test --stream",
+    "update": "./scripts/packages_update.sh"
   },
   "dependencies": {
-    "typescript": "^4.5.3"
+    "dotenv": "^14.3.2",
+    "nodemon-webpack-plugin": "^4.7.0",
+    "typescript": "^4.5.5"
   }
 }

@@ -21,9 +21,14 @@ const IconButton = ({onPress, startIcon, endIcon, children, isDisabled, style, h
           accessible={true}
           activeOpacity={0.3}
           onPress={onPress}
-          style={[styles.container, style, {opacity}, isHovered&&!isDisabled && {backgroundColor: hoverBg}]}
+          style={[
+            styles.container,
+            style,
+            {opacity},
+            isHovered&&!isDisabled && {backgroundColor: hoverBg}
+          ]}
         >
-          <Text style={{textAlignVertical: 'center', ...{color: !!style?.color ? style.color : '#000'}}}>
+          <Text style={{textAlignVertical: 'center', ...{color: style?.color ? style.color : '#000'}}}>
             {startIcon && startIcon} {children}
           </Text>
         </TouchableOpacity>

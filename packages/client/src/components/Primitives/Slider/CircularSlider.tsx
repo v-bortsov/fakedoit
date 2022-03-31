@@ -216,8 +216,7 @@ const CircularSlider: React.FC<CircularSliderProps> = ({
             1,
             endTintCoord.x,
             endTintCoord.y,
-          ].join(' ')}
-        />
+          ].join(' ')}/>
         <Path
           stroke={trackColor}
           strokeWidth={trackWidth}
@@ -226,8 +225,7 @@ const CircularSlider: React.FC<CircularSliderProps> = ({
             startCoord.y
           } A ${trackRadius} ${trackRadius} 0 ${
             valuePercentage * 3.6 > 180 ? 1 : 0
-          } 1 ${endCoord.x} ${endCoord.y}`}
-        />
+          } 1 ${endCoord.x} ${endCoord.y}`}/>
         {showText && (
           <Text
             x={trackRadius + thumbRadius}
@@ -247,8 +245,7 @@ const CircularSlider: React.FC<CircularSliderProps> = ({
               r={thumbRadius}
               cx={thumbRadius}
               cy={thumbRadius}
-              fill={thumbColor}
-            />
+              fill={thumbColor}/>
             
             {showThumbText && (
               <Text

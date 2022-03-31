@@ -82,7 +82,7 @@ module.exports = {
     ],
     'react/jsx-closing-bracket-location': [
       1,
-      'tag-aligned'
+      {selfClosing: 'after-props'}
     ],
     'react/jsx-wrap-multilines': [
       'warn',

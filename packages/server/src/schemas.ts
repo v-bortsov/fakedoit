@@ -1,15 +1,8 @@
-import {
-  GraphQLInputObjectType,
-  GraphQLList, GraphQLObjectType, GraphQLSchema,
-  printSchema
-} from 'graphql';
-import {
-  attributeFields, createConnection, defaultArgs, defaultListArgs, resolver
-  /** @ts-ignore */
-} from 'graphql-sequelize';
+import { GraphQLInputObjectType, GraphQLList, GraphQLObjectType, GraphQLSchema, printSchema } from 'graphql';
+import { attributeFields, createConnection, defaultArgs, defaultListArgs, resolver } from 'graphql-sequelize';
 import { isEmpty, keys, mapObjIndexed, merge, mergeAll, pick, pipe, prop, reduce, tap, values } from 'ramda';
 import { collectFrame, crudFrame, cudResolvers, paginator } from './elements';
-// asdasd
+
 export  const outputsFields = (
   key: string, value: any, types: any, isInput: boolean
 ) => {
@@ -41,9 +34,11 @@ export  const outputsFields = (
     }
   });
 };
+
 const getCustomGql = ()=>({
 
 })
+
 export const modelsToGraphQlType = (obj: any): any => {
   const outputs: any = {};
   const inputs: any = {};
@@ -110,7 +105,7 @@ export const typeDefs = (obj: any) => {
               obj.outputs[key],
               key
             ),
-            [`${key.toLowerCase()}s`]: pipe<any, any, any, any, any, any>(
+            [`${key.toLowerCase()}s`]: pipe<any, any, any, any, any>(
               paginator(obj.models[key]),
               createConnection,
               pick(['connectionType', 'connectionArgs']),
@@ -171,19 +166,41 @@ export const resolvers =  (obj: any) => {
       resolverIntgr(
         (
           value: any, key: string
-        ) =>
-          // console.log(resolver(value).toString())ad
-          ({
-            [key]: resolver(value),
-            [`${key.toLowerCase()}s`]: pipe<any, any, any, any, any>(
-              paginator(obj.models[key]),
-              createConnection,
-              prop('resolveConnection'),
-            )(
-              key,
-              obj.outputs
-            ),
-          }),
+        ) => ({
+          [key]: resolver(
+            value,
+            { before: (
+              findOptions, args
+            ) => {
+              findOptions.logging = true
+              console.log(
+                findOptions,
+                args
+              );
+                
+              return findOptions
+            },
+            after: (
+              results, args
+            ) => {
+              console.log(
+                results,
+                args
+              );
+                
+              return results
+            }
+            }
+          ),
+          [`${key.toLowerCase()}s`]: pipe<any, any, any, any>(
+            paginator(obj.models[key]),
+            createConnection,
+            prop('resolveConnection'),
+          )(
+            key,
+            obj.outputs
+          ),
+        }),
         obj.models,
       ),
       // addCustomQueryResolvers

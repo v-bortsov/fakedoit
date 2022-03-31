@@ -1,34 +1,14 @@
 import React, { Component, createRef } from 'react';
-import {
-  Animated,
-  Dimensions,
-  EmitterSubscription,
-  FlatList,
-  Keyboard,
-  KeyboardEvent,
-  LayoutChangeEvent,
-  Modal,
-  NativeScrollEvent,
-  NativeSyntheticEvent,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-  View
-} from 'react-native';
+import { Animated, Dimensions, EmitterSubscription, FlatList, Keyboard, KeyboardEvent, LayoutChangeEvent, Modal, NativeScrollEvent, NativeSyntheticEvent, Platform, SafeAreaView, StatusBar, TouchableOpacity, View } from 'react-native';
 import { styles } from './styles';
 import type { ActionSheetProps } from './types';
-import {
-  getDeviceHeight,
-  getElevation,
-  SUPPORTED_ORIENTATIONS,
-  waitAsync
-} from './utils';
+import { getDeviceHeight, getElevation, SUPPORTED_ORIENTATIONS, waitAsync } from './utils';
+
 const useNativeDriver = false
-let safeAreaInnerHeight = 0;
 const dummyData = ['dummy'];
-let safeAreaPaddingTop =
-  Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
+
+let safeAreaInnerHeight = 0;
+let safeAreaPaddingTop = Platform.OS === 'android' ? StatusBar.currentHeight || 0 : 0;
 let calculatedDeviceHeight = Dimensions.get('window').height;
 
 type State = {
@@ -360,7 +340,8 @@ export default class ActionSheet extends Component<Props, State, any> {
     }
   };
 
-  _onScrollBegin = async (_event: NativeSyntheticEvent<NativeScrollEvent>) => { };
+  _onScrollBegin = async (_event: NativeSyntheticEvent<NativeScrollEvent>) => { console.log('async action');
+  };
   _onScrollBeginDrag = async (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     let verticalOffset = event.nativeEvent.contentOffset.y;
     this.prevScroll = verticalOffset;
@@ -806,8 +787,7 @@ export default class ActionSheet extends Component<Props, State, any> {
                       zIndex: 1,
                       backgroundColor: overlayColor,
                       opacity: defaultOverlayOpacity
-                    }}
-                  />
+                    }}/>
                   <View
                     onTouchMove={this._onTouchMove}
                     onTouchStart={this._onTouchStart}
@@ -824,8 +804,7 @@ export default class ActionSheet extends Component<Props, State, any> {
                       style={{
                         height: this.state.deviceHeight * 1.15,
                         width: '100%'
-                      }}
-                    />
+                      }}/>
                   </View>
                   <Animated.View
                     onLayout={this._showModal}
@@ -869,8 +848,7 @@ export default class ActionSheet extends Component<Props, State, any> {
                             style={[
                               styles.indicator,
                               { backgroundColor: indicatorColor }
-                            ]}
-                          />
+                            ]}/>
                         )
                       ) : null}
 
@@ -885,12 +863,10 @@ export default class ActionSheet extends Component<Props, State, any> {
                         position: 'absolute',
                         bottom: -195,
                         width: containerStyle?.width || '100%'
-                      }}
-                    />
+                      }}/>
                   </Animated.View>
                 </View>
-              )}
-            />
+              )}/>
           </Animated.View>
         </Modal>
       </>

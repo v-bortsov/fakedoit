@@ -27,12 +27,13 @@ const useReducerWithMiddleware = (
   middlewareFns: any[],
   afterwareFns: any[]
 ) => {
+
   const [state, dispatch] = useReducer(
     reducer,
     initialState
   );
   
-  const aRef = useRef();
+  const aRef = useRef<HTMLInputElement | null>(null);
   
   const dispatchWithMiddleware = (action: any) => {
     middlewareFns.forEach((middlewareFn) => middlewareFn(
@@ -47,14 +48,16 @@ const useReducerWithMiddleware = (
   
   useEffect(
     () => {
+
       if (!aRef.current) return;
   
       afterwareFns.forEach((afterwareFn) => afterwareFn(
         aRef.current,
         state
       ));
-  
-      aRef?.current = null;
+
+      aRef.current = null;
+
     },
     [
       afterwareFns,

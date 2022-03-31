@@ -32,7 +32,8 @@ export const Hover = ({fontSize, icon, text, onPress, padding}: HoverProps)=> (
           style={[
             styles.topField,
             {fontSize}
-          ]}>
+          ]}
+        >
           {text}
         </Text>
         {isHovered /* && !isStaticIcon  */&& (
@@ -73,7 +74,7 @@ export const TextInputHover: React.FC<InputHoverProps> = ({edit, input, hover})=
     style={{
       opacity: fadeAnim,         // Bind opacity to animated value
     }}
-  >
+          >
     {edit ? input : hover}
   </Animated.View>)
 }
@@ -117,7 +118,7 @@ export const Input = (props: InputProps) => {
         props.style
       )
     ]}
-  >
+          >
     <TextInput
       style={[
         styles.input,
@@ -141,8 +142,7 @@ export const Input = (props: InputProps) => {
           ],
           props
         )
-      }
-    />
+      }/>
     {props.rightElement && props.rightElement}
   </View>)
 };
@@ -169,15 +169,16 @@ export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWith
     )}
     rightElement={(
       <Button
-        {...pick([
-          'title',
-          'onPress',
-          'color'
-        ]), props}
-        accessibilityLabel="Learn more about this purple button"
-      />
-    )}
-  />
+        {...pick(
+          [
+            'title',
+            'onPress',
+            'color'
+          ],
+          props
+        )}
+        accessibilityLabel="Learn more about this purple button"/>
+    )}/>
 )
 
 const styles = StyleSheet.create({

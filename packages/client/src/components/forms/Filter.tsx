@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, Switch, StyleSheet } from 'react-native'
 import SvgArrowDown from '../icons/SvgArrowDown';
 import { NewSlider } from '../Primitives/Slider/NewSlider';
-import SelectDropdown from '../Primitives/Select';
+import SelectDropdown from '../Primitives/Select/Select';
 import { FilterType } from '../../types/react-app-env';
 
 
@@ -18,24 +18,21 @@ const FilterForm = ({uniq, total, shuffle, byColumn}: FilterType) => {
         animateTransitions
         value={uniq.value}
         maximumValue={uniq.max}
-        onValueChange={(value: any) => console.log(value)}
-      />
+        onValueChange={(value: any) => console.log(value)}/>
       <Text>Shuffle:</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#81b0ff' }}
         thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
         ios_backgroundColor="#3e3e3e"
         onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
+        value={isEnabled}/>
     </View>
     <View style={{ flex: 1, padding: 10 }}>
       <Text>Total:</Text>
       <NewSlider
         value={total.value}
         maximumValue={total.max}
-        onValueChange={(value: any) => console.log(value)}
-      />
+        onValueChange={(value: any) => console.log(value)}/>
       <SelectDropdown
         data={byColumn.options}
         value={byColumn.value}
@@ -59,8 +56,7 @@ const FilterForm = ({uniq, total, shuffle, byColumn}: FilterType) => {
         ) => selectedItem}
         rowTextForSelection={(
           item: string, index: number
-        ) => item}
-      />
+        ) => item}/>
     </View>
   </View>)
 }

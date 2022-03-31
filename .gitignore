@@ -2,8 +2,11 @@
 #
 .DS_Store
 .history
+.env
+production.env
 dist
 stats
+data
 # Xcode
 build/
 *.pbxuser

@@ -16,12 +16,14 @@ export function Button(props: ButtonProps) {
         styles.button,
         props.buttonStyle
       ]}
-      onPress={onPress}>
+      onPress={onPress}
+    >
       <Text
         style={[
           styles.text,
           props.textStyle
-        ]}>{title}</Text>
+        ]}
+      >{title}</Text>
     </Pressable>
   );
 }

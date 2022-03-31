@@ -1,11 +1,14 @@
 {
 	"exclude": ["node_modules"],
-	"files": ["./typings.d.ts"],
+	// "include": ["src/**/*.ts"],
+	// "files": ["./typings.d.ts"],
 	"compilerOptions": {
 		"target": "es6",
-		"module": "commonjs",
+    "module": "commonjs",
+		"lib": ["es7"],
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"noFallthroughCasesInSwitch": true,
+		"moduleResolution": "node"
 	}
 }

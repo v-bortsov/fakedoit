@@ -2,23 +2,24 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface continentsAttributes {
-  id?: number;
+  id: number;
   name: string;
   abbr?: string;
 }
 
 export type continentsPk = "id";
 export type continentsId = continents[continentsPk];
-export type continentsCreationAttributes = Optional<continentsAttributes, continentsPk>;
+export type continentsOptionalAttributes = "id" | "abbr";
+export type continentsCreationAttributes = Optional<continentsAttributes, continentsOptionalAttributes>;
 
 export class continents extends Model<continentsAttributes, continentsCreationAttributes> implements continentsAttributes {
-  id?: number;
+  id!: number;
   name!: string;
   abbr?: string;
 
 
   static initModel(sequelize: Sequelize.Sequelize): typeof continents {
-    continents.init({
+    return continents.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -48,6 +49,5 @@ export class continents extends Model<continentsAttributes, continentsCreationAt
       },
     ]
   });
-  return continents;
   }
 }

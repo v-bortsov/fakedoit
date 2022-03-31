@@ -2,7 +2,7 @@ import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
 
 export interface districtsAttributes {
-  id?: number;
+  id: number;
   name: string;
   native: string;
   country_id?: number;
@@ -10,17 +10,18 @@ export interface districtsAttributes {
 
 export type districtsPk = "id";
 export type districtsId = districts[districtsPk];
-export type districtsCreationAttributes = Optional<districtsAttributes, districtsPk>;
+export type districtsOptionalAttributes = "id" | "country_id";
+export type districtsCreationAttributes = Optional<districtsAttributes, districtsOptionalAttributes>;
 
 export class districts extends Model<districtsAttributes, districtsCreationAttributes> implements districtsAttributes {
-  id?: number;
+  id!: number;
   name!: string;
   native!: string;
   country_id?: number;
 
 
   static initModel(sequelize: Sequelize.Sequelize): typeof districts {
-    districts.init({
+    return districts.init({
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -54,6 +55,5 @@ export class districts extends Model<districtsAttributes, districtsCreationAttri
       },
     ]
   });
-  return districts;
   }
 }
