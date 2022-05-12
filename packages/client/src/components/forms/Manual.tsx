@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react'
 import { NativeSyntheticEvent, Pressable, TextInputKeyPressEventData, View } from 'react-native'
 import { adjust, F, isEmpty, pipe, T, tap } from 'ramda'
 import { addColumnCollectItem, delColumnCollectItem, updColumnCollectItem } from '../../constants/Actions'
@@ -37,14 +37,28 @@ export interface IManualProps {
 }
 
 const submitAddColumn = (
-  ref:  React.RefObject<HTMLInputElement>, dispatch: Dispatch, idx: number
-)=> ()=>{
- 
-  if(!isEmpty(ref?.current?.value)){
+  ref:  React.RefObject<HTMLInputElement>, dispatch: Dispatch, idx: number, passRefButton: any, e: any = null
+): void => {
+  if(e?.nativeEvent?.key === 'Enter'){
     addColumnCollectItem({dispatch, idx, value: ref?.current?.value})
-    ref.current?.clear()
+    try {
+      ref?.current?.clear()
+        .focus()
+    } catch (error) {
+      console.warn('It has a trouble, but how to decide not clear');
+    }
   }
-  ref.current?.focus()
+
+  
+  if(!e) {
+    // console.log(passRefButton)
+    passRefButton.current.setNativeProps({disabled:  true})
+
+    addColumnCollectItem({dispatch, idx, value: ref?.current?.value})
+    ref?.current?.clear()
+    ref?.current?.focus()
+  }
+
 }
 
 export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
@@ -54,6 +68,7 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
   //   zipObj(['value', 'onChange'])
   // )(null)
   const ref = useRef<HTMLInputElement>(null)
+  const refButton = useRef<HTMLInputElement>(null)
   // const itemsRef:React.MutableRefObject<any[]> = useRef([]);
   const [edit, setEdit] = useState(collect.map(F))
   const [valueText, setValue] = useState(collect)
@@ -69,7 +84,7 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
   )
   
   useEffect(
-    () => { 
+    () => {
       setEdit(collect.map(F))
       setValue(collect)
     },
@@ -88,22 +103,27 @@ export const ExampleManual = ({dispatch, collect, idx}: IManualProps) => {
           borderColor: theme.colors.dart,
           // backgroundColor: '#fff',
         }}
-        onKeyPress={(e: NativeSyntheticEvent<TextInputKeyPressEventData>) => e.nativeEvent.key === 'Enter' ? submitAddColumn(
-          ref,
-          dispatch,
-          idx 
-        )() : null}
+        onKeyPress={
+          (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => submitAddColumn(
+            ref,
+            dispatch,
+            idx,
+            refButton,
+            e
+          )}
         passRef={ref}
         rightElement={(
           <Button
             textStyle={{fontSize: 26}}
             buttonStyle={{ height: 50}}
+            passRefButton={refButton}
             // {...pick(['title', 'onPress', 'color']), props}
             title={'ADD'}
-            onPress={submitAddColumn(
+            onPress={()=>submitAddColumn(
               ref,
               dispatch,
-              idx
+              idx,
+              refButton
             )}/>
         )}/>,
       EditableItemList: collect.map((

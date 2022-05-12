@@ -24,139 +24,138 @@ import { GeneratorState } from '../types/react-app-env';
 import { calcCount } from '../utils';
 import Hoverable from '../components/Primitives/Hoverable';
 
-const HeaderBody = ({ items: [
+function HeaderBody({ items: [
   type,
   name,
   label
-], dispatch, idx }: any) => ({ animation, open, setOpen }: any) => (
-  <Hoverable>
-    {(isHovered: boolean ) => (
-      <Pressable
-        onPress={()=>setOpen(!open)}
-        style={[
-          {
-            justifyContent: 'space-between',
-            flex: 1,
-            flexDirection: 'row',
-            backgroundColor: isHovered || open ? 'rgb(99,209,221)' : theme.colors.primary,
-          },
-          styles.accordionItem
-        ]}
-      >
-        <View style={styles.leftSummary}>
-          <Text>{type.component.value}</Text>
-        </View>
-        <View style={styles.titleSummary}>
-          {[
-            [
-              headType.NAME,
-              name.value,
-              name.edit,
-              32,
-              24,
-              30
-            ],
-            [
-              headType.LABEL,
-              label.value,
-              label.edit,
-              27,
-              20,
-              20
-            ]
-          ].map((
-            [
-              prop,
-              text,
-              toggle,
-              height,
-              fontSize,
-              width
-            ], keyNumber: number
-          )=> {
-
-            const [edit, setEdit] = useState(toggle)
-
-            useEffect(
-              () => {
-                setEdit(toggle)
-              },
-              [toggle]
-            )
-
-            const [valueText, setValue] = useState(text)
-            const ref = useRef<HTMLInputElement>(null)
-
-            const onQueryChange = useDebounce(setValue)
-
-            const saveStore = pipe(
-              tap(()=> setEdit(false)),
-              () => updColumnValue({dispatch, idx, prop, value: valueText})
-            )
-            const padding = {paddingLeft: 6,  paddingRight: 6,  marginTop: 5, marginBottom: 5}
-            // console.log(ref)
-            return (<TextInputHover
-              key={keyNumber}
-              input={(
-                <Input
-                  style={{fontSize, height, width: (200-width)}}
-                  padding={padding}
-                  defaultValue={valueText}
-                  onKeyPress={(e: any) => e.nativeEvent.key === 'Enter' ? saveStore(null) : null}
-                  onChangeText={(value: any)=> onQueryChange(value)}
-                  ref={ref}
-                  rightElement={(
-                    <Button onPress={saveStore} buttonStyle={{width, height, backgroundColor: 'green'}} title={'OK'} />
-                    // <Pressable onPress={saveStore}>
-                    //   <SvgEdit height={height} width={width} />
-                    // </Pressable>
-                  )}/>
-              )}
-              hover={(
-                <Hover
-                  text={text}
-                  onPress={pipe(tap(() => setEdit(!edit)))}
-                  icon={(
-                    <SvgEdit height={height} width={width} />
-                  )}
-                  fontSize={fontSize}
-                  padding={padding}/>
-              )}
-              edit={edit}/>)
-          })}
-        </View>
-        <View style={styles.keyIconSummary}>
-          <SvgKey />
-          {/* <MaterialCommunityIcons color={name===editColumn ? '#e8e32e' : ''} onPress={ () => dispatch(setLimit(name)) } style={{margin: 0}} size={36} name="key-variant" /> */}
-        </View>
-        <Animated.View
-          key={`desc_${idx}`}
-          style={{
-            justifyContent: 'center',
-            alignContent: 'center',
-            transform: [
+], dispatch, idx }: any) {
+  return  ({ animation, open, setOpen }: any) => (
+    <Hoverable>
+      {
+        (isHovered: boolean ) => (
+          <Pressable
+            onPress={()=>setOpen(!open)}
+            style={[
               {
-                rotate: animation.interpolate({
-                  inputRange: [
-                    0,
-                    1
-                  ],
-                  outputRange: [
-                    '0deg',
-                    '180deg'
-                  ],
-                  extrapolate: 'clamp',
-                })
-              }
-            ]
-          }}
-        >
-          <SvgArrowDown/>
-        </Animated.View>
-      </Pressable>
-    )}
-  </Hoverable>
-);
+                justifyContent: 'space-between',
+                flex: 1,
+                flexDirection: 'row',
+                backgroundColor: isHovered || open ? 'rgb(99,209,221)' : theme.colors.primary,
+              },
+              styles.accordionItem
+            ]}
+          >
+            <View style={styles.leftSummary}>
+              <Text>{type.component.value}</Text>
+            </View>
+            <View style={styles.titleSummary}>
+              {[
+                [
+                  headType.NAME,
+                  name.value,
+                  name.edit,
+                  32,
+                  24,
+                  30
+                ],
+                [
+                  headType.LABEL,
+                  label.value,
+                  label.edit,
+                  27,
+                  20,
+                  20
+                ]
+              ].map((
+                [
+                  prop,
+                  text,
+                  toggle,
+                  height,
+                  fontSize,
+                  width
+                ], keyNumber: number
+              )=> {
+
+                const [edit, setEdit] = useState(toggle)
+
+                useEffect(
+                  () => setEdit(toggle),
+                  [toggle]
+                )
+
+                const [valueText, setValue] = useState(text)
+                const ref = useRef<HTMLInputElement>(null)
+                const onQueryChange = useDebounce(setValue)
+                const saveStore = pipe(
+                  tap(()=> setEdit(false)),
+                  () => updColumnValue({dispatch, idx, prop, value: valueText})
+                )
+                const padding = {paddingLeft: 6,  paddingRight: 6,  marginTop: 5, marginBottom: 5}
+                
+                return  (<TextInputHover
+                  key={keyNumber}
+                  input={(
+                    <Input
+                      style={{fontSize, height, width: (200-width)}}
+                      padding={padding}
+                      defaultValue={valueText}
+                      onKeyPress={(e: any) => e.nativeEvent.key === 'Enter' ? saveStore(null) : null}
+                      onChangeText={(value: any)=> onQueryChange(value)}
+                      ref={ref}
+                      rightElement={(
+                        <Button onPress={saveStore} buttonStyle={{width, height, backgroundColor: 'green'}} title={'OK'} />
+                        // <Pressable onPress={saveStore}>
+                        //   <SvgEdit height={height} width={width} />
+                        // </Pressable>
+                      )}/>
+                  )}
+                  hover={(
+                    <Hover
+                      text={text}
+                      onPress={pipe(tap(() => setEdit(!edit)))}
+                      icon={(
+                        <SvgEdit height={height} width={width} />
+                      )}
+                      fontSize={fontSize}
+                      padding={padding}/>
+                  )}
+                  edit={edit}/>)
+              })}
+            </View>
+            <View style={styles.keyIconSummary}>
+              <SvgKey />
+              {/* <MaterialCommunityIcons color={name===editColumn ? '#e8e32e' : ''} onPress={ () => dispatch(setLimit(name)) } style={{margin: 0}} size={36} name="key-variant" /> */}
+            </View>
+            <Animated.View
+              key={`desc_${idx}`}
+              style={{
+                justifyContent: 'center',
+                alignContent: 'center',
+                transform: [
+                  {
+                    rotate: animation.interpolate({
+                      inputRange: [
+                        0,
+                        1
+                      ],
+                      outputRange: [
+                        '0deg',
+                        '180deg'
+                      ],
+                      extrapolate: 'clamp',
+                    })
+                  }
+                ]
+              }}
+            >
+              <SvgArrowDown />
+            </Animated.View>
+          </Pressable>
+        )}
+    </Hoverable>
+  )
+}
 
 const HeaderFooter = curry(({  idx, getStart, addColumn, totalCombination }: any) => ({animation, setOpen, open}: any) => (
   <View
@@ -185,7 +184,7 @@ const HeaderFooter = curry(({  idx, getStart, addColumn, totalCombination }: any
           formatter={(number: any) => parseInt(number)}
           timing={'easeIn'}
         /> */}
-        <AnimateCounter totalCombination={totalCombination}/>
+        <AnimateCounter totalCombination={totalCombination} />
       )!</Text>
 
     </TouchableOpacity>
@@ -287,6 +286,7 @@ export default ({ actionSheetRef, dispatch, state: {columns, limiting, filter} }
             duration={200}
             Header={HeaderBody({ idx, dispatch, items: item.head })}
           >
+
             {(() => {
               switch(item.head[headType.TYPE].component.value){
               case ColumnType.CUSTOM:
