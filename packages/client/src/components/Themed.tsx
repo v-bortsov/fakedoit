@@ -38,12 +38,15 @@ export function Text(props: TextProps) {
     'text'
   );
 
-  return (<DefaultText
-    style={[
-      { color },
-      style
-    ]}
-    {...otherProps} />);
+  return (
+    <DefaultText
+      style={[
+        { color },
+        style
+      ]}
+      {...otherProps}
+    />
+  );
 }
 
 export function View(props: ViewProps) {
@@ -53,10 +56,13 @@ export function View(props: ViewProps) {
     'background'
   );
 
-  return (<DefaultView
-    style={[
-      { backgroundColor },
-      style
-    ]}
-    {...otherProps} />);
+  return (
+    <DefaultView
+      style={[
+        { backgroundColor },
+        style
+      ]}
+      {...otherProps}
+    />
+  );
 }

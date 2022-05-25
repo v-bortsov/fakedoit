@@ -787,7 +787,8 @@ export default class ActionSheet extends Component<Props, State, any> {
                       zIndex: 1,
                       backgroundColor: overlayColor,
                       opacity: defaultOverlayOpacity
-                    }}/>
+                    }}
+                  />
                   <View
                     onTouchMove={this._onTouchMove}
                     onTouchStart={this._onTouchStart}
@@ -804,7 +805,8 @@ export default class ActionSheet extends Component<Props, State, any> {
                       style={{
                         height: this.state.deviceHeight * 1.15,
                         width: '100%'
-                      }}/>
+                      }}
+                    />
                   </View>
                   <Animated.View
                     onLayout={this._showModal}
@@ -848,7 +850,8 @@ export default class ActionSheet extends Component<Props, State, any> {
                             style={[
                               styles.indicator,
                               { backgroundColor: indicatorColor }
-                            ]}/>
+                            ]}
+                          />
                         )
                       ) : null}
 
@@ -863,10 +866,12 @@ export default class ActionSheet extends Component<Props, State, any> {
                         position: 'absolute',
                         bottom: -195,
                         width: containerStyle?.width || '100%'
-                      }}/>
+                      }}
+                    />
                   </Animated.View>
                 </View>
-              )}/>
+              )}
+            />
           </Animated.View>
         </Modal>
       </>

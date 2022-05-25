@@ -33,7 +33,7 @@ export default class AnimateNumber extends Component<Props, State> {
     value : 0,
     initialValue : 0,
     formatter : (val:any) => val,
-    onFinish : () => ({})
+    onFinish : () => {return {}}
   };
 
   static TimingFunctions = {
@@ -144,7 +144,8 @@ export default class AnimateNumber extends Component<Props, State> {
     return (
       <Text {...this.props}>
         {this.state.displayValue}
-      </Text>)
+      </Text>
+    )
   }
 
   startAnimate() {

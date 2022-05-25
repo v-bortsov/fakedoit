@@ -7,6 +7,7 @@
     "start:metro": "react-native start",
     "test": "jest",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "build": "cd ../../web && cross-env NODE_ENV=production webpack --env production",
     "start": "export NODE_OPTIONS=\"--max-old-space-size=8192\" && cross-env NODE_ENV=development && webpack serve --config ../../web/webpack.config.js --open"
   },
@@ -77,6 +78,7 @@
   },
   "jest": {
     "preset": "react-native",
+    "modulePathIgnorePatterns": ["src/__tests__/"],
     "moduleFileExtensions": [
       "ts",
       "tsx",

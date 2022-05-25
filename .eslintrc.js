@@ -47,7 +47,8 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off',
     'arrow-body-style': [
       'error',
-      'as-needed'
+      'as-needed',
+      { 'requireReturnForObjectLiteral': false }
     ],
     'max-statements-per-line': [
       'error',
@@ -82,14 +83,14 @@ module.exports = {
     ],
     'react/jsx-closing-bracket-location': [
       1,
-      {selfClosing: 'after-props'}
+      {selfClosing: 'tag-aligned'}
     ],
     'react/jsx-wrap-multilines': [
       'warn',
       {
         'declaration': 'parens-new-line',
         'assignment': 'parens',
-        'return': 'parens',
+        'return': 'parens-new-line',
         'arrow': 'parens-new-line',
         'condition': 'parens-new-line',
         'logical': 'parens-new-line',
@@ -113,6 +114,9 @@ module.exports = {
       { ArrayExpression: 'always', ArrayPattern: { minItems: 3 } },
     ],
     'object-curly-newline': 'off',
-    
+    'arrow-parens': [
+      'error',
+      'always'
+    ]
   }
 };

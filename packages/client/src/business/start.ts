@@ -1,4 +1,4 @@
-import { always, clone, converge, flatten, is, map, path, pipe, propEq, slice, when, xprod, zipObj, __ } from 'ramda';
+import { always, clone, converge, flatten, is, map, path, pathEq, pipe, propEq, slice, when, xprod, zipObj, __ } from 'ramda';
 import { headType } from '../types/enums';
 import { TypeLimiting } from '../types/react-app-env';
 import { sliceAndTranspose } from '../utils';
@@ -32,8 +32,12 @@ export const cartesianCondition: any = ([columns, limiting]: [CollapseForm<FormT
     sliceAndTranspose(
       columns,
       __,
-      propEq(
-        'name',
+      pathEq(
+        [
+          'head',
+          1,
+          'value'
+        ],
         limiting
       )
     )

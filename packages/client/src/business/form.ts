@@ -6,16 +6,6 @@ import { customFields, dateFields, dictionaryFields, integerFields, requestByAre
 import { countries, currencies, getCitiesByCountry, languages } from '../services/network';
 import { ColumnType } from '../types/enums';
 
-export const updColumpProp = ([
-  columns,
-  path,
-  value]: [CollapseForm<FormTypes>[], (number|string)[], string
-])=> assocPath(
-  path,
-  value,
-  columns
-)
-
 export const delColumnCollectItem = ([columns, path]: [CollapseForm<FormTypes>[], (number|string)[], string])=> dissocPath(
   path,
   columns

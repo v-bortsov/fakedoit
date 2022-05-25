@@ -9,7 +9,7 @@ export interface continentsAttributes {
 
 export type continentsPk = "id";
 export type continentsId = continents[continentsPk];
-export type continentsOptionalAttributes = "id" | "abbr";
+export type continentsOptionalAttributes = "abbr";
 export type continentsCreationAttributes = Optional<continentsAttributes, continentsOptionalAttributes>;
 
 export class continents extends Model<continentsAttributes, continentsCreationAttributes> implements continentsAttributes {
@@ -21,7 +21,6 @@ export class continents extends Model<continentsAttributes, continentsCreationAt
   static initModel(sequelize: Sequelize.Sequelize): typeof continents {
     return continents.init({
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true

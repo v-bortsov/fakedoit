@@ -1,12 +1,11 @@
 import { curry } from 'ramda'
 import { Actions, ColumnType } from '../types/enums'
-import { MenuActionAddColumn } from './Fields'
 
 type DispathParams = {
   dispatch: Dispatch
-  key: string|number
+  key?: string|number
   prop?: string
-  idx: number
+  idx?: number
   value: any
   path?: (string|number)[]
   type?: ColumnType
@@ -19,6 +18,7 @@ export const addColumnCollectItem = curry(({dispatch, idx, value}): DispathParam
     value
   }
 }))
+
 export const delColumnCollectItem = curry(({dispatch, idx, key}): DispathParams => dispatch({
   type: Actions.DEL_COLUMN_COLLECT_ITEM,
   payload: {
@@ -32,6 +32,7 @@ export const delColumnCollectItem = curry(({dispatch, idx, key}): DispathParams 
     ]
   }
 }))
+
 export const updColumnCollectItem = curry(({dispatch, idx, key, value}): DispathParams => dispatch({
   type: Actions.UPD_COLUMN_COLLECT_ITEM,
   payload: {
@@ -45,6 +46,7 @@ export const updColumnCollectItem = curry(({dispatch, idx, key, value}): Dispath
     value
   }
 }))
+
 export const addMenuToActionSheet = curry(({dispatch, value}): DispathParams => dispatch({
   type: Actions.ACTION_SHEET_ADD,
   payload: {
@@ -53,18 +55,14 @@ export const addMenuToActionSheet = curry(({dispatch, value}): DispathParams => 
   }
 }))
 
-export const updColumnValue = curry(({dispatch, idx, prop, value}: DispathParams)=> dispatch({
+export const updColumnValue = curry(({dispatch, path, value}: DispathParams)=> dispatch({
   type: Actions.UPD_COLUMN_VALUE,
   payload: {
-    path: [
-      idx,
-      'head',
-      prop,
-      'value'
-    ],
+    path,
     value
   }
 }))
+
 export const updColumnEdit = curry(({dispatch, idx, prop, value}: DispathParams)=> dispatch({
   type: Actions.UPD_COLUMN_EDIT,
   payload: {
@@ -77,6 +75,7 @@ export const updColumnEdit = curry(({dispatch, idx, prop, value}: DispathParams)
     value: !value
   }
 }))
+
 export const delColumn = curry(({dispatch, idx, key}: DispathParams)=> dispatch({
   type: Actions.DEL_COLUMN,
   payload: {
@@ -89,6 +88,7 @@ export const delColumn = curry(({dispatch, idx, key}: DispathParams)=> dispatch(
     ]
   }
 }))
+
 export const updFieldValueByColumn = curry(({dispatch, path, value}: DispathParams)=> dispatch({
   type: Actions.UPD_FIELD_VALUE_BY_COLUMN,
   payload: {
@@ -96,6 +96,7 @@ export const updFieldValueByColumn = curry(({dispatch, path, value}: DispathPara
     value
   }
 }))
+
 export const addColumn = curry(({dispatch, type}): DispathParams => dispatch({
   type: Actions.ADD_COLUMN,
   payload: {
@@ -103,6 +104,7 @@ export const addColumn = curry(({dispatch, type}): DispathParams => dispatch({
     path: ['columns']
   }
 }))
+
 export const startGen = ({dispatch}: any) => dispatch({
   type: Actions.START_GEN,
   payload: null
@@ -118,11 +120,16 @@ export const CustomBodyCollapse = [
   delColumnCollectItem,
   updColumnCollectItem
 ]
+
 export const DateBodyCollapse = [updFieldValueByColumn]
+
 export const NumberBodyCollapse = [updFieldValueByColumn]
+
 export const DictionaryBodyCollapse = []
+
 export const FooterCollapse = [
   addColumn,
   startGen
 ]
+
 export const FooterBodyCollapse = []

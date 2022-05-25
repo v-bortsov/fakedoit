@@ -1,8 +1,8 @@
 import { adjust, always, apply, applyTo, assocPath, call, clone, converge, curry, isNil, map, of, pair, path, paths, pipe, pipeWith, prop, tap, zip, __ } from 'ramda';
-import { addColumn } from '../business/column';
+import { addColumn, updColumpProp } from '../business/column';
 import { cartesianCondition } from '../business/start';
 import { Actions } from '../types/enums';
-import { addCollectItem, delColumnCollectItem, updColumpProp } from '../utils';
+import { addCollectItem, delColumnCollectItem } from '../utils';
 
 /* eslint array-element-newline: ["error", "never"] */
 export enum Data {
@@ -12,16 +12,23 @@ export enum Data {
 
 const reducers = {
   [Actions.ADD_COLUMN]: [[[1, 'payload', 'type'], [0, 'columns']], addColumn, ['columns']],
+  [Actions.DEL_COLUMN]: [[[0, 'columns'], [1, 'payload','path']], delColumnCollectItem, ['columns']],
+  
   [Actions.START_GEN]: [[[0, 'columns'], [0, 'limiting']], cartesianCondition, ['rows']],
+
   [Actions.ADD_COLUMN_COLLECT_ITEM]: [[[0, 'columns'], [1, 'payload','idx'], [1, 'payload','value']], addCollectItem, ['columns']],
   [Actions.UPD_COLUMN_COLLECT_ITEM]: [[[0, 'columns'], [1, 'payload','path'], [1, 'payload','value']], updColumpProp, ['columns']],
   [Actions.DEL_COLUMN_COLLECT_ITEM]: [[[0, 'columns'], [1, 'payload','path']], delColumnCollectItem, ['columns']],
+  
   [Actions.UPD_COLUMN_VALUE]: [[[0, 'columns'], [1, 'payload','path'], [1, 'payload','value']], updColumpProp, ['columns']],
+
+
   [Actions.UPD_COLUMN_EDIT]: [[[0, 'columns'], [1, 'payload','path'], [1, 'payload','value']], updColumpProp, ['columns']],
-  [Actions.DEL_COLUMN]: [[[0, 'columns'], [1, 'payload','path']], delColumnCollectItem, ['columns']],
+  
   [Actions.ACTION_SHEET_ADD]: [[[1, 'payload', 'value']], prop(0), ['actionSheet']],
   [Actions.ACTION_SHEET_CLEAR]: clone,
-  
+
+  [Actions.UPD_FIELD_VALUE_BY_COLUMN]: [[[1, 'payload', 'value']], prop(0), ['limiting']],
   // [Actions.FIELD_CHANGE_VALUE]: clone,
 }
 

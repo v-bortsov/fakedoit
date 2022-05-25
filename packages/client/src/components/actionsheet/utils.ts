@@ -10,13 +10,13 @@ export function getDeviceHeight(statusBarTranslucent: boolean | undefined): numb
   return height;
 }
 
-export const getElevation = (elevation: number) => ({
+export const getElevation = (elevation: number) => {return {
   elevation,
   shadowColor: 'black',
   shadowOffset: { width: 0.3 * elevation, height: 0.5 * elevation },
   shadowOpacity: 0.2,
   shadowRadius: 0.7 * elevation,
-});
+}};
 
 export const SUPPORTED_ORIENTATIONS: (
   | 'portrait'

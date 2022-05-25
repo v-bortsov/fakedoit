@@ -34,7 +34,8 @@ if(!isDir(dir)){
       directory: dir,
       host: process.env.POSTGRES_HOST,
       port: process.env.POSTGRES_PORT,
-      dialectOptions: { ssl: { rejectUnauthorized: false } },
+      // ssl connection disable so to enable -> {ssl: { rejectUnauthorized: false }}
+      dialectOptions: {  },
       logging: console.log,
       lang: 'ts'
     }

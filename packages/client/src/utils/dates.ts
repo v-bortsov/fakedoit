@@ -1,5 +1,4 @@
 import dayjs from 'dayjs';
-import moment from 'moment';
 import { always, aperture, append, assoc, chain, clone, concat, converge, curry, divide, filter, flatten, ifElse, is, last, length, map, of, omit, pair, pipe, prop, reduce, repeat, when, __ } from 'ramda';
 import { Interval, DaysOfWeek } from '../types/enums';
 import { addParam, enumToObject } from './popular';
@@ -84,6 +83,7 @@ export const dayToDate = pipe<string[], any, any, any>(
     ]
   )
 );
+
 export const transformDates = pipe<any, any, any, any, any>(
   chain(
     assoc('collect'),
@@ -116,8 +116,12 @@ export const transformDates = pipe<any, any, any, any, any>(
         always(dayToDate),
         pipe(
           prop('startDay'),
-          (e: Date)=>moment(e)
-            .format('DD.MM.YYYY')
+          (e: Date)=>dayjs(
+            e,
+            'DD.MM.YYYY'
+          )
+          // (e: Date)=>moment(e)
+          //   .format('DD.MM.YYYY')
         ),
         prop('collect'),
       ]
@@ -140,3 +144,43 @@ export const dayOfWeekToDate = pipe<any, any, any, any>(
   omit(['daysTransform'])
 );
 
+export const calcDates = curry((
+  startDay: dayjs.Dayjs, limit: number, cycle: number[]
+): string[] => {
+  let numberDay = 0
+  const dates = []
+
+  while(limit > 0){
+    startDay = dayjs(startDay)
+      .add(
+        cycle[numberDay],
+        'day'
+      )
+      
+    dates.push(startDay.format('DD.MM.YYYY'))
+    
+    if(numberDay === (cycle.length-1))
+      numberDay = 0
+    else
+      numberDay++
+
+    limit--
+  }
+
+  return dates
+})
+
+export const weekToDays = (week: boolean[]): number[] => {
+  let arrVal = [];
+  let j = 0;
+
+  for (let i = week.length - 1; i >= 0; i--) {
+    j++;
+    if (week[i]) {
+      arrVal.unshift(j);
+      j = 0;
+    }
+  }
+
+  return arrVal;
+}
