@@ -6,7 +6,7 @@ import db from './db';
 export default pipe<any, any, any>(
     (graphqlObject: any)=> {
       
-      graphqlObject.db = require('../model/init-models.ts')
+      graphqlObject.db = require(__dirname+'/../model/init-models.ts')
       graphqlObject.db.initModels(db())
 
       return graphqlObject
@@ -23,6 +23,7 @@ export default pipe<any, any, any>(
     ),
     /* @ts-ignore **/
     (data: any) => {
+      
       fs.writeFile(
         __dirname+'/graphql.gql',
         data.typeDefs,

@@ -1,7 +1,5 @@
 import * as Sequelize from 'sequelize';
 import { DataTypes, Model, Optional } from 'sequelize';
-import type { cities, citiesId } from './cities';
-import type { countries_languages, countries_languagesId } from './countries_languages';
 import type { currencies, currenciesId } from './currencies';
 
 export interface countriesAttributes {
@@ -16,7 +14,7 @@ export interface countriesAttributes {
 
 export type countriesPk = "id";
 export type countriesId = countries[countriesPk];
-export type countriesOptionalAttributes = "id" | "abbr" | "capital";
+export type countriesOptionalAttributes = "abbr" | "capital";
 export type countriesCreationAttributes = Optional<countriesAttributes, countriesOptionalAttributes>;
 
 export class countries extends Model<countriesAttributes, countriesCreationAttributes> implements countriesAttributes {
@@ -28,30 +26,6 @@ export class countries extends Model<countriesAttributes, countriesCreationAttri
   abbr?: string;
   capital?: string;
 
-  // countries hasMany cities via country_id
-  cities!: cities[];
-  getCities!: Sequelize.HasManyGetAssociationsMixin<cities>;
-  setCities!: Sequelize.HasManySetAssociationsMixin<cities, citiesId>;
-  addCity!: Sequelize.HasManyAddAssociationMixin<cities, citiesId>;
-  addCities!: Sequelize.HasManyAddAssociationsMixin<cities, citiesId>;
-  createCity!: Sequelize.HasManyCreateAssociationMixin<cities>;
-  removeCity!: Sequelize.HasManyRemoveAssociationMixin<cities, citiesId>;
-  removeCities!: Sequelize.HasManyRemoveAssociationsMixin<cities, citiesId>;
-  hasCity!: Sequelize.HasManyHasAssociationMixin<cities, citiesId>;
-  hasCities!: Sequelize.HasManyHasAssociationsMixin<cities, citiesId>;
-  countCities!: Sequelize.HasManyCountAssociationsMixin;
-  // countries hasMany countries_languages via country_id
-  countries_languages!: countries_languages[];
-  getCountries_languages!: Sequelize.HasManyGetAssociationsMixin<countries_languages>;
-  setCountries_languages!: Sequelize.HasManySetAssociationsMixin<countries_languages, countries_languagesId>;
-  addCountries_language!: Sequelize.HasManyAddAssociationMixin<countries_languages, countries_languagesId>;
-  addCountries_languages!: Sequelize.HasManyAddAssociationsMixin<countries_languages, countries_languagesId>;
-  createCountries_language!: Sequelize.HasManyCreateAssociationMixin<countries_languages>;
-  removeCountries_language!: Sequelize.HasManyRemoveAssociationMixin<countries_languages, countries_languagesId>;
-  removeCountries_languages!: Sequelize.HasManyRemoveAssociationsMixin<countries_languages, countries_languagesId>;
-  hasCountries_language!: Sequelize.HasManyHasAssociationMixin<countries_languages, countries_languagesId>;
-  hasCountries_languages!: Sequelize.HasManyHasAssociationsMixin<countries_languages, countries_languagesId>;
-  countCountries_languages!: Sequelize.HasManyCountAssociationsMixin;
   // countries belongsTo currencies via currency_id
   currency!: currencies;
   getCurrency!: Sequelize.BelongsToGetAssociationMixin<currencies>;
@@ -61,7 +35,6 @@ export class countries extends Model<countriesAttributes, countriesCreationAttri
   static initModel(sequelize: Sequelize.Sequelize): typeof countries {
     return countries.init({
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true

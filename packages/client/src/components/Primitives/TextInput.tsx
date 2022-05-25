@@ -1,5 +1,5 @@
 import { omit, pick, props } from 'ramda';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Button, Easing, NativeSyntheticEvent, Platform, Pressable, StyleSheet, Text, TextInput, TextInputChangeEventData, View } from 'react-native';
 import { theme } from '../../constants/Colors';
 import Hoverable from './Hoverable';
@@ -9,11 +9,12 @@ interface HoverProps {
   icon: JSX.Element
   text: string|number
   padding: any
+  keyNumber?: string
   onPress: ()=>void
 }
 
-export const Hover = ({fontSize, icon, text, onPress, padding}: HoverProps)=> (
-  <Hoverable>
+export const Hover = ({keyNumber, fontSize, icon, text, onPress, padding}: HoverProps)=> (
+  <Hoverable key={keyNumber}>
     {(isHovered: boolean) => (
       <Pressable
         onPress={onPress}
@@ -50,34 +51,37 @@ export interface InputHoverProps {
   edit: boolean
 }
 
-export const TextInputHover: React.FC<InputHoverProps> = ({edit, input, hover})=>{
+export const TextInputHover: React.FC<InputHoverProps> = ({edit, input, hover, keyNumber}: any)=>
 
-  const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
+// const fadeAnim = useRef(new Animated.Value(0)).current  // Initial value for opacity: 0
 
-  useEffect(
-    () => {
-      Animated.timing(
-        fadeAnim,
-        {
-          useNativeDriver: false,
-          easing: Easing.bounce,
-          toValue: 1,
-          duration: 500,
-        }
-      )
-        .start();
-    },
-    [fadeAnim]
+// useEffect(
+//   () => {
+//     Animated.timing(
+//       fadeAnim,
+//       {
+//         useNativeDriver: false,
+//         easing: Easing.bounce,
+//         toValue: 1,
+//         duration: 500,
+//       }
+//     )
+//       .start();
+//   },
+//   [fadeAnim]
+// )
+
+  (
+    <View                 // Special animatable View
+      key={keyNumber}
+      // style={{
+      //   opacity: fadeAnim,         // Bind opacity to animated value
+      // }}
+    >
+      {edit ? input : hover}
+    </View>
   )
 
-  return (<Animated.View                 // Special animatable View
-    style={{
-      opacity: fadeAnim,         // Bind opacity to animated value
-    }}
-  >
-    {edit ? input : hover}
-  </Animated.View>)
-}
 
 export interface InputFuncProps {
   onChangeText?: (value: string)=>void
@@ -96,9 +100,11 @@ export interface InputProps extends InputFuncProps {
   padding?:any
 }
 
-export const Input = (props: InputProps) => {
+export const Input = React.forwardRef((
+  props: InputProps, ref: any
+) => {
 
-  const ref = props.passRef ? props.passRef : useRef<HTMLInputElement>(null)
+  // const ref = props.passRef ? props.passRef : useRef<HTMLInputElement>(null)
 
   useEffect(
     () => {
@@ -107,23 +113,24 @@ export const Input = (props: InputProps) => {
     []
   );
 
-  return (<View
-    style={[
-      styles.containerInput,
-      omit(
-        [
-          'fontSize',
-          'padding'
-        ],
-        props.style
-      )
-    ]}
-  >
-    <TextInput
+  return (
+    <View
       style={[
-        styles.input,
-        props.style,
-        props.padding
+        styles.containerInput,
+        omit(
+          [
+            'fontSize',
+            'padding'
+          ],
+          props.style
+        )
+      ]}
+    >
+      <TextInput
+        style={[
+          styles.input,
+          props.style,
+          props.padding
         // pick(
         //   [
         //     'fontSize',
@@ -131,21 +138,23 @@ export const Input = (props: InputProps) => {
         //   ],
         //   props.style
         // )
-      ]}
-      ref={ref}
-      {
-        ...omit(
-          [
-            'rightElement',
-            'style',
-            'passRef'
-          ],
-          props
-        )
-      }/>
-    {props.rightElement && props.rightElement}
-  </View>)
-};
+        ]}
+        ref={ref}
+        {
+          ...omit(
+            [
+              'rightElement',
+              'style',
+              'passRef'
+            ],
+            props
+          )
+        }
+      />
+      {props.rightElement && props.rightElement}
+    </View>
+  )
+});
 
 export interface InputWithButtonFuncProps extends InputProps {
   onPress: ()=>void
@@ -177,8 +186,10 @@ export const InputWithButton: React.FC<InputWithButtonProps> = (props: InputWith
           ],
           props
         )}
-        accessibilityLabel="Learn more about this purple button"/>
-    )}/>
+        accessibilityLabel="Learn more about this purple button"
+      />
+    )}
+  />
 )
 
 const styles = StyleSheet.create({

@@ -22,7 +22,7 @@ const Rect = ({
     width: number;
     x: number;
     y: number;
-}) => ({
+}) => {return {
   containsPoint: (
     nativeX: number, nativeY: number
   ) => nativeX >= x &&
@@ -44,7 +44,7 @@ const Rect = ({
   width,
   x,
   y,
-});
+}};
 
 const DEFAULT_ANIMATION_CONFIGS = {
   spring: {
@@ -288,7 +288,7 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
       },
     );
   };
-    /* e, gestureState: GestureState */
+  /* e, gestureState: GestureState */
     
   // Should we allow another component to take over this pan?
   _handlePanResponderRequestEnd = () => false;
@@ -606,7 +606,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
         style={[
           styles.debugThumbTouchArea,
           positionStyle
-        ]} />
+        ]}
+      />
     );
   };
 
@@ -623,7 +624,8 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
                     (Array.isArray(thumbImage)
                       ? thumbImage[thumbIndex]
                       : thumbImage) as ImageSourcePropType
-        }/>
+        }
+      />
     );
   };
 
@@ -779,39 +781,41 @@ export class NewSlider extends PureComponent<SliderProps, SliderState> {
               },
               trackStyle,
             ]}
-            onLayout={this._measureTrack}/>
+            onLayout={this._measureTrack}
+          />
           <Animated.View
             renderToHardwareTextureAndroid
             style={[
               styles.track,
               trackStyle,
               minimumTrackStyle
-            ]}/>
+            ]}
+          />
           {renderTrackMarkComponent &&
-                        interpolatedTrackMarksValues &&
-                        interpolatedTrackMarksValues.map((
-                          value, i
-                        ) => (
-                          <Animated.View
-                            key={`track-mark-${i}`}
-                            style={[
-                              styles.renderThumbComponent,
-                              {
-                                transform: [
-                                  {
-                                    translateX: value,
-                                  },
-                                  {
-                                    translateY: 0,
-                                  },
-                                ],
-                                ...valueVisibleStyle,
-                              },
-                            ]}
-                          >
-                            {renderTrackMarkComponent(i)}
-                          </Animated.View>
-                        ))}
+          interpolatedTrackMarksValues &&
+          interpolatedTrackMarksValues.map((
+            value, i
+          ) => (
+            <Animated.View
+              key={`track-mark-${i}`}
+              style={[
+                styles.renderThumbComponent,
+                {
+                  transform: [
+                    {
+                      translateX: value,
+                    },
+                    {
+                      translateY: 0,
+                    },
+                  ],
+                  ...valueVisibleStyle,
+                },
+              ]}
+            >
+              {renderTrackMarkComponent(i)}
+            </Animated.View>
+          ))}
           {interpolatedThumbValues.map((
             value, i
           ) => (

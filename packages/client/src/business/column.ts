@@ -1,37 +1,39 @@
-import { always, anyPass, assocPath, both, clone, complement, cond, converge, hasPath, ifElse, indexBy, lensPath, map, mapObjIndexed, mergeRight, mergeWith, objOf, over, path, pathEq, pipe, pluck, prop, propEq, tap, when } from 'ramda'
+import { always, anyPass, assocPath, both, clone, cond, converge, hasPath, ifElse, includes, lensPath, map, mergeRight, mergeWith, objOf, over, path, pathEq, pipe, pluck, prop, propEq, T, update, when, __ } from 'ramda'
 import { ColumnType, headType, Props } from '../types/enums'
-import { getFieldsByType, random, uuidv4 } from '../utils'
+import { copy, getFieldsByType, random, uuidv4 } from '../utils'
+import { calcDates, weekToDays } from '../utils/dates'
 
-export const assocPathConverge = (
-  target: string[], source: string[]
-): any=> converge(
-  assocPath(target),
-  [
-    path(source),
-    clone
-  ]
-)
+type AddColumn = (pointers: [ColumnType, CollapseForm<FormTypes>[]]) => CollapseForm<FormTypes>[]
 
-const addValueAndGroupBy = pipe(
-  map(when(
-    complement(propEq(
-      'name',
-      'startDay'
-    )),
-    assocPathConverge(
-      [
-        'component',
-        'value'
-      ],
-      [
-        'component',
-        'defaultValue'
-      ]
-    )
-  )),
-  /** @ts-ignore */
-  indexBy(path(pathComponent))
-)
+type getColumnStructure = (x: ColumnType) => CollapseForm<FormTypes>
+
+type transformPropValue = (x: CollapseForm<FormTypes>) => CollapseForm<FormTypes>
+
+const pathName: ['head', headType.NAME, Props.VALUE] = [
+  'head',
+  headType.NAME,
+  Props.VALUE
+]
+
+const pathLabel: ['head', headType.LABEL, Props.VALUE] = [
+  'head',
+  headType.LABEL,
+  Props.VALUE
+]
+
+const pathType: ['head', headType.TYPE, 'component', Props.VALUE] = [
+  'head',
+  headType.TYPE,
+  'component',
+  Props.VALUE
+]
+
+const pathLimit: ['body', Props.LIMIT, Props.COMPONENT, Props.VALUE] = [
+  'body',
+  Props.LIMIT,
+  Props.COMPONENT,
+  Props.VALUE
+]
 
 const bindTypeToHandler = cond([
   [
@@ -54,33 +56,6 @@ const bindTypeToHandler = cond([
     random
   ]
 ])
-
-const pathName: ['head', headType, Props] = [
-  'head',
-  headType.NAME,
-  Props.VALUE
-]
-const pathLabel: ['head', headType, Props] = [
-  'head',
-  headType.LABEL,
-  Props.VALUE
-]
-const pathType: ['head', headType, 'component', Props] = [
-  'head',
-  headType.TYPE,
-  'component',
-  Props.VALUE
-]
-const pathComponent: ['head', headType, Props] = [
-  'head',
-  headType.TYPE,
-  Props.NAME
-]
-const pathLimit: ['body', Props, Props] = [
-  'body',
-  Props.LIMIT,
-  Props.VALUE
-]
 
 const transformPropValue: transformPropValue = pipe(ifElse(
   anyPass([
@@ -127,13 +102,16 @@ const getColumnStructure: getColumnStructure = pipe(
     lensPath(pathName),
     uuidv4
   ),
-  assocPathConverge(
+  copy(
     pathLabel,
     pathName
   ),
   /** @ts-ignore */
   when(
-    hasPath(pathLimit),
+    hasPath([
+      'body',
+      'limit'
+    ]),
     over(
       lensPath(pathLimit),
       always(10)
@@ -164,23 +142,82 @@ const getColumnStructure: getColumnStructure = pipe(
       ]),
       always(new Date())
     )
-  ),
+  )
 )
-type AddColumn = (pointers: [ColumnType, CollapseForm<FormTypes>[]]) => CollapseForm<FormTypes>[]
 
-type getColumnStructure = (x: ColumnType) => CollapseForm<FormTypes>
 
-type transformPropValue = (x: CollapseForm<FormTypes>) => CollapseForm<FormTypes>
+export function recalcCollectDates(getPath: (arg0: string)=>string[]) {
+  return converge(
+    assocPath(getPath('collect')),
+    [
+      converge(
+        calcDates,
+        [
+          path(getPath('startDay')),
+          path(getPath('limit')),
+          pipe(
+            path(getPath('days')),
+            map(prop('active')),
+            weekToDays
+          ),
+        ]
+      ),
+      clone
+    ]
+  )
+}
 
-export const addColumn: AddColumn = ([type, columns]) => pipe<ColumnType, CollapseForm<FormTypes>,  CollapseForm<FormTypes>, CollapseForm<FormTypes>[]>(
+export const addColumn: AddColumn = ([type, columns]) => pipe<ColumnType, CollapseForm<FormTypes>, CollapseForm<FormTypes>, CollapseForm<FormTypes>[]>(
   getColumnStructure,
-  tap(x => console.log(
-    'clg',
-    x
-  )),
   // transformPropValue,
+  cond([
+    [
+      pathEq(
+        pathType,
+        ColumnType.DATE
+      ),
+      recalcCollectDates((prop: string) => [
+        'body',
+        prop,
+        'component',
+        'value'
+      ])
+    ],
+    [
+      T,
+      clone
+    ]
+  ]),
   (column: CollapseForm<FormTypes>) => [
     ...columns,
     column
   ]
 )(type)
+
+export const updColumpProp = ([
+  columns,
+  path,
+  value]: [CollapseForm<FormTypes>[], (number|string)[], string
+])=> pipe(
+  
+  assocPath(
+    path,
+    value
+  ),
+  when(
+    always(includes(
+      path[2],
+      [
+        'startDay',
+        'limit',
+        'days'
+      ]
+    )),
+    recalcCollectDates(update(
+      2,
+      __,
+      path
+    ))
+  )
+)(columns)
+

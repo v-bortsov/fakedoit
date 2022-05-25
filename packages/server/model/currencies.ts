@@ -6,19 +6,19 @@ export interface currenciesAttributes {
   id: number;
   native?: string;
   name?: string;
-  abbr: string;
+  abbr?: string;
 }
 
 export type currenciesPk = "id";
 export type currenciesId = currencies[currenciesPk];
-export type currenciesOptionalAttributes = "id" | "native" | "name";
+export type currenciesOptionalAttributes = "native" | "name" | "abbr";
 export type currenciesCreationAttributes = Optional<currenciesAttributes, currenciesOptionalAttributes>;
 
 export class currencies extends Model<currenciesAttributes, currenciesCreationAttributes> implements currenciesAttributes {
   id!: number;
   native?: string;
   name?: string;
-  abbr!: string;
+  abbr?: string;
 
   // currencies hasMany countries via currency_id
   countries!: countries[];
@@ -36,7 +36,6 @@ export class currencies extends Model<currenciesAttributes, currenciesCreationAt
   static initModel(sequelize: Sequelize.Sequelize): typeof currencies {
     return currencies.init({
     id: {
-      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -51,7 +50,7 @@ export class currencies extends Model<currenciesAttributes, currenciesCreationAt
     },
     abbr: {
       type: DataTypes.STRING(255),
-      allowNull: false
+      allowNull: true
     }
   }, {
     sequelize,

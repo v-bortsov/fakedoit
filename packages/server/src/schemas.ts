@@ -173,20 +173,20 @@ export const resolvers =  (obj: any) => {
               findOptions, args
             ) => {
               findOptions.logging = true
-              console.log(
-                findOptions,
-                args
-              );
+              // console.log(
+              //   findOptions,
+              //   args
+              // );
                 
               return findOptions
             },
             after: (
               results, args
             ) => {
-              console.log(
-                results,
-                args
-              );
+              // console.log(
+              //   results,
+              //   args
+              // );
                 
               return results
             }

@@ -29,13 +29,13 @@ module.exports = {
     // isDevEnv && 'webpack-dev-server/client/index.js?hot=true&live-reload=false',
     // isDevEnv && 'webpack/hot/poll?1000',
     // () => ['./src/makeModels.ts',
-    // make: {
-    //   import: path.join(
-    //     rootDir,
-    //     './src/makeModels.ts'
-    //   ),
-    //   filename: 'makeModels.js'
-    // },
+    make: {
+      import: path.join(
+        rootDir,
+        './src/makeModels.ts'
+      ),
+      filename: 'makeModels.js'
+    },
     server: {
       import: path.join(
         rootDir,
@@ -112,7 +112,7 @@ module.exports = {
       'pg-native': 'noop2',
     }
   },
-  externals: [nodeExternals({ allowlist: ['sequelize', 'pg-hstore', 'pg'], modulesDir: './node_modules'})],
+  externals: [nodeExternals({ allowlist: ['sequelize', 'pg-hstore', 'pg', 'graphql-relay'], modulesDir: './node_modules'})],
   externalsPresets: {
     node: true // in order to ignore built-in modules like path, fs, etc. 
   },
@@ -130,10 +130,10 @@ module.exports = {
     //   MODE: isProdEnv ? 'production' : 'development', // use 'development' unless process.env.NODE_ENV is defined
     //   DEBUG: false,
     // }),
-    // new Dotenv({
-    //   path: resolve(__dirname, './production.env'),
-    //   // safe: true,
-    // }),
+    new Dotenv({
+      path: resolve(__dirname, './production.env'),
+      // safe: true,
+    }),
     // new webpack.DefinePlugin({
     //   // process: {
     //   //   env: dotenv.parsed

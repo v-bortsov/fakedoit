@@ -28,6 +28,7 @@ interface FilterType {
   total: {value: number, max: number, step?: number}
   shuffle: {value: boolean }
   byColumn: { value: string, options: Nullable<string[]> }
+  dispatch: Dispatch
 }
 
 interface GeneratorState {

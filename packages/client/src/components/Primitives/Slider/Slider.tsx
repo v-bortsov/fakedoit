@@ -58,7 +58,8 @@ const Slider = () => {
             zIndex: 101,
             width: pan.x,
             height: 10,
-          }}/>
+          }}
+        />
         <Animated.View
           style={[
             styles.box,
@@ -69,7 +70,8 @@ const Slider = () => {
                 { translateY: 0 }
               ]}
           ]}
-          {...panResponder.panHandlers}/>
+          {...panResponder.panHandlers}
+        />
         <Animated.View
           style={{
             position: 'absolute',
@@ -77,7 +79,8 @@ const Slider = () => {
             height: 10,
             width: 400,
             backgroundColor: 'grey',
-          }}/>
+          }}
+        />
       </View>
     </View>
   );
