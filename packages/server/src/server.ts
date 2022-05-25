@@ -3,10 +3,10 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-co
 import { pick } from 'ramda';
 import gqlScheme from './index'
 
-console.log(process.env.POSTGRES_NAME);
+console.log('process.env.POSTGRES_NAME',process.env.POSTGRES_NAME);
 
 const obj = gqlScheme({})
-console.log(Object.keys(obj));
+console.log(Object.keys(obj), obj.typeDefs);
 
 const server = new ApolloServer({
   ...pick(

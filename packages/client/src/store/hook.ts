@@ -26,6 +26,7 @@ const actionOnOtherFields = updateFields(converge(
     always('name')
   ]
 ));
+
 const actionOnTypeField = updateFields(converge(
   map,
   [
@@ -171,7 +172,7 @@ export const evolveInitialState = pipe(
       ]
     )
   ),
-  tap(x => console.log(
+  tap((x) => console.log(
     'evolveStte',
     x
   )),

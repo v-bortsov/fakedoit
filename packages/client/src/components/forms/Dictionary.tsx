@@ -26,9 +26,10 @@ const DictionaryForm = ({country, dispatch}: IDictionaryProps) => {
     setCountries(collect)
   })
   
-  return (<View>
-    <Text>Country</Text>
-    {/* <SelectDropdown
+  return (
+    <View>
+      <Text>Country</Text>
+      {/* <SelectDropdown
       data={countries}
       value={country?.component?.value}
       // disabled={true}
@@ -52,14 +53,15 @@ const DictionaryForm = ({country, dispatch}: IDictionaryProps) => {
       rowTextForSelection={(
         item: string, index: number
       ) => item}/> */}
-    {cities.map((
-      item: string, keyNumber: number
-    ) => (
-      <View key={keyNumber} style={{flex: 1, flexDirection: 'row', borderColor: 'black', borderWidth: 1,  alignItems: 'center'}}>
-        {item}
-      </View>
-    ))}
-  </View>)
+      {cities.map((
+        item: string, keyNumber: number
+      ) => (
+        <View key={keyNumber} style={{flex: 1, flexDirection: 'row', borderColor: 'black', borderWidth: 1,  alignItems: 'center'}}>
+          {item}
+        </View>
+      ))}
+    </View>
+  )
 }
 
 export default DictionaryForm

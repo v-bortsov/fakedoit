@@ -15,7 +15,7 @@ interface IconButton {
 const IconButton = ({onPress, startIcon, endIcon, children, isDisabled, style, hoverBg, opacity}: IconButton) => (
   <Pressable disabled={isDisabled} onPress={onPress}>
     <Hoverable>
-      {isHovered => (
+      {(isHovered) => (
         <TouchableOpacity
           disabled={isDisabled}
           accessible={true}

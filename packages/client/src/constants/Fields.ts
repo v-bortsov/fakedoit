@@ -1,5 +1,5 @@
 import { Actions, ColumnType } from '../types/enums';
-import { countries, languages, currencies, getCitiesByCountry, } from '../services/network';
+import { getCountries, languages, currencies, getCitiesByCountry, } from '../services/network';
 
 export const MenuActionAddColumn = [
   { icon: 'playlist-plus', label: 'Custom', action: { type: Actions.ADD_COLUMN, payload: {type: ColumnType.CUSTOM }}, backgroundColor: '#b72424' },
@@ -119,6 +119,7 @@ export const dateFields = {
         rules: [],
         name: 'WeekDays',
         defaultValue: daysOfWeek,
+        value: daysOfWeek,
       }
     }, 
     startDay: {
@@ -202,7 +203,7 @@ export const requestByAreas = {
       'countries'
     ],
     'name',
-    countries,
+    getCountries,
     []
   ],
   languages: [

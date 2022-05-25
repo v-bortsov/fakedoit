@@ -4,10 +4,11 @@ import { isHoverEnabled } from '../../hooks/useHover';
 export interface HoverableProps {
   onHoverIn?: () => void;
   onHoverOut?: () => void;
+  keyNumber?: string;
   children: ((isHovered: boolean) => ReactNode) | ReactNode;
 }
 
-export default function Hoverable({ onHoverIn, onHoverOut, children }: HoverableProps) {
+export default function Hoverable({ keyNumber, onHoverIn, onHoverOut, children }: HoverableProps) {
   const [isHovered, setHovered] = React.useState(false);
   const [showHover, setShowHover] = React.useState(true);
 
@@ -53,17 +54,21 @@ export default function Hoverable({ onHoverIn, onHoverOut, children }: Hoverable
 
   const child = typeof children === 'function' ? children(showHover && isHovered) : children;
 
-  return React.cloneElement(
-    React.Children.only(child),
-    {
-      onMouseEnter: handleMouseEnter,
-      onMouseLeave: handleMouseLeave,
-      // prevent hover showing while responder
-      onResponderGrant: handleGrant,
-      onResponderRelease: handleRelease,
-      // if child is Touchable
-      onPressIn: handleGrant,
-      onPressOut: handleRelease,
-    }
-  );
+  return (
+    <React.Fragment key={keyNumber}>
+      {React.cloneElement(
+        React.Children.only(child),
+        {
+          onMouseEnter: handleMouseEnter,
+          onMouseLeave: handleMouseLeave,
+          // prevent hover showing while responder
+          onResponderGrant: handleGrant,
+          onResponderRelease: handleRelease,
+          // if child is Touchable
+          onPressIn: handleGrant,
+          onPressOut: handleRelease,
+        }
+      )}
+    </React.Fragment>
+  )
 }

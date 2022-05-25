@@ -4,12 +4,13 @@ import { Animated, Easing } from 'react-native';
 export function useAnimateCollapse(
   duration: number, open: boolean
 ){
-  const value = useRef(new Animated.Value(0)).current;
+
+  const ref = useRef(new Animated.Value(0)).current;
 
   useEffect(
     () =>{
       Animated.timing(
-        value,
+        ref,
         {
           duration,
           easing: Easing.bounce,
@@ -18,12 +19,11 @@ export function useAnimateCollapse(
         }
       )
         .start();
-
     },
     [open]
   );
 
-  const maxHeight = value.interpolate({
+  const maxHeight = ref.interpolate({
     inputRange: [
       0,
       1
@@ -35,5 +35,5 @@ export function useAnimateCollapse(
     extrapolate: 'clamp',
   })
 
-  return {maxHeight, value}
+  return {maxHeight, ref}
 } 

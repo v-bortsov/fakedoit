@@ -43,7 +43,8 @@ export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (
         day: Day, idx: number
       ) => (
         <TouchableOpacity
-        // style={[styles.day, day.active && styles.dayActive]}
+          key={idx}
+          // style={[styles.day, day.active && styles.dayActive]}
           onPress={()=> setDay(
             day,
             value,
@@ -51,7 +52,7 @@ export const WeekDays = ({ value, onChange }: WeekDay): JSX.Element => (
           )
           }
         >
-          <Circle key={ idx } active={day.active}><Text style={{color: day.active ? 'rgb(255,255,255)' : 'rgb(0,0,0)'}}>{day.abbr}</Text></Circle>
+          <Circle active={day.active}><Text style={{color: day.active ? 'rgb(255,255,255)' : 'rgb(0,0,0)'}}>{day.abbr}</Text></Circle>
         </TouchableOpacity>
       ))
     }

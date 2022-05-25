@@ -1,4 +1,4 @@
-import { always, append, assoc, chain, clone, converge, curry, filter, flatten, is, length, map, mergeRight, objOf, of, omit, path, pick, pipe, pluck, prop, propEq, reject, slice, splitAt, transpose, values, when, zipObj, __, xprod, adjust, findIndex, tap, cond, find, hasPath, identity, pathEq, product, T, pathSatisfies } from 'ramda';
+import { always, append, assoc, chain, clone, converge, curry, filter, flatten, is, length, map, mergeRight, objOf, of, omit, path, pick, pipe, pluck, prop, propEq, reject, slice, splitAt, transpose, values, when, zipObj, __, xprod, adjust, findIndex, tap, cond, find, hasPath, identity, pathEq, product, T, pathSatisfies, isNil, defaultTo, assocPath } from 'ramda';
 import { ObjectLiteral } from 'src/types/react-app-env';
 
 // import { multipledParts } from 'ramda-combo';
@@ -12,11 +12,19 @@ const RF = require('ramda-fantasy'),
 // const lenFuncTest = lenFunc("string")
 // lenFunc("asdfasf")
 //   .map(<any>flatten)
+export const copy = (
+  target: string[], source: string[]
+): any => converge(
+  assocPath(target),
+  [path(source), clone]
+)
+
 export const sliceAndTranspose = curry((
   columns: CollapseForm<FormTypes>[][], multipled: any[], equalsName: any
 ) => pipe(
   filter<any, any>(equalsName),
-  path([0, 'collect']),
+  path([0, 'body', 'collect', 'component', 'value']),
+  defaultTo([]),
   converge(
     append,
     [
@@ -115,6 +123,7 @@ export const addParam = curry((
     args
   )
 ))
+
 export const mergeAndRestruct = curry((
   columns: string[], wrapper: string
 )=>converge(

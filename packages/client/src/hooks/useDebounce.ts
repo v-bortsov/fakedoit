@@ -37,6 +37,7 @@ export function useDebounceWithCollect(setValue: React.Dispatch<React.SetStateAc
 }
 
 export default function useDebounce(setValue: (value: any)=> void){
+
   const request = useMemo(
     () => debounce(
       (text: string) => setValue(text),
@@ -44,9 +45,11 @@ export default function useDebounce(setValue: (value: any)=> void){
     ),
     []
   );
+  
   const onQueryChange = useCallback(
     (q: string) => request(q),
     []
   );
+
   return onQueryChange
 }

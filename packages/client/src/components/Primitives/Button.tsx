@@ -1,3 +1,4 @@
+import { isEmpty } from 'ramda';
 import React from 'react';
 import { Text, View, StyleSheet, Pressable, StyleProp, ViewStyle, TextStyle } from 'react-native';
 
@@ -6,6 +7,7 @@ interface ButtonProps {
   title: string,
   buttonStyle?: StyleProp<ViewStyle>
   textStyle?: StyleProp<TextStyle>
+  disabled: boolean | undefined | null
 }
 
 export function Button(props: ButtonProps) {
@@ -16,6 +18,7 @@ export function Button(props: ButtonProps) {
         styles.button,
         props.buttonStyle
       ]}
+      // disabled={ isEmpty(passRef.current?.value) }
       onPress={onPress}
     >
       <Text

@@ -48,7 +48,8 @@ export function DatePicker(props: any) {
         title={isNil(props.value) || isEmpty(props.value) ? 'Pick single date' : is(
           String,
           props.value
-        ) ? props.value : formatDate(props.value.toString())}/>
+        ) ? props.value : formatDate(props.value.toString())}
+      />
       {/* <DatePickerModal
         // locale={'en'} optional, default: automatic
         mode="single"

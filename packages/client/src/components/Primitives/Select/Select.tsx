@@ -36,7 +36,7 @@ const SelectDropdown = (
   ///////////////////////////////////////////////////////
   useImperativeHandle(
     ref,
-    () => ({
+    () => {return {
       reset: () => {
         reset();
       },
@@ -46,7 +46,7 @@ const SelectDropdown = (
       closeDropdown: () => {
         closeDropdown();
       },
-    })
+    }}
   );
   ///////////////////////////////////////////////////////
   // Dropdown height calculation
@@ -278,7 +278,8 @@ const SelectDropdown = (
               backgroundColor: dropdownOverlayColor,
             },
           ]}
-          onPress={() => closeDropdown()}/>
+          onPress={() => closeDropdown()}
+        />
         <View
           style={[
             styles.dropdownOverlayView,
@@ -309,14 +310,14 @@ const SelectDropdown = (
               renderItem={renderFlatlistItem}
               getItemLayout={(
                 data, index
-              ) => ({
+              ) => {return {
                 index,
                 length: data?.length,
                 offset:
                     rowStyle && rowStyle?.height
                       ? rowStyle?.height * index
                       : 50 * index,
-              })}
+              }}}
               onLayout={() => {
                 if (index >= 3 && dropDownFlatlistRef) {
                   dropDownFlatlistRef.current?.scrollToOffset({
@@ -327,7 +328,8 @@ const SelectDropdown = (
                     animated: true,
                   });
                 }
-              }}/>
+              }}
+            />
           )}
         </View>
       </Modal>

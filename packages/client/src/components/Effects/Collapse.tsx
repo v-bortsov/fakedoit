@@ -26,14 +26,14 @@ const Collapse = ({
 
   const [open, setOpen] = useState(false);
 
-  const {maxHeight, value} = useAnimateCollapse(
+  const {maxHeight, ref} = useAnimateCollapse(
     duration,
     open
   )
   
   return (
     <View key={idx}>
-      <Header animation={value} setOpen={setOpen} open={open} />
+      <Header animation={ref} setOpen={setOpen} open={open} />
       <Animated.View
         key={`desc_${idx}`}
         style={{

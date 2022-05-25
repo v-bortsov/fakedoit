@@ -19,5 +19,6 @@ export const TextArea = (props: any): JSX.Element => (
       props
     )}
     numberOfLines={4}
-    multiline/>
+    multiline
+  />
 )
