@@ -9,8 +9,8 @@ sonarqubeScanner(
       'sonar.projectDescription': 'Description for "My App" project...',
       'sonar.sources': 'src',
       // 'sonar.projectName': 'expo-bare',
-      'sonar.login':  'admin',
-      'sonar.password':  'frikandel',
+      'sonar.login':  env.process.SONAR_LOGIN,
+      'sonar.password':  env.process.SONAR_PASSWORD,
       // 'sonar.sources':  'src',
       // 'sonar.tests':  'src',
       // 'sonar.inclusions'  :  '**', // Entry point of your code
